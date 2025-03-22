@@ -11,9 +11,9 @@ library(ggplot2)
 library(treemapify)
 
 # library(stringr)
-# library(extrafont)
+library(extrafont)
 # library(colorspace)
-# library(ggtext)
+library(ggtext)
 # library(paletteer)
 # library(shadowtext)
 
@@ -26,7 +26,7 @@ languages <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesda
 
 df = languages[, .(pldb_id, number_of_users)]
 
-df = df[number_of_users > 10000, ]
+df = df[number_of_users > 20000, ]
 
 label = paste0(df$pldb_id, "\n", df$number_of_users)
 
@@ -34,7 +34,7 @@ label = paste0(df$pldb_id, "\n", df$number_of_users)
 df[, label := paste0(pldb_id, "\n", scales::comma(number_of_users))]
 
 
-col = c('#60608b', '#9291be', '#b9b8e5', '#ffeacf','#fcc1ad', '#e7877d', '#c15451')
+col = c('#60608b', '#9291be', '#b9b8e5', '#fcc1ad', '#e7877d', '#c15451')
 
 
 # plot --------
@@ -54,7 +54,7 @@ ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
     
     # scale_fill_manual(values = col) +
     scale_fill_stepsn(
-        colors = col, 
+        colors = rev(col), 
         breaks = c(50000, 100000, 200000, 500000, 1000000, 5000000), 
         transform = "log2",
         guide = guide_colorsteps(barwidth = unit(16, "lines"), 
@@ -62,7 +62,18 @@ ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
     ) +
     
     theme(
-        legend.position = "none"
+        legend.position = "bottom",
+        
+        legend.title = element_text(size = 12, hjust = .5, face = "bold", family = "Candara", color = "grey30"),
+        legend.text = element_text(size = 10, family = "Candara", color = "grey30"),
+        
+        plot.background = element_rect(fill = "grey93", color = NA),
+        
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 10, t = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(b = 20, t = 2)),
+        plot.caption = element_markdown(margin = margin(t = 22), size = 10, family = "Candara", hjust = 1.03),
+        
+        plot.margin = margin(20, 20, 20, 20)
     )
 
 
