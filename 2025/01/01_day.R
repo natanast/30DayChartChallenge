@@ -39,7 +39,8 @@ col = c('#60608b', '#9291be', '#b9b8e5', '#fcc1ad', '#e7877d', '#c15451')
 
 # plot --------
 
-ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
+gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
+    
     
     geom_treemap(layout = "squarified", color = "#f8f2f9", start = "topleft", radius = unit(2, "pt")) +
     
@@ -50,21 +51,22 @@ ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
         start = "topleft", 
         grow = FALSE, 
         reflow = TRUE,
-        min.size = .5) +
+        min.size = .5,
+        family = "Candara") +
     
     # scale_fill_manual(values = col) +
     scale_fill_stepsn(
         colors = rev(col), 
         breaks = c(50000, 100000, 200000, 500000, 1000000, 5000000), 
         transform = "log2",
+        labels = c("50K", "100K", "200K", "500K", "1M", "5M"),
         guide = guide_colorsteps(barwidth = unit(16, "lines"), 
                                  barheight = unit(.5, "lines"))
     ) +
     
     labs(
-        title = "",
-        subtitle = "",
-        caption = "Source: <b> </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        title = "The Most Used Programming Languages",
+        caption = "Source: <b> Programming Language DataBase </b> | Graphic: <b>Natasa Anastasiadou</b>",
         fill = "Number of users",
     ) +
     
@@ -84,9 +86,6 @@ ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
         
         plot.margin = margin(20, 20, 20, 20)
     )
-
-
-
 
 
 
