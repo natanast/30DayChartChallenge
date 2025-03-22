@@ -10,7 +10,7 @@ library(data.table)
 library(ggplot2)
 library(treemapify)
 
-# library(stringr)
+library(stringr)
 library(extrafont)
 # library(colorspace)
 library(ggtext)
@@ -27,6 +27,8 @@ languages <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesda
 df = languages[, .(pldb_id, number_of_users)]
 
 df = df[number_of_users > 20000, ]
+
+df$pldb_id <- df$pldb_id |> str_to_upper()
 
 label = paste0(df$pldb_id, "\n", df$number_of_users)
 
@@ -46,7 +48,7 @@ gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = labe
     
     geom_treemap_text(
         colour = "white",
-        # size = 15,
+        size = 16,
         layout = "squarified", 
         start = "topleft", 
         grow = FALSE, 
@@ -75,6 +77,7 @@ gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = labe
     
     theme(
         # legend.position = "bottom",
+        # legend.position = c(1.0, 0.5),
         legend.title.position = "left",
         legend.title = element_text(size = 10, angle = 90, hjust = 0.5, face = "bold", family = "Candara", color = "grey30"),
         legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
@@ -83,7 +86,7 @@ gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = labe
         
         plot.title = element_markdown(size = 19, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 10, t = 5)),
         plot.subtitle = element_markdown(size = 15, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(b = 20, t = 2)),
-        plot.caption = element_markdown(margin = margin(t = 20), size = 7, family = "Candara", hjust = 1.2),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 8, family = "Candara", hjust = 1.2),
         
         plot.margin = margin(20, 20, 20, 20)
     )
