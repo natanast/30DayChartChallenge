@@ -14,7 +14,7 @@ library(treemapify)
 library(extrafont)
 # library(colorspace)
 library(ggtext)
-# library(paletteer)
+library(paletteer)
 # library(shadowtext)
 
 # load data --------
@@ -57,11 +57,11 @@ gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = labe
     # scale_fill_manual(values = col) +
     scale_fill_stepsn(
         colors = rev(col), 
-        breaks = c(50000, 100000, 200000, 500000, 1000000, 5000000), 
+        breaks = c(50000, 100000, 500000, 1000000, 5000000), 
         transform = "log2",
-        labels = c("50K", "100K", "200K", "500K", "1M", "5M"),
-        guide = guide_colorsteps(barwidth = unit(16, "lines"), 
-                                 barheight = unit(.5, "lines"))
+        labels = c("50K", "100K", "500K", "1M", "5M"),
+        guide = guide_colorsteps(barwidth = unit(0.5, "lines"), 
+                                 barheight = unit(10, "lines"))
     ) +
     
     labs(
@@ -74,27 +74,28 @@ gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = labe
     theme_void() + 
     
     theme(
-        legend.position = "bottom",
-        legend.title.position = "top",
-        legend.title = element_text(size = 12, hjust = .5, face = "bold", family = "Candara", color = "grey30"),
-        legend.text = element_text(size = 10, family = "Candara", color = "grey30"),
+        # legend.position = "bottom",
+        legend.title.position = "left",
+        legend.title = element_text(size = 10, angle = 90, hjust = 0.5, face = "bold", family = "Candara", color = "grey30"),
+        legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
         
         plot.background = element_rect(fill = "grey93", color = NA),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 10, t = 5)),
-        plot.subtitle = element_markdown(size = 14, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(b = 20, t = 2)),
-        plot.caption = element_markdown(margin = margin(t = 22), size = 10, family = "Candara", hjust = 1.03),
+        plot.title = element_markdown(size = 19, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 10, t = 5)),
+        plot.subtitle = element_markdown(size = 15, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(b = 20, t = 2)),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 7, family = "Candara", hjust = 1.2),
         
         plot.margin = margin(20, 20, 20, 20)
     )
 
 
+gr
 
 # save ---------
 
-# ggsave(
-#    plot = gr, filename = "Rplot.png",
-#    width = 9, height = 7, units = "in", dpi = 600
-#)
+ggsave(
+   plot = gr, filename = "Rplot.png",
+   width = 9, height = 10, units = "in", dpi = 600
+)
 
 
