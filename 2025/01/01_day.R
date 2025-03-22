@@ -61,9 +61,18 @@ ggplot(df, aes(area = number_of_users, fill = number_of_users, label = label)) +
                                  barheight = unit(.5, "lines"))
     ) +
     
+    labs(
+        title = "",
+        subtitle = "",
+        caption = "Source: <b> </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        fill = "Number of users",
+    ) +
+    
+    theme_void() + 
+    
     theme(
         legend.position = "bottom",
-        
+        legend.title.position = "top",
         legend.title = element_text(size = 12, hjust = .5, face = "bold", family = "Candara", color = "grey30"),
         legend.text = element_text(size = 10, family = "Candara", color = "grey30"),
         
