@@ -66,6 +66,7 @@ gr = ggplot(df, aes(area = number_of_users, fill = number_of_users, label = labe
     
     labs(
         title = "The Most Used Programming Languages",
+        subtitle = "Estimated number of users for programming languages based on PLDB data.",
         caption = "Source: <b> Programming Language DataBase </b> | Graphic: <b>Natasa Anastasiadou</b>",
         fill = "Number of users",
     ) +
