@@ -37,13 +37,24 @@ df_long$year <- as.numeric(gsub("rank_", "", df_long$year))
 
 
 # Combine artist name and album for the y-axis label
-df_long$album_label <- paste0(df_long$clean_name, df_long$album, sep = " - ")
+df_long$album_label <- paste(df_long$clean_name, df_long$album, sep = " - ")
 
 df_long$point_label <- ifelse(df_long$year == 2003, paste(df_long$clean_name, df_long$album, sep = " - "), "" )
 
 
 # Order the data using data.table's setorder
-setorder(df_long, clean_name, year)
+setorder(df_long, year, rank)
+
+
+col = c(
+     "Metallica - Metallica" = "#33608CFF", 
+    "Pearl Jam - Ten" = "#9768A5FF", 
+    "Led Zeppelin - Led Zeppelin IV" = "#E7718AFF", 
+    "Pink Floyd - The Dark Side of the Moon" = "#D78D50", 
+    "Carole King - Tapestry" = "#ED7846FF", 
+    "Nirvana - Nevermind" = "#D54C45FF", 
+    "The Beatles - Sgt. Pepper's Lonely Hearts Club Band" = "#B81840FF"
+) 
 
 
 
@@ -57,11 +68,13 @@ gr = ggplot(df_long, aes(x = year, y = rank, color = album_label, group = album_
     
     geom_text(
         aes(label = point_label), 
-        nudge_y = 3.3, 
-        nudge_x = 2.2, 
+        nudge_y = 3.5, 
+        nudge_x = 2.3, 
         family = "Candara", 
         size = 3
     ) +
+    
+    scale_color_manual(values = col) +
     
     scale_x_continuous(breaks = c(2003, 2012, 2020)) +
     
@@ -77,7 +90,6 @@ gr = ggplot(df_long, aes(x = year, y = rank, color = album_label, group = album_
     
     theme(
         legend.position = "none",
-        # legend.position = c(1.0, 0.5),
         legend.title.position = "left",
         legend.title = element_text(size = 10, angle = 90, hjust = 0.5, face = "bold", family = "Candara", color = "grey30"),
         legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
@@ -103,7 +115,7 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 10, height = 9, units = "in", dpi = 600
+   width = 9.5, height = 9, units = "in", dpi = 600
 )
 
 
