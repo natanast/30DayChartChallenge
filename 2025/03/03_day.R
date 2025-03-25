@@ -31,7 +31,7 @@ df_long <- melt(df, id.vars = "Year", measure.vars = c("Starters", "Finishers"),
 # labels -------
 
 # Labels Preparation
-label_data <- df[, .(Year, Finishers)]
+label_data <- df[, .(Year, Starters)]
 label_data[, id := .I]  # Assign an ID from 1 to N
 
 number_of_bar <- nrow(label_data)
@@ -41,12 +41,15 @@ angle <- 90 - 360 * (label_data$id - 0.5) / number_of_bar
 label_data[, angle := ifelse(angle < -90, angle + 180, angle)]
 label_data[, hjust := ifelse(angle < -90, 1, 0)]
 
+label_data$Starters <- ifelse(label_data$Year < 2001, label_data$Starters + 1000, label_data$Starters + 6000)
+
+
 
 # Plot -----------
 
 gr = ggplot(df_long, aes(x = factor(Year), y = Runners, fill = Category)) +
     
-    geom_bar(width = 0.6, stat = "identity", position = "dodge") +
+    geom_bar(width = 0.7, stat = "identity", position = "dodge") +
     
     coord_radial(
         start = 0,
@@ -59,20 +62,20 @@ gr = ggplot(df_long, aes(x = factor(Year), y = Runners, fill = Category)) +
     ) +
     
     
-    scale_fill_manual(values = c("Starters" = "#F39B7F", "Finishers" = "#3a5cbc")) +
+    scale_fill_manual(values = c("Starters" = "#f09a8c", "Finishers" = "#5f899d")) +
     
-    geom_text(data = label_data, aes(x = id, y = Finishers, label = Year, hjust = hjust, angle = angle, vjust = 0.5), 
+    geom_text(data = label_data, aes(x = id, y = Starters, label = Year, hjust = hjust, angle = angle, vjust = 0.5), 
               color = "black", fontface = "bold", alpha = 0.6, size = 2.5, , inherit.aes = FALSE) +
     
-    # # Adjusted text labels
-    # geom_text(data = label_data, aes(x = factor(Year), y = max(df_long$Runners) + 5000, 
-    #                                  label = Year, angle = angle, hjust = hjust), 
-    #           color = "black", fontface = "bold", alpha = 0.8, size = 3) +
-    # 
-    # 
+
     theme_minimal() +
     
     theme(
+        
+        legend.position = "bottom",
+        legend.title = element_text(size = 10, hjust = 0.5, face = "bold", family = "Candara", color = "grey30"),
+        legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
+        
         plot.margin = margin(20, 20, 20, 20),
         axis.text.x = element_blank(),
         axis.text.y = element_blank(),  
@@ -83,16 +86,10 @@ gr = ggplot(df_long, aes(x = factor(Year), y = Runners, fill = Category)) +
         
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
-        
-        legend.text = element_text(size = 7),  
-        legend.title = element_text(size = 10),  
         plot.title = element_text(size = 16)
         
     )
     
-
-
-
 
 gr
 
@@ -101,7 +98,7 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 9.5, height = 9, units = "in", dpi = 600
+   width = 8, height = 8, units = "in", dpi = 600
 )
 
 
