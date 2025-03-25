@@ -57,7 +57,8 @@ gr = ggplot(df_long, aes(x = factor(Year), y = Runners, fill = Category)) +
     ) +
 
     labs(
-        title = "Comparison of Starters and Finishers in the London Marathon",
+        title = "London Marathon",
+        subtitle = "A year-by-year comparison of starters and finishers in the London Marathon.",
         caption = "Source: <b>  {LondonMarathon} R package</b> | Graphic: <b>Natasa Anastasiadou</b>",
         fill = ""
     ) +
@@ -80,8 +81,8 @@ gr = ggplot(df_long, aes(x = factor(Year), y = Runners, fill = Category)) +
         # legend.title = element_text(size = 10, hjust = 0.5, face = "bold", family = "Candara", color = "grey30"),
         legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
         
-        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 5)),
-        plot.subtitle = element_markdown(size = 10, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(b = 15, t = 5)),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 10)),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(t = 15)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 7, family = "Candara", hjust = 1.3),
         
         plot.margin = margin(20, 20, 20, 20),
