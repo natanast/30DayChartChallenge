@@ -83,7 +83,7 @@ gr = ggplot(df_long, aes(x = factor(Year), y = Runners, fill = Category)) +
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 10)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.25, family = "Candara", color = "grey30", margin = margin(t = 15)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 7, family = "Candara", hjust = 1.2),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, family = "Candara", hjust = 1.2),
         
         plot.margin = margin(20, 20, 20, 20),
         axis.text.x = element_blank(),
@@ -105,7 +105,7 @@ gr
 # save ---------
 
 ggsave(
-   plot = gr, filename = "1Rplot.png",
+   plot = gr, filename = "Rplot.png",
    width = 8, height = 8, units = "in", dpi = 600
 )
 
