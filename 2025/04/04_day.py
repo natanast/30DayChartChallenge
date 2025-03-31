@@ -1,5 +1,4 @@
 
-
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -7,6 +6,7 @@ import matplotlib.pyplot as plt
 
 # Load and clean data
 soccer = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-04-04/soccer21-22.csv')
+
 
 # Calculate total goals per team
 home_goals = soccer.groupby("HomeTeam")["FTHG"].sum()
@@ -21,8 +21,8 @@ bottom_teams = total_goals.nsmallest(5, "Total Goals")
 # Assign values: top teams are positive, bottom teams are negative
 bottom_teams["Total Goals"] *= -1  # Flip bottom teams to negative
 
-# Combine data
-goal_plot_data = pd.concat([top_teams, bottom_teams])
+# Combine data and **manually set order** (top teams first)
+goal_plot_data = pd.concat([top_teams, bottom_teams]).sort_values("Total Goals", ascending=True)
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 6))
@@ -36,9 +36,12 @@ ax.scatter(goal_plot_data["Total Goals"], goal_plot_data["Team"],
            color=["steelblue" if x > 0 else "red" for x in goal_plot_data["Total Goals"]],
            s=100, edgecolors="black", zorder=3)
 
+# Manually set y-axis order (top teams at the top)
+ax.set_yticks(range(len(goal_plot_data)))
+ax.set_yticklabels(goal_plot_data["Team"])
+
 # Customization
 ax.set_xlabel("Total Goals")
-ax.set_ylabel("Team")
 ax.set_title("Premier League Teams with Most & Least Goals", fontsize=14)
 ax.axvline(0, color="black", linewidth=1.2)  # Center baseline at 0
 ax.grid(axis="x", linestyle="--", alpha=0.7)
