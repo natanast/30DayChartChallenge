@@ -8,14 +8,6 @@ import matplotlib.pyplot as plt
 # Load and clean data
 soccer = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-04-04/soccer21-22.csv')
 
-
-import pandas as pd
-import matplotlib.pyplot as plt
-
-# Load dataset
-url = "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-08-22/epl_matches.csv"
-soccer = pd.read_csv(url)
-
 # Calculate total goals per team
 home_goals = soccer.groupby("HomeTeam")["FTHG"].sum()
 away_goals = soccer.groupby("AwayTeam")["FTAG"].sum()
