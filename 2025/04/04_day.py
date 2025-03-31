@@ -8,43 +8,85 @@ import matplotlib.pyplot as plt
 soccer = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-04-04/soccer21-22.csv')
 
 
-# Calculate total goals per team
-home_goals = soccer.groupby("HomeTeam")["FTHG"].sum()
-away_goals = soccer.groupby("AwayTeam")["FTAG"].sum()
-total_goals = home_goals.add(away_goals, fill_value=0).reset_index()
-total_goals.columns = ["Team", "Total Goals"]
+# Calculate goals scored and conceded per team
+home_goals_scored = soccer.groupby("HomeTeam")["FTHG"].sum()
+away_goals_scored = soccer.groupby("AwayTeam")["FTAG"].sum()
+goals_scored = home_goals_scored.add(away_goals_scored, fill_value = 0)
 
-# Get top 5 and bottom 5 teams
-top_teams = total_goals.nlargest(5, "Total Goals")
-bottom_teams = total_goals.nsmallest(5, "Total Goals")
+home_goals_conceded = soccer.groupby("HomeTeam")["FTAG"].sum()
+away_goals_conceded = soccer.groupby("AwayTeam")["FTHG"].sum()
+goals_conceded = home_goals_conceded.add(away_goals_conceded, fill_value = 0)
 
-# Assign values: top teams are positive, bottom teams are negative
-bottom_teams["Total Goals"] *= -1  # Flip bottom teams to negative
+# Create DataFrame
+goal_comparison = pd.DataFrame({
+    "Team": goals_scored.index,
+    "Goals Scored": goals_scored.values,
+    "Goals Conceded": -goals_conceded.values  # Make conceded goals negative
+})  # Sort by scored goals
 
-# Combine data and **manually set order** (top teams first)
-goal_plot_data = pd.concat([top_teams, bottom_teams]).sort_values("Total Goals", ascending=True)
+goal_comparison = goal_comparison.sort_values("Goals Scored", ascending = True)
+
 
 # Plot
 fig, ax = plt.subplots(figsize=(10, 6))
 
-# Draw lines from 0 to value
-for index, row in goal_plot_data.iterrows():
-    ax.plot([0, row["Total Goals"]], [row["Team"], row["Team"]], color="gray", lw=1)
+# Lollipops for goals scored
+ax.hlines(
+    goal_comparison["Team"], 
+    0, 
+    goal_comparison["Goals Scored"], 
+    color = "grey", 
+    alpha = 0.6
+)
+ax.scatter(
+    goal_comparison["Goals Scored"], 
+    goal_comparison["Team"], 
+    color = "#5f899d", 
+    label = "Goals Scored", 
+    s = 100,
+    zorder = 3
+)
 
-# Add lollipops (scatter points)
-ax.scatter(goal_plot_data["Total Goals"], goal_plot_data["Team"],
-           color=["steelblue" if x > 0 else "red" for x in goal_plot_data["Total Goals"]],
-           s=100, edgecolors="black", zorder=3)
+# Add text for goals scored
+for i, (team, goals) in enumerate(zip(goal_comparison["Team"], goal_comparison["Goals Scored"])):
+    ax.text(goals + 2, team, str(goals), va="center", ha="left", fontsize=10, color="#5f899d")
 
-# Manually set y-axis order (top teams at the top)
-ax.set_yticks(range(len(goal_plot_data)))
-ax.set_yticklabels(goal_plot_data["Team"])
+# Lollipops for goals conceded
+ax.hlines(
+    goal_comparison["Team"], 
+    goal_comparison["Goals Conceded"], 
+    0, 
+    color = "grey", 
+    alpha = 0.6
+)
+
+ax.scatter(
+    goal_comparison["Goals Conceded"], 
+    goal_comparison["Team"], 
+    color = "#dc756e", 
+    label="Goals Conceded", 
+    s = 100,
+    zorder = 3
+)
+
+# Add text for goals conceded
+for i, (team, goals) in enumerate(zip(goal_comparison["Team"], goal_comparison["Goals Conceded"])):
+    ax.text(goals - 2, team, str(abs(goals)), va="center", ha="right", fontsize=10, color="#dc756e")
+
+# Add a vertical line at 0
+ax.axvline(0, color = "black", linewidth = 1 , linestyle="dashed")
+
+
+# Update x-axis labels to show absolute values (convert negatives to positives)
+ax.set_xticks(ax.get_xticks())  # Keep the original tick positions
+ax.set_xticklabels([f"{int(abs(tick))}" for tick in ax.get_xticks()])
 
 # Customization
-ax.set_xlabel("Total Goals")
-ax.set_title("Premier League Teams with Most & Least Goals", fontsize=14)
-ax.axvline(0, color="black", linewidth=1.2)  # Center baseline at 0
-ax.grid(axis="x", linestyle="--", alpha=0.7)
+ax.set_xlabel("Goals")
+ax.set_title("Premier League: Goals Scored vs. Goals Conceded", fontsize=14)
+ax.legend()
+ax.grid(axis="x", linestyle="--", alpha = 0.5)
 
-# Show plot
 plt.show()
+
+
