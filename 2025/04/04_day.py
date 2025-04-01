@@ -3,6 +3,11 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# Check if Candara is available
+plt.rcParams["font.family"] = "Candara"
+
+# Check if Candara is available
+plt.rcParams["font.family"] = "Candara"
 
 # Load and clean data
 soccer = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-04-04/soccer21-22.csv')
@@ -35,27 +40,29 @@ ax.hlines(
     goal_comparison["Team"], 
     0, 
     goal_comparison["Goals Scored"], 
-    color = "grey", 
+    color = "#A6ACAD",
     alpha = 0.6
 )
+
 ax.scatter(
     goal_comparison["Goals Scored"], 
     goal_comparison["Team"], 
     color = "#5f899d", 
     label = "Goals Scored", 
-    s = 100,
+    s = 80,
     zorder = 3
 )
 
 # Add text for goals scored
 for i, (team, goals) in enumerate(zip(goal_comparison["Team"], goal_comparison["Goals Scored"])):
     ax.text(
-        goals + 2, 
+        goals + 4, 
         team, 
         str(goals), 
         va = "center", 
         ha = "left", 
-        fontsize = 10, 
+        fontweight = "bold",
+        fontsize = 9, 
         color = "#5f899d"
     )
 
@@ -64,7 +71,7 @@ ax.hlines(
     goal_comparison["Team"], 
     goal_comparison["Goals Conceded"], 
     0, 
-    color = "grey", 
+    color = "#A6ACAD", 
     alpha = 0.6
 )
 
@@ -73,19 +80,20 @@ ax.scatter(
     goal_comparison["Team"], 
     color = "#dc756e", 
     label="Goals Conceded", 
-    s = 100,
+    s = 80,
     zorder = 3
 )
 
 # Add text for goals conceded
 for i, (team, goals) in enumerate(zip(goal_comparison["Team"], goal_comparison["Goals Conceded"])):
     ax.text(
-        goals - 2, 
+        goals - 4, 
         team, 
         str(abs(goals)), 
         va = "center", 
         ha = "right", 
-        fontsize = 10, 
+        fontweight = "bold",
+        fontsize = 9, 
         color = "#dc756e"
     )
 
@@ -102,11 +110,12 @@ ax.set_xlabel("Goals")
 
 # legend
 handles, labels = ax.get_legend_handles_labels()
-ax.legend(handles[::-1], labels[::-1], loc='center left', bbox_to_anchor=(1.02, 0.5), fontsize = 5)  
+ax.legend(handles[::-1], labels[::-1], loc = 'center left', bbox_to_anchor=(1.02, 0.5), fontsize = 8)  
 
 plt.title(
-    "Premier League: Goals Scored vs. Goals Conceded",
+    "Premier League: Goals Conceded vs Goals Scored (Season 2021-2022). ",
     fontsize = 12,
+    fontweight = "bold",
     pad = 35,
     x = 0.5,
     y = 0.99
@@ -114,7 +123,8 @@ plt.title(
 
 # Add the subtitle for clarification
 plt.text(x = 0.5, y = 1.05, 
-        s = "Tracking the Evolution of Data Science Key",
+        s =  "The further a team’s points extend from the center,\n"
+           "the more dominant or vulnerable they were in attack or defense.",
         ha = 'center', 
         va = 'center', 
         fontsize = 10, 
@@ -123,18 +133,24 @@ plt.text(x = 0.5, y = 1.05,
         transform = plt.gca().transAxes
 )
 
+
 # Add a caption to the plot
 plt.text(
     x = 0.98, y = -0.15,  # Adjust x, y to position the
-    s = "Source:  Amazon's annual reports | Graphic: Natasa Anastasiadou",
+    s = "Source:  Premier League Match Data 2021-2022 | Graphic: Natasa Anastasiadou",
     ha = 'center', 
     va = 'center', 
-    fontsize = 6, 
+    fontsize = 6,
+    fontweight = "bold",  
     style = 'italic', 
     color = "#8C8380",
     transform = plt.gca().transAxes
 )
 
+
+
+# Add gridlines only for the x-axis
+ax.grid(axis="x", linestyle="--", alpha=0.2)
 
 
 # Display the plot
