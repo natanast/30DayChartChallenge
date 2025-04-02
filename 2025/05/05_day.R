@@ -10,7 +10,7 @@ library(data.table)
 library(ggplot2)
 library(stringr)
 library(extrafont)
-library(ggtext)
+# library(ggtext)
 library(paletteer)
 
 
