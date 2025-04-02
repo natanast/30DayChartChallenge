@@ -75,6 +75,8 @@ gr = ggplot(df_long, aes(x = year, y = rank, color = album_label, group = album_
     
     scale_x_continuous(breaks = c(2003, 2012, 2020)) +
     
+    scale_y_reverse() +
+    
     labs(
         title = "Evolution of Rolling Stone's album rankings",
         subtitle = "Tracking changes in rankings from 2003 to 2020. Only albums with over <b>200</b> weeks on Billboard are included.",
@@ -100,8 +102,8 @@ gr = ggplot(df_long, aes(x = year, y = rank, color = album_label, group = album_
         panel.grid.major = element_line(linewidth = .35, color = "grey85"),
         panel.grid.minor = element_line(linewidth = .35, color = "grey85", linetype = "dashed"),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 10, t = 5)),
-        plot.subtitle = element_markdown(size = 14, hjust = 0.4, family = "Candara", color = "grey30", margin = margin(b = 20, t = 2)),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 10, t = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.4, family = "Candara", color = "grey30", margin = margin(b = 20, t = 2)),
         plot.caption = element_markdown(margin = margin(t = 20), size = 8, family = "Candara", hjust = 1),
         
         plot.margin = margin(20, 20, 20, 20)
