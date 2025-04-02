@@ -8,12 +8,9 @@ gc()
 
 library(data.table)
 library(ggplot2)
+library(stringr)
 library(ggtext)
 library(extrafont)
-library(ggthemes)
-library(paletteer)
-library(colorspace)
-library(ggrepel)
 
 
 # load data --------
@@ -27,19 +24,24 @@ d = taylor_album_songs[, .(album_name, album_release, track_number, track_name, 
 
 d = d[!is.na(danceability), ]
 
-d = d[order(album_release), ]
+d$album_name <- str_to_title(d$album_name)
+
+
+d$album_name <- factor(d$album_name, levels = unique(d[order(album_release)]$album_name))
+
+# d = d[order(album_release), ]
 
 
 
-col = c(
-    "Metallica - Metallica"                 = "#33608CFF", 
-    "Pearl Jam - Ten"                        = "#9768A5FF", 
-    "Led Zeppelin - Led Zeppelin IV"         = "#E7718AFF", 
-    "Pink Floyd - The Dark Side of the Moon" = "#D78D50", 
-    "Carole King - Tapestry"                 = "#ED7846FF", 
-    "Nirvana - Nevermind"                    = "#D54C45FF", 
-    "The Beatles - Sgt. Pepper's Lonely Hearts Club Band"= "#B81840FF"
-) 
+# col = c(
+#     "Metallica - Metallica"                 = "#33608CFF", 
+#     "Pearl Jam - Ten"                        = "#9768A5FF", 
+#     "Led Zeppelin - Led Zeppelin IV"         = "#E7718AFF", 
+#     "Pink Floyd - The Dark Side of the Moon" = "#D78D50", 
+#     "Carole King - Tapestry"                 = "#ED7846FF", 
+#     "Nirvana - Nevermind"                    = "#D54C45FF", 
+#     "The Beatles - Sgt. Pepper's Lonely Hearts Club Band"= "#B81840FF"
+# ) 
 
 # Plot -----------
 
@@ -88,7 +90,7 @@ gr = ggplot(d, aes(x = album_name, y = track_number, group = album_name)) +
         axis.title.x = element_blank(),
         
         axis.title.y = element_text(size = 10, family = "Candara"),
-        axis.text.x = element_text(size = 10, family = "Candara", angle = 45, vjust = 0.5),
+        axis.text.x = element_text(size = 10, family = "Candara", angle = 45, hjust = 1, vjust = 1),
         axis.text.y = element_text(size = 10, family = "Candara"),
         
         panel.grid.major = element_line(linewidth = .35, color = "grey85"),
@@ -96,7 +98,7 @@ gr = ggplot(d, aes(x = album_name, y = track_number, group = album_name)) +
         
         plot.title = element_markdown(size = 14, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 10, hjust = 0.65, family = "Candara", color = "grey30", margin = margin(t = 5, b = 15)),
-        plot.caption = element_markdown(margin = margin(t = 20), size = 7, family = "Candara", hjust = 1.4),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 7, family = "Candara", hjust = 1.2),
         
         plot.margin = margin(20, 20, 20, 20),
         
@@ -109,6 +111,6 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 8, height = 8, units = "in", dpi = 600
+   width = 9, height = 10, units = "in", dpi = 600
 )
 
