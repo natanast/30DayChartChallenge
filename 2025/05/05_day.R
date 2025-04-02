@@ -8,10 +8,12 @@ gc()
 
 library(data.table)
 library(ggplot2)
-library(stringr)
+library(ggtext)
 library(extrafont)
-# library(ggtext)
+library(ggthemes)
 library(paletteer)
+library(colorspace)
+library(ggrepel)
 
 
 # load data --------
