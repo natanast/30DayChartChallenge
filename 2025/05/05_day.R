@@ -16,33 +16,9 @@ library(paletteer)
 
 # load data --------
 
-london_marathon <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-04-25/london_marathon.csv')
-
+taylor_album_songs <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-10-17/taylor_album_songs.csv')
 
 # data cleaning ------
-
-df <- london_marathon[, .(Year, Starters, Finishers)]
-
-df <- df[!is.na(Starters), ]
-
-df_long <- melt(df, id.vars = "Year", measure.vars = c("Starters", "Finishers"), 
-                variable.name = "Category", value.name = "Runners")
-
-# labels -------
-
-# Labels Preparation
-label_data <- df[, .(Year, Starters)]
-label_data[, id := .I]  # Assign an ID from 1 to N
-
-number_of_bar <- nrow(label_data)
-
-# Calculate angles
-angle <- 90 - 360 * (label_data$id - 0.5) / number_of_bar
-label_data[, angle := ifelse(angle < -90, angle + 180, angle)]
-label_data[, hjust := ifelse(angle < -90, 1, 0)]
-
-label_data$Starters <- ifelse(label_data$Year < 2001, label_data$Starters + 1000, label_data$Starters + 6000)
-
 
 
 # Plot -----------
