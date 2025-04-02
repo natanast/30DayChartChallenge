@@ -60,19 +60,11 @@ ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
     
     # Adjust x-axis limits to start from 1
     # scale_x_continuous(limits = c(1, max(d$track_number) + 2), expand = c(0, 0)) +
-    
-    # geom_text(aes(label = season_text),
-    #           na.rm = TRUE,
-    #           color = "grey50",
-    #           size = 2.5,
-    #           fontface = "bold",
-    #           hjust = 1.75,
-    #           vjust = 0.35) +
-    
+
     labs(
         title = " Danceability & Energy Levels in Taylor Swift’s Albums.",
-        subtitle = "Tracks are ranked by their order in each album, with bubble size representing danceability and color indicating energy levels.",
-        caption = "Source: <b>  {bobsburgersR} R Package</b> | Graphic: <b>Natasa Anastasiadou</b>"
+        subtitle = "Tracks are ranked by their order in each album, with <b>bubble size</b> representing <b>danceability</b> and <b>color</b> indicating <b>energy levels</b>.",
+        caption = "Source: <b>  {taylor} R Package</b> | Graphic: <b>Natasa Anastasiadou</b>"
     ) +
     
     theme(
@@ -83,7 +75,7 @@ ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
         legend.title = element_text(size = 7, face = "bold", family = "Candara", color = "grey30", angle = 90, hjust = .5),
         legend.text = element_text(size = 7, family = "Candara", color = "grey30"),
 
-        # axis.title.y = element_blank(),
+        axis.title.y = element_blank(),
         # axis.title.x = element_blank(),
         # axis.text.x = element_blank(), 
         # axis.text.y = element_blank(), 
@@ -91,11 +83,11 @@ ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
         panel.grid.major = element_line(linewidth = .35, color = "grey85"),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 25, l = 50)),
-        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 10, l = 50)),
-        plot.caption = element_markdown(margin = margin(t = 12), size = 8, family = "Candara", hjust = 1.25),
+        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 15)),
+        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 10)),
+        plot.caption = element_markdown(margin = margin(t = 12), size = 8, family = "Candara", hjust = 1.3),
         
-        plot.margin = margin(6, 6, 6, 6),
+        plot.margin = margin(20, 20, 20, 20),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA)
     )
