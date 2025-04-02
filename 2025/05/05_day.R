@@ -20,8 +20,10 @@ library(ggrepel)
 
 taylor_album_songs <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-10-17/taylor_album_songs.csv')
 
+
 # data cleaning ------
 
+d = taylor_album_songs[, .(album_name, track_name, danceability, energy)]
 
 # Plot -----------
 
