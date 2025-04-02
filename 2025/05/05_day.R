@@ -56,9 +56,6 @@ ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
     
     theme_minimal() +
     
-    # Adjust x-axis limits to start from 1
-    # scale_x_continuous(limits = c(1, max(d$track_number) + 2), expand = c(0, 0)) +
-
     labs(
         title = " Danceability & Energy Levels in Taylor Swift’s Albums.",
         subtitle = "Tracks are ranked by their order in each album, with <b>bubble size</b> representing <b>danceability</b> and <b>color</b> indicating <b>energy levels</b>.",
