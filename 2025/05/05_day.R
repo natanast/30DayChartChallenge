@@ -53,8 +53,6 @@ ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
             
         )
     ) +
-
-    # coord_radial(inner.radius = .2) +
     
     theme_minimal() +
     
