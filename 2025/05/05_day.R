@@ -23,25 +23,29 @@ taylor_album_songs <- fread('https://raw.githubusercontent.com/rfordatascience/t
 
 # data cleaning ------
 
-d = taylor_album_songs[, .(album_name, track_name, danceability, energy)]
+d = taylor_album_songs[, .(album_name, track_number, track_name, danceability, energy)]
 
 # Plot -----------
 
-ggplot(d, aes(x = episode, y = season, group = season)) +
+ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
     
     geom_line(color = "grey65", size = 0.6, alpha = 0.7) +
     
     geom_point(
-        aes(fill = unique_words),
-        size = 3.5,
+        aes(fill = energy, size = danceability),
+        # size = 3.5,
         shape = 21,
         stroke = 0.15,
         alpha = 0.9
     ) +
     
+    scale_size(range = c(1, 6), guide = guide_legend(title = "Danceability")) +  # Adjust the point size range
+    
+    
     scale_fill_stepsn(
-        colors = c("#7d7ca9","#abaad9","#ffffe0","#ff9a92","#b24745"),
-        breaks = c(1000, 1200, 1400),
+        # colors = c("#7d7ca9","#abaad9","#ffffe0","#ff9a92","#b24745"),
+        colors =  c('#2c5769', '#6F99AD', 'grey96', '#ffb5ac', '#b1532a'),
+        # breaks = c(1000, 1200, 1400),
         guide = guide_colorsteps(
             title = "Bubble Color",
             barheight = unit(7, "lines"),
@@ -50,24 +54,24 @@ ggplot(d, aes(x = episode, y = season, group = season)) +
         )
     ) +
 
-    coord_radial(inner.radius = .2) +
+    # coord_radial(inner.radius = .2) +
     
     theme_minimal() +
     
     # Adjust x-axis limits to start from 1
-    scale_x_continuous(limits = c(1, max(d$episode) + 2), expand = c(0, 0)) +
+    # scale_x_continuous(limits = c(1, max(d$track_number) + 2), expand = c(0, 0)) +
     
-    geom_text(aes(label = season_text),
-              na.rm = TRUE,
-              color = "grey50",
-              size = 2.5,
-              fontface = "bold",
-              hjust = 1.75,
-              vjust = 0.35) +
+    # geom_text(aes(label = season_text),
+    #           na.rm = TRUE,
+    #           color = "grey50",
+    #           size = 2.5,
+    #           fontface = "bold",
+    #           hjust = 1.75,
+    #           vjust = 0.35) +
     
     labs(
-        title = "Radial plot of Unique Words per episode across 14 seasons of <span style='color: #b24745;'>Bob's Burgers</span>.",
-        subtitle = "Each bubble represents an <b>Episode</b>. Each circle represents a <b>Season</b>. <br> Episodes with unique words ranging from <b><span style='color: #7d7ca9; font-weight: bold;'>1000 to 1200</span></b> appear more often.",
+        title = " Danceability & Energy Levels in Taylor Swift’s Albums.",
+        subtitle = "Tracks are ranked by their order in each album, with bubble size representing danceability and color indicating energy levels.",
         caption = "Source: <b>  {bobsburgersR} R Package</b> | Graphic: <b>Natasa Anastasiadou</b>"
     ) +
     
@@ -79,10 +83,10 @@ ggplot(d, aes(x = episode, y = season, group = season)) +
         legend.title = element_text(size = 7, face = "bold", family = "Candara", color = "grey30", angle = 90, hjust = .5),
         legend.text = element_text(size = 7, family = "Candara", color = "grey30"),
 
-        axis.title.y = element_blank(),
-        axis.title.x = element_blank(),
-        axis.text.x = element_blank(), 
-        axis.text.y = element_blank(), 
+        # axis.title.y = element_blank(),
+        # axis.title.x = element_blank(),
+        # axis.text.x = element_blank(), 
+        # axis.text.y = element_blank(), 
         
         panel.grid.major = element_line(linewidth = .35, color = "grey85"),
         panel.grid.minor = element_blank(),
@@ -102,5 +106,4 @@ ggsave(
    plot = gr, filename = "Rplot.png",
    width = 8, height = 8, units = "in", dpi = 600
 )
-
 
