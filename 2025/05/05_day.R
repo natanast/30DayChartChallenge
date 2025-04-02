@@ -33,7 +33,6 @@ ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
     
     geom_point(
         aes(fill = energy, size = danceability),
-        # size = 3.5,
         shape = 21,
         stroke = 0.15,
         alpha = 0.9
