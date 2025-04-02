@@ -31,8 +31,6 @@ d = d[!is.na(danceability), ]
 
 gr = ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
     
-    # geom_line(color = "grey75", size = 0.5, alpha = 0.7) +
-    
     geom_point(
         aes(fill = energy, size = danceability),
         shape = 21,
@@ -42,14 +40,13 @@ gr = ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
     
     scale_size(
         range = c(1.5, 5), 
-        guide = guide_legend(title = "Danceability")
+        guide = guide_legend(title = "Danceability"),
+        breaks = c(0.3, 0.6, 0.8)
     ) +  # Adjust the point size range
     
     
     scale_fill_stepsn(
-        # colors = c("#7d7ca9","#abaad9","#ffffe0","#ff9a92","#b24745"),
         colors =  c('#2c5769', '#6F99AD', 'grey96', '#ffb5ac', '#b1532a'),
-        # breaks = c(1000, 1200, 1400),
         guide = guide_colorsteps(
             title = "Energy",
             barheight = unit(7, "lines"),
@@ -77,7 +74,7 @@ gr = ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
 
         axis.title.y = element_blank(),
         
-        axis.title.x = element_blank(),
+        axis.title.x = element_text(size = 10, family = "Candara"),
         axis.text.x = element_text(size = 10, family = "Candara"),
         axis.text.y = element_text(size = 10, family = "Candara"),
         
@@ -86,12 +83,14 @@ gr = ggplot(d, aes(x = track_number, y = album_name, group = album_name)) +
         
         plot.title = element_markdown(size = 14, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 10, hjust = 0.65, family = "Candara", color = "grey30", margin = margin(t = 5, b = 15)),
-        plot.caption = element_markdown(margin = margin(t = 12), size = 8, family = "Candara", hjust = 1.35),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 7, family = "Candara", hjust = 1.4),
         
         plot.margin = margin(20, 20, 20, 20),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA)
     )
+
+gr
 
 # save ---------
 
