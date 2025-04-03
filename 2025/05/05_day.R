@@ -55,7 +55,7 @@ gr = ggplot(d, aes(x = album_name, y = track_number, group = album_name)) +
     ) +  
     
     scale_fill_stepsn(
-        colors =  c('#2c5769', '#6F99AD', 'grey96', '#D78D50', '#b1532a'),
+        colors =  c('#2c5769', '#6F99AD', 'grey96', '#D78D50', '#BC3C29'),
         guide = guide_colorsteps(
             title = "Energy",
             barheight = unit(7, "lines"),
