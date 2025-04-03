@@ -34,6 +34,13 @@ d$album_name <- factor(d$album_name, levels = unique(d[order(album_release)]$alb
 
 gr = ggplot(d, aes(x = album_name, y = track_number, group = album_name)) +
     
+    # geom_hline(
+    #     aes(yintercept = track_number), 
+    #     color = "grey85", 
+    #     linewidth = 0.3, 
+    #     alpha = 0.5
+    # ) +
+    
     geom_point(
         aes(fill = energy, size = danceability),
         shape = 21,
@@ -69,13 +76,13 @@ gr = ggplot(d, aes(x = album_name, y = track_number, group = album_name)) +
     ) +
     
     theme(
-        
+
         legend.position = "right",
         legend.title.position = "left",
         
         legend.title = element_text(size = 8, face = "bold", family = "Candara", color = "grey30", angle = 90, hjust = .5),
         legend.text = element_text(size = 7, family = "Candara", color = "grey30"),
-        
+
         axis.title.x = element_blank(),
         
         axis.title.y = element_text(size = 10, family = "Candara"),
@@ -99,6 +106,7 @@ gr
 # save ---------
 
 ggsave(
-    plot = gr, filename = "Rplot.png",
-    width = 9, height = 11, units = "in", dpi = 600
+   plot = gr, filename = "Rplot.png",
+   width = 9, height = 11, units = "in", dpi = 600
 )
+
