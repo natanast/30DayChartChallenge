@@ -12,17 +12,42 @@ library(stringr)
 library(ggtext)
 library(extrafont)
 
-
 # load data --------
 
-life_expectancy <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy.csv')
+# life_expectancy <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy.csv')
 life_expectancy_different_ages <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy_different_ages.csv')
-life_expectancy_female_male <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy_female_male.csv')
+# life_expectancy_female_male <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy_female_male.csv')
 
 
 # data cleaning ------
 
+# Select a country and year (Example: United Kingdom, 2020)
+country <- "United Kingdom"
+year <- 2020
 
+# Filter dataset for selected country and year
+df <- life_expectancy[Entity == country & Year == year, ]
+
+# Convert wide format to long format
+df_long <- df %>%
+    pivot_longer(cols = starts_with("LifeExpectancy"), 
+                 names_to = "Age_Group", 
+                 values_to = "Life_Expectancy")
+
+# Clean Age_Group column (remove "LifeExpectancy" prefix)
+df_long$Age_Group <- gsub("LifeExpectancy", "Age ", df_long$Age_Group)
+
+# Create a polar area chart (Nightingale-style)
+ggplot(df_long, aes(x = Age_Group, y = Life_Expectancy, fill = Age_Group)) +
+    geom_bar(stat = "identity", width = 1, color = "black") +
+    coord_polar(start = 0) +
+    scale_fill_viridis_d() +  # Use a color gradient
+    theme_minimal() +
+    labs(title = paste("Life Expectancy at Different Ages in", country, year),
+         subtitle = "Inspired by Florence Nightingale's polar area charts",
+         y = "Life Expectancy (Years)",
+         x = NULL) +
+    theme(axis.text.x = element_text(size = 12, face = "bold"))
 
 # Plot -----------
 
