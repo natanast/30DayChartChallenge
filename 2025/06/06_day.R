@@ -219,7 +219,7 @@ gr2 = ggplot(avg_risk_predicted_dt, aes(x = factor(Group), y = Proportion, fill 
         panel.grid.minor = element_line(linewidth = .35, color = "grey80"),
         
         plot.title = element_markdown(size = 18, face = "bold", hjust = -7, family = "Candara", margin = margin(t = 70, b = 5)),
-        plot.subtitle = element_markdown(size = 15, hjust = 1.2, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
+        plot.subtitle = element_markdown(size = 15, hjust = 1.08, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 5), size = 8, family = "Candara", hjust = 1),
         
         plot.margin = margin(6, 6, 6, 6),
