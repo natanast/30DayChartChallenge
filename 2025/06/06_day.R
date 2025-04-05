@@ -232,7 +232,7 @@ gr2
 
 
 
-combined_plot <- gr1 + gr2
+combined_plot <- gr1 + gr2 
 
 
 # save ---------
