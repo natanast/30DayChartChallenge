@@ -11,47 +11,62 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(extrafont)
-library(tidyverse)
+
 
 # load data --------
 
-life_expectancy <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy.csv')
-life_expectancy_different_ages <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy_different_ages.csv')
-life_expectancy_female_male <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-12-05/life_expectancy_female_male.csv')
+patient_risk_profiles <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-10-24/patient_risk_profiles.csv')
 
 
-# data cleaning ------
+# Plot 1 -----------
 
-# Filter dataset for selected country and year
-df <- life_expectancy_different_ages[Entity == "Greece" & Year > 1950, ]
+# data cleaning 
 
+colnames(patient_risk_profiles)
 
-
-# Reshape the dataframe from wide to long format
-df_tidy <- melt(df, 
-                id.vars = c("Entity", "Year"), 
-                measure.vars = c("LifeExpectancy0", "LifeExpectancy45", "LifeExpectancy80"),
-                variable.name = "Number",
-                value.name = "LifeExpectancy")
+df1 = patient_risk_profiles[, .(
+    personId, `Occurrence of Anxiety in prior year`, `Chronic hepatitis in prior year`, `Type 1 diabetes and no prior specific non-T1DM diabetes in prior year`, `Type 2 Diabetes Mellitus (DM), with no type 1 or secondary DM in prior year`, `Any cancer (excl. prostate cancer and benign cancer) in prior year`,
+    `Heart failure in prior year`, `Obesity in prior year`, `Occurrence of Alcoholism in prior year`, `Seizure in prior year`, `Smoking in prior year`, `Opioids in prior year`, `Osteoporosis in prior year`
+)]
 
 
-df_tidy$Number <- factor(df_tidy$Number, 
-                         levels = c("LifeExpectancy80", "LifeExpectancy45", "LifeExpectancy0"))
+colnames(df1) <- str_replace_all(colnames(df1), " in prior year", "")
+
+colnames(df1) <- str_replace_all(colnames(df1), "Type 1 diabetes and no prior specific non-T1DM diabetes", "Type 1 Diabetes")
+colnames(df1) <- str_replace_all(colnames(df1), "Type 2 Diabetes Mellitus \\(DM\\), with no type 1 or secondary DM", "Type 2 Diabetes")
+colnames(df1) <- str_replace_all(colnames(df1), "Any cancer \\(excl. prostate cancer and benign cancer\\)", "Any Cancer")
 
 
-# Filter dataset to keep only years that are the start of a decade (e.g., 1951, 1961, etc.)
-df_tidy <- df_tidy[Year %% 10 == 1, ]
+avg_risk_dt <- data.table()
 
-df_tidy$Year <- df_tidy$Year |> as.character()
+for (col in colnames(df1)[-1]) {  
+    avg_risk <- mean(df1[[col]], na.rm = TRUE)  # Proportion of 1's in the column
+    avg_risk_dt <- rbind(avg_risk_dt, data.table(Group = col, Proportion = avg_risk))
+}
 
 
-custom_colors <- c("LifeExpectancy0" = "#A3C9F1",  # Light Blue
-                   "LifeExpectancy45" = "#F4A300",  # Golden Yellow
-                   "LifeExpectancy80" = "#E1A7D3")  # Light Purple
 
-# Plot -----------
+# Labels Preparation 
 
-gr = ggplot(df_tidy, aes(x = Year, y = LifeExpectancy, fill = Number)) +
+label_data <- avg_risk_dt
+label_data[, id := .I] 
+number_of_bar <- nrow(label_data)
+
+
+label_data[, angle := 90 - 360 * (id - 0.5) / number_of_bar]
+label_data[, angle := ifelse(angle < -90, angle + 180, angle)]
+label_data[, hjust := ifelse(angle < 0, 1, 0)]  
+
+label_data$Proportion <- label_data$Proportion + 0.05
+
+avg_risk_dt$Group <- avg_risk_dt$Group |> factor(levels = unique(avg_risk_dt$Group))
+label_data$Group <- label_data$Group |> factor(levels = unique(label_data$Group))
+label_data$Group <- label_data$Group |> str_wrap(width = 15)
+
+
+# plot -----------
+
+gr1 = ggplot(avg_risk_dt, aes(x = factor(Group), y = Proportion, fill = Group)) +
     
     geom_bar(
         position = "stack", 
@@ -59,35 +74,36 @@ gr = ggplot(df_tidy, aes(x = Year, y = LifeExpectancy, fill = Number)) +
         width = 1, 
         alpha = 0.9, 
         color = "black",
-        linewidth = 0.25
+        linewidth = 0.25,
+        fill = "#ACD4EC"
     ) +
     
-    coord_polar(start = 0) +
+    coord_polar(start = 0) + 
     
-    scale_fill_manual(values = custom_colors) +
-    
+    geom_text(data = label_data, aes(x = id, y = Proportion, label = Group, angle = angle),
+              color = "black", fontface = "bold", alpha = 0.6, size = 3, inherit.aes = FALSE,
+              family = "Candara") +
+
 
     theme_minimal() +
-
-    labs(
-        title = "Life Expectancy in Greece by Age Group",
-        subtitle = "Data for Decade Start Years (e.g., 1951, 1961, etc.)",
-        caption = "Source: <b>  {taylor} R Package</b> | Graphic: <b>Natasa Anastasiadou</b>",
-        y = "Track number"
-    ) +
+    
+    # labs(title = "Circular Barplot of Proportions of Conditions",
+    #      subtitle = "Proportion of individuals with each condition (binary 0/1)",
+    #      x = "Group",
+    #      y = "Proportion of 1's") +
+    
 
     theme(
 
-        legend.position = "right",
+        legend.position = "none",
         legend.title.position = "left",
 
-        legend.title = element_text(size = 8, face = "bold", family = "Candara", color = "grey30", angle = 90, hjust = .5),
-        legend.text = element_text(size = 7, family = "Candara", color = "grey30"),
+        legend.title = element_blank(),
 
         axis.title.x = element_blank(),
 
         axis.title.y = element_blank(),
-        axis.text.x = element_text(size = 10, family = "Candara", hjust = 1, vjust = 1),
+        axis.text.x = element_blank(),
         axis.text.y = element_blank(),
 
         panel.grid.major = element_blank(),
@@ -102,12 +118,127 @@ gr = ggplot(df_tidy, aes(x = Year, y = LifeExpectancy, fill = Number)) +
         plot.background = element_rect(fill = "#e4e4e3", color = NA)
     )
 
-gr
+gr1
+
+
+# Plot 2 -----------
+
+
+# data clean 
+
+index <- c("personId", colnames(patient_risk_profiles)[87:ncol(patient_risk_profiles)])
+
+df2 <- patient_risk_profiles[, ..index]
+
+
+# colnames ----
+
+# Update the column names for predicted variables
+colnames(df2) <- str_replace_all(colnames(df2), "predicted risk of ", "")
+
+# Clean up the column names by removing text inside parentheses (including the parentheses)
+colnames(df2)[-1] <- str_replace(colnames(df2)[-1], "\\(.*\\)", "")
+
+# Clean up the column names by keeping only the first part before a comma or additional text
+colnames(df2)[-1] <- str_replace(colnames(df2)[-1], ",.*", "")
+
+
+
+# Calculate the proportions -----
+
+avg_risk_predicted_dt <- data.table()
+
+for (col in colnames(df2)[-1]) {  
+    avg_risk <- mean(df2[[col]], na.rm = TRUE)  # Proportion of 1's in the column
+    avg_risk_predicted_dt <- rbind(avg_risk_predicted_dt, data.table(Group = col, Proportion = avg_risk))
+}
+
+
+avg_risk_predicted_dt$Proportion <- round(avg_risk_predicted_dt$Proportion, 4)
+
+
+# Labels Preparation for predicted values
+label_data_predicted <- avg_risk_predicted_dt
+label_data_predicted[, id := .I] 
+
+number_of_bar_predicted <- nrow(label_data_predicted)
+
+# Calculate angles for label positions
+label_data_predicted[, angle := 90 - 360 * (id - 0.5) / number_of_bar_predicted]
+label_data_predicted[, angle := ifelse(angle < -90, angle + 180, angle)]
+label_data_predicted[, hjust := ifelse(angle < 0, 1, 0)]  
+
+label_data_predicted$Proportion <- ifelse(label_data_predicted$Group %in% c("Migraine", "Dementia", "Ulcerative colitis"),
+                                          label_data_predicted$Proportion + 0.0065,
+                                          label_data_predicted$Proportion + 0.012)
+
+
+avg_risk_predicted_dt$Group <- avg_risk_predicted_dt$Group |> factor(levels = unique(avg_risk_predicted_dt$Group))
+label_data_predicted$Group <- label_data_predicted$Group |> factor(levels = unique(label_data_predicted$Group))
+# label_data_predicted$Group <- label_data_predicted$Group |> str_wrap(width = 15)
+
+# Plot -----------
+
+gr2 = ggplot(avg_risk_predicted_dt, aes(x = factor(Group), y = Proportion, fill = Group)) +
+    geom_bar(
+        position = "stack", 
+        stat = "identity", 
+        width = 1, 
+        alpha = 0.9, 
+        color = "black",
+        linewidth = 0.25,
+        fill = "#ACD4EC"  # Set the fill color to #ACD4EC
+    ) +
+    
+    coord_polar(start = 0) + 
+    
+    geom_text(data = label_data_predicted, aes(x = id, y = Proportion, label = Group, angle = angle),
+              color = "black", fontface = "bold", alpha = 0.6, size = 2.4, inherit.aes = FALSE, 
+              family = "Candara") +  # Set the font family to Candara
+    
+    theme_minimal() +
+    
+    labs(title = "Risk Distribution Across Conditions: Observed vs Predicted",
+         subtitle = "A visualization of the average risk proportions for various medical conditions based on <b>observed data (left)</b> and <b>model-predicted outcomes(right)</b>.",
+         caption = "Source: <b> Patient Risk Profiles Data</b> | Graphic: <b>Natasa Anastasiadou</b>"
+         ) +
+    
+    theme(
+        legend.position = "none",
+        legend.title.position = "left",
+        
+        legend.title = element_blank(),
+        
+        axis.title.x = element_blank(),
+        
+        axis.title.y = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_line(linewidth = .35, color = "grey80"),
+        
+        plot.title = element_markdown(size = 18, face = "bold", hjust = -7, family = "Candara", margin = margin(t = 70, b = 5)),
+        plot.subtitle = element_markdown(size = 15, hjust = 1.2, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 5), size = 8, family = "Candara", hjust = 1),
+        
+        plot.margin = margin(6, 6, 6, 6),
+        
+        plot.background = element_rect(fill = "#e4e4e3", color = NA)
+    )
+
+
+gr2
+
+
+
+combined_plot <- gr1 + gr2
+
 
 # save ---------
 
 ggsave(
-   plot = gr, filename = "Rplot.png",
-   width = 9, height = 9, units = "in", dpi = 600
+   plot = combined_plot, filename = "Rplot.png",
+   width = 14, height = 13, units = "in", dpi = 600
 )
 
