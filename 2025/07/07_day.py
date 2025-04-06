@@ -2,8 +2,8 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import joypy
-import seaborn as
+import seaborn as sns
+import plotnine as gg
 
 
 # Load data --------
@@ -25,117 +25,66 @@ stats = ['attack', 'defense', 'speed']
 selected_types = ['fire', 'water', 'grass', 'electric']
 col = ['#78C850', '#C03028', '#6890F0', '#f4cd2c']
 
+col = ['#f4cd2c', '#C03028', '#78C850', '#6890F0']
+
 
 df = pokemon_df[['pokemon', 'type_1'] + stats]
 df = df[df['type_1'].isin(selected_types)].dropna()
 
-# Long format
-df_long = df.melt(
-    id_vars=['pokemon', 'type_1'],
-    value_vars=stats,
-    var_name='stat',
-    value_name='value'
+
+# Reshape the data for a long-format dataframe to plot with ggplot
+df_long = df.melt(id_vars=['pokemon', 'type_1'], value_vars=stats, var_name='stat', value_name='value')
+
+g = (
+    gg.ggplot(df_long)
+
+    + gg.aes(x = "stat", y = "value", fill = "type_1")
+
+    + gg.geom_violin(size = 0.8, alpha = 0.6, show_legend = False, trim=False)
+
+    + gg.geom_jitter(size=2, width=0.1, height=0, alpha=0.8, color='black', show_legend=False)  # Jittered points
+
+    + gg.facet_wrap('~type_1')
+
+    + gg.scale_fill_manual(values=col)
+
+    + gg.theme_minimal()
+
+    + gg.labs(
+        title = "Distribution of Pokémon Stats by Type",
+        subtitle = "The distribution of Pokémon stats for selected types.",
+        caption = "Source: Pokémon Data | Graphic: Natasa Anastasiadou"
+    )
+
+    + gg.theme(
+
+        legend_position= "none", 
+        axis_title = gg.element_blank(),
+
+        axis_text_x = gg.element_text(margin={'t': 40, 'units': 'pt'}, family="Candara"),
+        axis_text_y = gg.element_text(margin={'r': 40, 'units': 'pt'}, family="Candara"),
+
+        plot_title = gg.element_text(size = 10, color = 'black', weight = 'bold', hjust = 0.5, family="Candara"),
+        plot_subtitle = gg.element_text(size= 8, color = 'black', hjust = 0.5, family="Candara"),
+        plot_caption =  gg.element_text(size= 5, color = 'black', hjust = 1, family="Candara"),
+
+        plot_background=gg.element_rect(fill='white', color='white'),
+        panel_background=gg.element_rect(fill='white', color='white'),
+
+        panel_grid_major_y = gg.element_line(color='#e5e5e5', alpha=0.9, size=0.75),
+        panel_grid_major_x = gg.element_line(color='#e5e5e5', alpha=0.9, size=0.75),
+        panel_border = gg.element_rect(color='#e5e5e5', alpha = 0.7, size = 0.5),
+
+        axis_ticks = gg.element_line(color='#e5e5e5', alpha = 0.7),
+
+        figure_size=(8, 4.5)
+    ) 
 )
 
-# Create FacetGrid
-g = sns.FacetGrid(
-    df_long,
-    col='type_1',
-    col_order=selected_types,
-    sharey=True,
-    height=4,
-    aspect=0.8
-)
+g
 
-# Loop over axes and draw violin + points manually
-for ax, t, c in zip(g.axes.flat, selected_types, col):
-    subset = df_long[df_long['type_1'] == t]
-    
-    sns.violinplot(
-        data =subset,
-        x = 'stat',
-        y = 'value',
-        inner = None,
-        linewidth = 0.8,
-        edgecolor = 'black',
-        bw = 0.3,
-        color = c,
-        ax = ax, 
-        alpha = 0.4
-    )
-    
-    sns.stripplot(
-        data = subset,
-        x = 'stat',
-        y = 'value',
-        color = c,
-        size = 5,
-        jitter = .15,
-        alpha = 0.9,
-        ax = ax,
-        edgecolor = 'white',  # This sets the edgecolor to white
-        linewidth = 0.25        # This controls the thickness of the edge
-    
-    )
-    
-    ax.set_title(t.capitalize())
-    ax.set_xlabel("")
-    ax.set_ylabel("")
+g.draw()
 
-# Final layout
-plt.suptitle("Distribution of Pokémon Stats by Type", fontsize=16)
-plt.tight_layout()
-plt.show()
+# Save the plot with custom size and resolution
+gg.ggsave(g, "day_05.png", width=10, height=6, dpi=300)
 
-
-
-
-
-# plt.title(
-    # "Premier League: Goals Conceded vs Goals Scored (Season 2021-2022). ",
-    # fontsize = 12,
-    # fontweight = "bold",
-    # pad = 35,
-    # x = 0.5,
-    # y = 0.99
-# )
-# 
-Add the subtitle for clarification
-# plt.text(x = 0.5, y = 1.05, 
-        # s =  "The further a team’s points extend from the center,\n"
-        #    "the more dominant or vulnerable they were in attack or defense.",
-        # ha = 'center', 
-        # va = 'center', 
-        # fontsize = 10, 
-        # style = 'italic', 
-        # color = "#8C8380",
-        # transform = plt.gca().transAxes
-# )
-# 
-# 
-Add a caption to the plot
-# plt.text(
-    # x = 0.98, y = -0.15,  # Adjust x, y to position the
-    # s = "Source:  Premier League Match Data 2021-2022 | Graphic: Natasa Anastasiadou",
-    # ha = 'center', 
-    # va = 'center', 
-    # fontsize = 6,
-    # fontweight = "bold",  
-    # style = 'italic', 
-    # color = "#8C8380",
-    # transform = plt.gca().transAxes
-# )
-# 
-# 
-# 
-Add gridlines only for the x-axis
-# ax.grid(axis="x", linestyle="--", alpha=0.2)
-# 
-# 
-Display the plot
-# plt.tight_layout()
-# plt.show()
-# 
-# 
-# plt.savefig("plot.png", dpi = 600, bbox_inches='tight')
-# 
