@@ -23,9 +23,6 @@ office_ratings$season <- office_ratings$season |> as.character()
 
 # Plot 1 -----------
 
-colors =  c('#2c5769', '#6F99AD', 'grey96', '#ffb5ac', '#a33a3a')
-colors = c('#2c5769', '#507a8d', '#76a0b2', '#9cc6d8', '#b2dded', '#d08078', '#c26962', '#b3524e', '#a33a3a')
-
 colors = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 9)
 
 # Season-wise IMDb ratings
