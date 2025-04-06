@@ -81,7 +81,7 @@ gr1 = ggplot(avg_risk_dt, aes(x = factor(Group), y = Proportion, fill = Group)) 
     coord_polar(start = 0) + 
     
     geom_text(data = label_data, aes(x = id, y = Proportion, label = Group, angle = angle),
-              color = "black", fontface = "bold", alpha = 0.6, size = 3, inherit.aes = FALSE,
+              color = "black", fontface = "bold", alpha = 0.6, size = 2.3, inherit.aes = FALSE,
               family = "Candara") +
 
 
@@ -193,7 +193,7 @@ gr2 = ggplot(avg_risk_predicted_dt, aes(x = factor(Group), y = Proportion, fill 
     coord_polar(start = 0) + 
     
     geom_text(data = label_data_predicted, aes(x = id, y = Proportion, label = Group, angle = angle),
-              color = "black", fontface = "bold", alpha = 0.6, size = 2.4, inherit.aes = FALSE, 
+              color = "black", fontface = "bold", alpha = 0.6, size = 1.7, inherit.aes = FALSE, 
               family = "Candara") +  # Set the font family to Candara
     
     theme_minimal() +
@@ -218,9 +218,9 @@ gr2 = ggplot(avg_risk_predicted_dt, aes(x = factor(Group), y = Proportion, fill 
         panel.grid.major = element_blank(),
         panel.grid.minor = element_line(linewidth = .35, color = "grey80"),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = -7, family = "Candara", margin = margin(t = 70, b = 5)),
-        plot.subtitle = element_markdown(size = 15, hjust = 1.08, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 5), size = 8, family = "Candara", hjust = 1),
+        plot.title = element_markdown(size = 12, face = "bold", hjust = -4, family = "Candara", margin = margin(t = 70, b = 5)),
+        plot.subtitle = element_markdown(size = 9, hjust = 1.4, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 5), size = 6, family = "Candara", hjust = 1),
         
         plot.margin = margin(6, 6, 6, 6),
         
@@ -231,7 +231,7 @@ gr2 = ggplot(avg_risk_predicted_dt, aes(x = factor(Group), y = Proportion, fill 
 gr2
 
 
-
+library(patchwork)
 combined_plot <- gr1 + gr2 
 
 
@@ -239,6 +239,6 @@ combined_plot <- gr1 + gr2
 
 ggsave(
    plot = combined_plot, filename = "Rplot.png",
-   width = 14, height = 13, units = "in", dpi = 600
+   width = 10, height = 8, units = "in", dpi = 600
 )
 
