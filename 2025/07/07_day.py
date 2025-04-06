@@ -16,15 +16,10 @@ pokemon_df = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 # font family
 plt.rcParams["font.family"] = "Candara"
 
-pokemon_df.columns
-
-
-
 # Select relevant columns
 stats = ['attack', 'defense', 'speed']
 selected_types = ['fire', 'water', 'grass', 'electric']
-# col = ['#78C850', '#C03028', '#6890F0', '#f4cd2c']
-# 
+
 col = ['#f4cd2c', '#C03028', '#78C850', '#6890F0']
 
 
@@ -36,11 +31,13 @@ df = df[df['type_1'].isin(selected_types)].dropna()
 df['type_1'] = df['type_1'].str.capitalize()  # Capitalize first letter of type_1
 
 
-
 # Reshape the data for a long-format dataframe to plot with ggplot
 df_long = df.melt(id_vars=['pokemon', 'type_1'], value_vars=stats, var_name='stat', value_name='value')
 
 df_long['stat'] = df_long['stat'].str.capitalize()
+
+
+# plot --------
 
 g = (
     gg.ggplot(df_long)
@@ -86,12 +83,11 @@ g = (
         axis_ticks = gg.element_line(color='#e5e5e5', alpha = 0.7),
 
         figure_size=(8, 4.5)
+
     ) 
 )
 
 g
-
-
 
 # Save the plot with custom size and resolution
 gg.ggsave(g, "day_05.png", width=10, height=6, dpi=300)
