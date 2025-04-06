@@ -10,10 +10,56 @@ pokemon_df = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 
 
 # clean data ------
+pokemon_df.columns
+
+
+df = pokemon_df[[
+    'pokemon', 'type_1', 'attack', 'defense', 'special_attack', 'special_defense', 'speed'
+]]
+
+
+# Drop NAs in type_1 or attack
+df = df[['pokemon', 'type_1', 'attack', 'defense', 'special_attack', 'special_defense', 'speed']].dropna()
+
+# Reshape it to long format
+df_long = df.melt(
+    id_vars=['pokemon', 'type_1'],
+    value_vars=['attack', 'defense', 'special_attack', 'special_defense', 'speed'],
+    var_name='stat',
+    value_name='value'
+)
 
 
 
+# Optional: filter to top types if you want
+top_types = df['type_1'].value_counts().nlargest(6).index
+df_long = df_long[df_long['type_1'].isin(top_types)]
 
+
+col_list = pokemon_df['color_1'].unique().tolist()
+
+col = ['#78C850', '#C03028', '#6890F0', '#F8D030', '#705898']
+
+
+# Create ridge plot
+plt.figure(figsize=(10, 6))
+
+joypy.joyplot(
+    data = df_long,
+    by = 'stat',
+    column = 'value',
+    colormap = plt.cm.viridis,
+    kind = 'kde',
+    linewidth = 0.5,
+    overlap = 3,
+    alpha = 0.85,
+    color = col
+)
+
+plt.title("Distribution of Pokémon Stats")
+plt.xlabel("Stat Value")
+plt.tight_layout()
+plt.show()
 
 
 # font family
