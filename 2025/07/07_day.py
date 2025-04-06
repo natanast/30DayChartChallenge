@@ -29,15 +29,7 @@ df_long = df.melt(
     value_name='value'
 )
 
-
-
-# Optional: filter to top types if you want
-top_types = df['type_1'].value_counts().nlargest(6).index
-df_long = df_long[df_long['type_1'].isin(top_types)]
-
-
-col_list = pokemon_df['color_1'].unique().tolist()
-
+# colors
 col = ['#78C850', '#C03028', '#6890F0', '#F8D030', '#705898']
 
 
