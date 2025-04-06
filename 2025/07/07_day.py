@@ -3,6 +3,8 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import joypy
+import seaborn as
+
 
 # Load data --------
 
@@ -10,60 +12,86 @@ pokemon_df = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidy
 
 
 # clean data ------
-pokemon_df.columns
-
-
-df = pokemon_df[[
-    'pokemon', 'type_1', 'attack', 'defense', 'special_attack', 'special_defense', 'speed'
-]]
-
-
-# Drop NAs in type_1 or attack
-df = df[['pokemon', 'type_1', 'attack', 'defense', 'special_attack', 'special_defense', 'speed']].dropna()
-
-# Reshape it to long format
-df_long = df.melt(
-    id_vars=['pokemon', 'type_1'],
-    value_vars=['attack', 'defense', 'special_attack', 'special_defense', 'speed'],
-    var_name='stat',
-    value_name='value'
-)
-
-# colors
-col = ['#78C850', '#C03028', '#6890F0', '#F8D030', '#705898']
-
-
-# Create ridge plot
-plt.figure(figsize=(10, 6))
-
-joypy.joyplot(
-    data = df_long,
-    by = 'stat',
-    column = 'value',
-    colormap = plt.cm.viridis,
-    kind = 'kde',
-    linewidth = 0.5,
-    overlap = 3,
-    alpha = 0.85,
-    color = col
-)
-
-
-
-plt.title("Distribution of Pokémon Stats")
-plt.xlabel("Stat Value")
-plt.tight_layout()
-plt.show()
-
 
 # font family
 plt.rcParams["font.family"] = "Candara"
 
+pokemon_df.columns
 
-Plot
-# fig, ax = plt.subplots(figsize=(10, 6))
-# 
-Lollipops for goals scored
+
+
+# Select relevant columns
+stats = ['attack', 'defense', 'speed']
+selected_types = ['fire', 'water', 'grass', 'electric']
+col = ['#78C850', '#C03028', '#6890F0', '#f4cd2c']
+
+
+df = pokemon_df[['pokemon', 'type_1'] + stats]
+df = df[df['type_1'].isin(selected_types)].dropna()
+
+# Long format
+df_long = df.melt(
+    id_vars=['pokemon', 'type_1'],
+    value_vars=stats,
+    var_name='stat',
+    value_name='value'
+)
+
+# Create FacetGrid
+g = sns.FacetGrid(
+    df_long,
+    col='type_1',
+    col_order=selected_types,
+    sharey=True,
+    height=4,
+    aspect=0.8
+)
+
+# Loop over axes and draw violin + points manually
+for ax, t, c in zip(g.axes.flat, selected_types, col):
+    subset = df_long[df_long['type_1'] == t]
+    
+    sns.violinplot(
+        data =subset,
+        x = 'stat',
+        y = 'value',
+        inner = None,
+        linewidth = 0.8,
+        edgecolor = 'black',
+        bw = 0.3,
+        color = c,
+        ax = ax, 
+        alpha = 0.4
+    )
+    
+    sns.stripplot(
+        data = subset,
+        x = 'stat',
+        y = 'value',
+        color = c,
+        size = 5,
+        jitter = .15,
+        alpha = 0.9,
+        ax = ax,
+        edgecolor = 'white',  # This sets the edgecolor to white
+        linewidth = 0.25        # This controls the thickness of the edge
+    
+    )
+    
+    ax.set_title(t.capitalize())
+    ax.set_xlabel("")
+    ax.set_ylabel("")
+
+# Final layout
+plt.suptitle("Distribution of Pokémon Stats by Type", fontsize=16)
+plt.tight_layout()
+plt.show()
+
+
+
+
+
+
 # ax.hlines(
     # goal_comparison["Team"], 
     # 0, 
