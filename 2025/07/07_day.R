@@ -77,7 +77,7 @@ gr <- ggplot() +
     
     labs(
         title = "The Office: IMDb Ratings Across Seasons",
-        subtitle = "Rating distribution per season. Outliers (above 9.5 or below and equal 7) are labeled.",
+        subtitle = "Rating distribution per season. Outliers (above 9.5 or below and equal 7) are bigger and labeled.",
         caption = "Source: <b>The Office ratings</b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Season",
         y = "IMDb Rating"
