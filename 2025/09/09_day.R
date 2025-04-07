@@ -15,28 +15,51 @@ library(extrafont)
 
 # load data --------
 
-tornados <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-05-16/tornados.csv')
+ratings  <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2022/2022-01-25/ratings.csv')
+# details <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2022/2022-01-25/details.csv')
+
 
 
 # Plot 1 -----------
-# Create the histogram
-ggplot(tornados, aes(x = yr)) +
-    geom_histogram(binwidth = 1, fill = "steelblue", color = "black", alpha = 0.7) +
-    labs(title = "Tornado Frequency by Year",
-         x = "Year",
-         y = "Number of Tornadoes") +
+
+
+# Filter for D&D-themed games (Assuming you have a 'category' column or similar to filter D&D games)
+df_dnd <- ratings %>% 
+    filter(grepl("D&D|Dungeons & Dragons", name, ignore.case = TRUE))  # adjust according to the actual column name
+
+# Calculate the rating deviation
+avg_rating <- mean(df_dnd$average, na.rm = TRUE)
+df_dnd <- df_dnd %>% 
+    mutate(rating_dev = average - avg_rating)
+
+# Reshape the data back to long format
+df_long <- df_dnd %>%
+    select(name, rating_dev) %>%
+    pivot_longer(cols = -name, names_to = "game_name", values_to = "rating_dev")
+
+# Check the reshaped data
+head(df_long)
+
+
+
+# lollipop plot
+ggplot(df_dnd, aes(x = reorder(name, rating_dev), y = rating_dev, color = rating_dev)) +
+    geom_segment(aes(xend = name, yend = 0), size = 1) +  # Draw line from zero to rating
+    geom_point(size = 4) +  # Dot at the end of the line
+    scale_color_gradient2(midpoint = 0, low = "red", high = "green", mid = "white") +
+    labs(
+        title = "Diverging Lollipop Chart of D&D Board Game Rating Deviations",
+        x = "Board Game",
+        y = "Rating Deviation"
+    ) +
     theme_minimal() +
-    scale_x_continuous(breaks = seq(1950, 2022, by = 5)) # Adjust x-axis to show ev
+    theme(
+        axis.text.x = element_text(angle = 45, hjust = 1, family="Candara", size = 10),
+        plot.title = element_text(size = 14, color = 'black', hjust = 0.5, family="Candara"),
+        plot.background = element_rect(fill='white'),
+        panel.background = element_rect(fill='white')
+    )
 
-
-# Create the histogram
-ggplot(tornados, aes(x = mo)) +
-    geom_histogram(stat = "count", fill = "steelblue", color = "black", alpha = 0.7) +
-    labs(title = "Tornado Frequency by Month",
-         x = "Month",
-         y = "Number of Tornadoes") +
-    scale_x_continuous(breaks = 1:12, labels = c("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")) +
-    theme_minimal()
 
 
 # plot -----------
