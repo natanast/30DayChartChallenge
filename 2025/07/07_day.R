@@ -59,12 +59,11 @@ gr <- ggplot() +
     geom_label(
         data = outliers,
         aes(x = season, y = imdb_rating, label = paste0("Ep. ", episode)),
-        # position = position_jitter(width = 0.25, height = 0),
         family = "Candara",
         size = 3.5,
-        label.size = 0.2,     # border thickness
+        label.size = 0.2,    
         label.padding = unit(0.15, "lines"),
-        label.r = unit(0.15, "lines"),  # border radius
+        label.r = unit(0.15, "lines"),  
         color = "grey35",
         hjust = -0.4,
         alpha = 0.15
