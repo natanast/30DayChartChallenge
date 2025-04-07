@@ -68,13 +68,16 @@ g = (
         
         strip_text = element_text(size = 8, family='Candara'),
         
-        panel_grid_major = element_line(color = '#e5e5e5', alpha = 0.9, size = 0.75),
+        panel_grid_major = element_line(color = '#e5e5e5', alpha = 0.75, size = 0.65, linetype = "dashed"),
+        # panel_grid_major = element_blank(),
+        panel_grid_minor = element_blank(),
+
         panel_border = element_rect(color = '#e5e5e5', alpha = 0.7, size = 0.5, fill = None),
         
         plot_background = element_rect(fill = 'white', color = 'white'),
         panel_background = element_rect(fill = 'white', color = 'white'),
         
-        axis_ticks = element_line(color = '#e5e5e5', alpha = 0.7),
+        axis_ticks= element_blank(),
         
         figure_size = (10, 6)
     )
@@ -83,5 +86,5 @@ g = (
 g
 
 # Save the plot with custom size and resolution
-gg.ggsave(g, "07_day.png", width=10, height=6, dpi=300)
+ggsave(g, "08_day.png", width = 10, height = 6, dpi = 600)
 
