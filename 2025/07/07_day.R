@@ -20,20 +20,17 @@ library(tidyverse)
 office_ratings <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-03-17/office_ratings.csv')
 
 
+# clean data -----
+
 office_ratings$season <- office_ratings$season |> as.character()
 
 
-
 # outliers 
-
 outliers <- office_ratings[imdb_rating > 9.5 | imdb_rating <= 7]
-
-
 office_ratings_clean <- office_ratings[!(imdb_rating > 9.5 | imdb_rating <= 7)]
 
-
-
 colors = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 9)
+
 
 # Plot 1 -----------
 
@@ -58,19 +55,7 @@ gr <- ggplot() +
         aes(x = season, y = imdb_rating, fill = season),
         shape = 21, size = 4.5, stroke = 0.25, color = "white"
     ) +
-    # 
-    # geom_text(
-    #     data = outliers,
-    #     aes(x = season, y = imdb_rating, label = paste0("Ep. ", episode)),
-    #     # position = position_jitter(width = 0.25, height = 0),
-    #     family = "Candara",
-    #     size = 3.5,
-    #     hjust = -0.4,
-    #     vjust = 0.4,
-    #     check_overlap = TRUE
-    # ) +
-    # 
-    
+
     geom_label(
         data = outliers,
         aes(x = season, y = imdb_rating, label = paste0("Ep. ", episode)),
