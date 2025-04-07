@@ -12,6 +12,7 @@ library(stringr)
 library(ggtext)
 library(extrafont)
 library(paletteer)
+library(tidyverse)
 
 
 # load data --------
@@ -19,71 +20,88 @@ library(paletteer)
 office_ratings <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-03-17/office_ratings.csv')
 
 
+# clean data -----
+
 office_ratings$season <- office_ratings$season |> as.character()
 
-# Plot 1 -----------
+
+# outliers 
+outliers <- office_ratings[imdb_rating > 9.5 | imdb_rating <= 7]
+office_ratings_clean <- office_ratings[!(imdb_rating > 9.5 | imdb_rating <= 7)]
 
 colors = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 9)
 
-# Season-wise IMDb ratings
-gr = office_ratings |>
-    
-    ggplot(aes(x = factor(season), y = imdb_rating)) +
+
+# Plot 1 -----------
+
+gr <- ggplot() +
     
     geom_boxplot(
-        aes(fill = season),
+        data = office_ratings_clean,
+        aes(x = season, y = imdb_rating, fill = season),
         position = position_dodge(width = .5),
         width = .35, outlier.shape = NA, alpha = 0.45, linewidth = 0.2
     ) +
     
     geom_point(
-        aes(fill = season),
+        data = office_ratings_clean,
+        aes(x = season, y = imdb_rating, fill = season),
         position = position_jitterdodge(jitter.width = .25, dodge.width = .5),
-        shape = 21, size = 3, stroke = .15, color = "white"
+        shape = 21, size = 2.5, stroke = .15, color = "white"
+    ) +
+    
+    geom_point(
+        data = outliers,
+        aes(x = season, y = imdb_rating, fill = season),
+        shape = 21, size = 4.5, stroke = 0.25, color = "white"
+    ) +
+
+    geom_label(
+        data = outliers,
+        aes(x = season, y = imdb_rating, label = paste0("Ep. ", episode)),
+        family = "Candara",
+        size = 3.5,
+        label.size = 0.2,    
+        label.padding = unit(0.15, "lines"),
+        label.r = unit(0.15, "lines"),  
+        color = "grey35",
+        hjust = -0.4,
+        alpha = 0.15
     ) +
     
     scale_fill_manual(values = colors) +
-
+    
     scale_color_manual(values = colors) +
     
     theme_minimal() +
     
     labs(
-        title = "IMDb Ratings by Season for 'The Office",
-        subtitle = "Proportion of individuals with each condition (binary 0/1)",
-        caption = "Source: <b>  Long Beach Animal Shelter Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        title = "The Office: IMDb Ratings Across Seasons",
+        subtitle = "Rating distribution per season. Outliers (above 9.5 or below and equal 7) are bigger and labeled.",
+        caption = "Source: <b>The Office ratings</b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Season",
         y = "IMDb Rating"
-         ) +
-
-
-        theme(
-
-            legend.position = "none",
-            legend.title.position = "left",
-
-            legend.title = element_blank(),
-
-            # axis.title.x = element_blank(),
-
-            # axis.title.y = element_blank(),
-            # axis.text.x = element_blank(),
-            # axis.text.y = element_blank(),
-
-            panel.grid.major = element_line(linewidth = .35, color = "grey80", linetype = "dashed"),
-            panel.grid.minor = element_line(linewidth = .35, color = "grey80", linetype = "dashed"),
-
-            plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 15, b = 5)),
-            plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
-            plot.caption = element_markdown(margin = margin(t = 5), size = 8, family = "Candara", hjust = 1),
-
-            plot.margin = margin(20, 20, 20, 20),
-
-            plot.background = element_rect(fill = "#e4e4e3", color = NA)
-        )
-
-
-
+    ) +
+    
+    theme(
+        legend.position = "none",
+        
+        axis.title.x = element_text(size = 10, family = "Candara"),
+        axis.title.y = element_text(size = 10, family = "Candara"),
+        axis.text.x = element_text(size = 10, family = "Candara"),
+        axis.text.y = element_text(size = 10, family = "Candara"),
+        
+        panel.grid.major = element_line(linewidth = .35, color = "grey80", linetype = "dashed"),
+        panel.grid.minor = element_line(linewidth = .35, color = "grey80", linetype = "dashed"),
+        
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 8, family = "Candara", hjust = 1),
+        
+        plot.margin = margin(20, 20, 20, 20),
+        
+        plot.background = element_rect(fill = "#e4e4e3", color = NA)
+    )
 
 gr
 
