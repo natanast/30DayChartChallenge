@@ -64,16 +64,10 @@ gr = df |>
     
     geom_segment(aes(xend = name, yend = 0, color = rating_dev), size = 0.7) +
     
-    # geom_point(size = 4, stroke = .15) +
-    
     geom_point(
-        # data = office_ratings_clean,
-        # aes(x = season, y = imdb_rating, fill = season),
-        # position = position_jitterdodge(jitter.width = .25, dodge.width = .5),
-        shape = 21, size = 4, stroke = 0.05, color = "white"
+        shape = 21, size = 4, stroke = 0.15, color = "white"
     ) +
     
-    # Adjust color palette for diverging colors
     scale_color_gradientn(
         colors = col,
         limits = c(min(df$rating_dev), max(df$rating_dev)),
@@ -103,22 +97,24 @@ gr = df |>
         legend.position = "none",
         
         axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 11, family = "Candara"),
         
         axis.text.y = element_text(size = 10, family = "Candara"),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5, size = 6, family = "Candara"),
+        axis.text.x = element_text(size = 9, angle = 90, hjust = 1, vjust = 1, family = "Candara"),
         
-        plot.title = element_markdown(size = 16, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 5, b = 30)),
+        plot.title = element_markdown(size = 14, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 5, b = 20)),
         plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 5), size = 8, family = "Candara", hjust = 1.25),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
 
-        panel.grid.major = element_line(linewidth = .15, color = "grey80", linetype = "dashed"),
-        panel.grid.minor = element_line(linewidth = .15, color = "grey80", linetype = "dashed"),
+        panel.grid.major = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
         
         plot.margin = margin(20, 20, 20, 20),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA)
         
     )
+
 
 gr
 
@@ -127,6 +123,6 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 10, height = 8, units = "in", dpi = 600
+   width = 10, height = 9.5, units = "in", dpi = 600
 )
 
