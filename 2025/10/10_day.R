@@ -28,7 +28,7 @@ olympics <- tt$athletes
 
 # Filter: remove NAs and select top sports with enough weight data
 top_sports <- olympics %>%
-    filter(!is.na(weight)) %>%
+    filter(!is.na(height)) %>%
     count(sport, sort = TRUE) %>%
     top_n(10, n) %>%
     pull(sport)
@@ -53,6 +53,10 @@ ggplot(olympics_filtered, aes(x = weight, y = fct_rev(fct_infreq(sport)), fill =
         plot.subtitle = element_text(size = 11),
         axis.title.y = element_blank()
     )
+
+
+
+
 
 
 # # plot ---------
