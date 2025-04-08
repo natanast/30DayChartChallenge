@@ -83,8 +83,8 @@ gr = df |>
     ) +
 
     labs(
-        title = "Diverging Lollipop Chart of D&D Board Game Rating Deviations",
-        subtitle = "",
+        title = "Ratings of Dungeons & Dragons Board Games",
+        subtitle = "A chart showing how each D&D-themed board game's average rating deviates from the overall D&D average.",
         caption = "Source: <b> Board Games Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Board Game",
         y = "Rating Deviation"
@@ -100,10 +100,10 @@ gr = df |>
         axis.title.y = element_text(size = 11, family = "Candara"),
         
         axis.text.y = element_text(size = 10, family = "Candara"),
-        axis.text.x = element_text(size = 9, angle = 90, hjust = 1, vjust = 1, family = "Candara"),
+        axis.text.x = element_text(size = 9, angle = 90, hjust = 1, vjust = 0.5, family = "Candara"),
         
-        plot.title = element_markdown(size = 14, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 5, b = 20)),
-        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
+        plot.title = element_markdown(size = 17, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.5, family = "Candara", color = "grey40", margin = margin(t = 5, b = 20)),
         plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
 
         panel.grid.major = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
