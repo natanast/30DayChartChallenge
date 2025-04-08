@@ -50,31 +50,48 @@ df_long <- melt(
 
 library(paletteer)
 
-col = c('#60608b', '#9291be', '#b9b8e5', '#fcc1ad', '#e7877d', '#c15451')
-
-col = c('#0e4051', '#2c5769', '#598396', '#93bdd2', '#facbc7', '#fdb5ae', '#c15451', '#9a2f34')
 
 col = c('#003344', '#0e4051', '#1d4d5e', '#2c5a6c', '#3b677a', '#4a7588', '#598396', '#6791a5', '#76a0b3', '#84aec3', '#93bdd2', '#a2cde2', '#bddae9', '#d9e8ef', '#f5f5f5', '#f8e0de', '#facbc7', '#fdb5ae', '#faa098', '#ed8f89', '#e17e79', '#d46e69', '#c85d59', '#b94d4b', '#aa3e40', '#9a2f34', '#8a2028', '#79101b', '#67000e')
 
-col = c('#0e4051', '#598396', '#facbc7', '#9a2f34')
+
+col = c('#1d4d5e', '#4D6291', '#9A68A4', '#DD708E', '#E56946', '#e17e79', '#b94d4b', '#8a2028')
+
+
+col = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 30)
 
 gr = df |>
-    ggplot(aes(x = reorder(name, rating_dev), y = rating_dev, color = rating_dev)) +
+    ggplot(aes(x = reorder(name, rating_dev), y = rating_dev, fill = rating_dev)) +
     
-    geom_segment(aes(xend = name, yend = 0), size = 0.5) +
+    geom_segment(aes(xend = name, yend = 0, color = rating_dev), size = 0.7) +
     
-    geom_point(size = 4) +
+    # geom_point(size = 4, stroke = .15) +
+    
+    geom_point(
+        # data = office_ratings_clean,
+        # aes(x = season, y = imdb_rating, fill = season),
+        # position = position_jitterdodge(jitter.width = .25, dodge.width = .5),
+        shape = 21, size = 4, stroke = 0.05, color = "white"
+    ) +
     
     # Adjust color palette for diverging colors
     scale_color_gradientn(
-        colors = col, 
-        limits = c(min(df$rating_dev), max(df$rating_dev)), 
+        colors = col,
+        limits = c(min(df$rating_dev), max(df$rating_dev)),
         values = scales::rescale(c(min(df$rating_dev), 0, max(df$rating_dev))), # Rescale to ensure zero is the midpoint
         breaks = c(min(df$rating_dev), 0, max(df$rating_dev))
     ) +
     
+    scale_fill_gradientn(
+        colors = col,
+        limits = c(min(df$rating_dev), max(df$rating_dev)),
+        values = scales::rescale(c(min(df$rating_dev), 0, max(df$rating_dev))), # Rescale to ensure zero is the midpoint
+        breaks = c(min(df$rating_dev), 0, max(df$rating_dev))
+    ) +
+
     labs(
         title = "Diverging Lollipop Chart of D&D Board Game Rating Deviations",
+        subtitle = "",
+        caption = "",
         x = "Board Game",
         y = "Rating Deviation"
     ) +
@@ -87,19 +104,19 @@ gr = df |>
         
         axis.title.x = element_blank(),
         
-        axis.text.y = element_text(size = 12, family = "Candara", color = "#e4e4e3"),
-        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5, size = 8, family = "Candara", color = "#e4e4e3"),
+        axis.text.y = element_text(size = 10, family = "Candara"),
+        axis.text.x = element_text(angle = 90, hjust = 1, vjust = .5, size = 6, family = "Candara"),
         
-        plot.title = element_markdown(size = 16, face = "bold", color = "#e4e4e3", hjust = 0.5, family = "Candara", margin = margin(t = 5, b = 30)),
-        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "#e4e4e3", margin = margin(t = 5, b = 25)),
+        plot.title = element_markdown(size = 16, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 5, b = 30)),
+        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 5), size = 8, family = "Candara", hjust = 1.25),
 
-        panel.grid.major = element_line(linewidth = .15, color = "grey70"),
-        panel.grid.minor = element_line(linewidth = .15, color = "grey70"),
+        panel.grid.major = element_line(linewidth = .15, color = "grey80", linetype = "dashed"),
+        panel.grid.minor = element_line(linewidth = .15, color = "grey80", linetype = "dashed"),
         
         plot.margin = margin(20, 20, 20, 20),
         
-        plot.background = element_rect(fill = "grey60", color = NA)
+        plot.background = element_rect(fill = "#e4e4e3", color = NA)
         
     )
 
