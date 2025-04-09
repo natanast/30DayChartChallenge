@@ -18,11 +18,10 @@ library(ggridges)
 
 olympics <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-07-27/olympics.csv')
 
+
 # data cleaning -----------
 
 df <- olympics[!is.na(height), ]
-
-# df <- df[, sport_count := .N, by = sport]
 
 
 # Define your selected sports
@@ -35,9 +34,7 @@ popular_sports <- c("Basketball", "Football", "Handball",
 
 df <- df[sport %in% popular_sports]
 
-# df[, sport := factor(sport, levels = sort(unique(sport), decreasing = TRUE))]
 
-# Modify the sex column to replace "M" with "Male" and "F" with "Female"
 df$sex <- factor(df$sex, levels = c("F", "M"), labels = c("Female", "Male"))
 
 
@@ -53,7 +50,7 @@ df$sport <- factor(df$sport, levels = ordered_sports)
 
 col = c('#565781', '#6f6e9a', '#8887b4', '#a2a0cf', '#bcbaea', '#d8d7f5', '#f9d2c6', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
 
-# Apply transparency (alpha = 0.7) to the color palette
+
 col_alpha <- adjustcolor(col, alpha.f = 0.9)
 
 
@@ -90,12 +87,13 @@ gr = ggplot(df, aes(x = height, y = sport, fill = sport)) +
 
         
         axis.title.y = element_blank(),
+        axis.text = element_text(size = 11),
 
         plot.margin = margin(20, 20, 20, 20),
 
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         
-        panel.spacing = unit(1.5, "cm"),
+        panel.spacing = unit(1, "cm"),
         
         strip.text = element_text(size = 12, face = "bold", color = "grey30", hjust = 0.5, margin = margin(b = 10))
         
@@ -104,11 +102,12 @@ gr = ggplot(df, aes(x = height, y = sport, fill = sport)) +
     facet_wrap(~sex) 
     
 
+gr
 
 # save ---------
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 10, height = 9.5, units = "in", dpi = 600
+   width = 10, height = 10, units = "in", dpi = 600
 )
 
