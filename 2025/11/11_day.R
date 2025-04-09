@@ -12,6 +12,11 @@ library(stringr)
 library(ggtext)
 library(extrafont)
 
+library(ComplexHeatmap)
+library(ggplotify)
+library(ggplot2)
+library(circlize)
+
 
 # load data --------
 #2023-07-11
@@ -25,58 +30,50 @@ df <- global_temps[1:145, 1:13]
 
 df <- df[Year >= 1990, ]
 
+# Convert month columns to numeric
+df[, 2:13] <- lapply(df[, 2:13], function(x) as.numeric(as.character(x)))
 
-rownames(df) <- df$Year |> as.character()
 
-df$Year <- NULL
+# Melt the data into long format for ggplot
+long_data <- melt(df, id.vars = "Year", variable.name = "Month", value.name = "Temperature Anomaly")
+
+
+col = c("#00429d", "#73a2c6", "#ffffe0", "#ff9a92", "#b24745")
 
 # plot --------
 
-
-gr = ggplot(df, aes(x = height, y = sport, fill = sport)) +
+gr <- ggplot(long_data, aes(x = Year, y = Month, fill = `Temperature Anomaly`)) +
     
-    geom_density_ridges_gradient(scale = 2, rel_min_height = 0.01, gradient_lwd = 0.05, lwd = 0.05) +
+    geom_tile(linewidth = .15, color = "grey20") +
     
-    scale_fill_manual(values = col_alpha) +
+    scale_fill_gradientn(colors = col) +
     
+    theme_minimal() +
     
     labs(
-        title = "Distribution of Athlete Heights Across Popular Olympic Sports",
-        subtitle = "Separate distributions for female and male athletes reveal body type diversity",
-        caption = "Source: <b> Olympic Games Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
-        x = "Height (cm)",
-        y = "Sport"
+        title = "Global Temperature Anomalies",
+        subtitle = "Monthly Temperature Anomalies from 1990 to 2024",
+        caption = "Source: <b> NOAA Global Temperature Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        y = "Year"
     ) +
-    
-    theme_minimal(base_family = "Candara") +
     
     theme(
+        legend.position = "right",
+        legend.title.position = "left",
+        legend.title = element_text(size = 10, face = "bold", family = "Candara", color = "grey30", angle = 90, hjust = .5),
+        legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
         
-        legend.position = "none", 
+        axis.text.x = element_text(size = 12, family = "Candara", angle = 90, hjust = 1, vjust = .25, margin = margin(t = 2)),
+        axis.text.y = element_text(size = 12, family = "Candara", hjust = 1, vjust = .25, margin = margin(l = 5, r = 5)),
         
-        plot.title = element_markdown(size = 17, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
-        plot.subtitle = element_markdown(size = 13, hjust = 0.5, family = "Candara", color = "grey40", margin = margin(t = 5, b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
-
-        panel.grid.major = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
-        panel.grid.minor = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
-
+        plot.title = element_markdown(size = 20, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 5)),
+        plot.subtitle = element_markdown(size = 16, hjust = 0.45, family = "Candara", color = "grey30", margin = margin(b = 15, t = 5)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 10, family = "Candara", hjust = 1.35),
         
-        axis.title.y = element_blank(),
-        axis.text = element_text(size = 11),
-
         plot.margin = margin(20, 20, 20, 20),
+        plot.background = element_rect(fill = "grey93", color = NA)
+    )
 
-        plot.background = element_rect(fill = "#e4e4e3", color = NA),
-        
-        panel.spacing = unit(1, "cm"),
-        
-        strip.text = element_text(size = 12, face = "bold", color = "grey30", hjust = 0.5, margin = margin(b = 10))
-        
-    ) +
-    
-    facet_wrap(~sex) 
-    
 
 gr
 
