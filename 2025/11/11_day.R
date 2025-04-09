@@ -11,47 +11,24 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(extrafont)
-library(ggridges)
 
 
 # load data --------
+#2023-07-11
 
-olympics <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-07-27/olympics.csv')
+global_temps <- fread("GLB.Ts+dSST.csv")
 
 
 # data cleaning -----------
 
-df <- olympics[!is.na(height), ]
+df <- global_temps[1:145, 1:13]
+
+df <- df[Year >= 1990, ]
 
 
-# Define your selected sports
-popular_sports <- c("Basketball", "Football", "Handball", 
-                    "Cycling", "Volleyball", "Tennis", 
-                    "Diving", "Gymnastics", "Swimming",
-                    "Taekwondo", "Weightlifting","Wrestling" )
+rownames(df) <- df$Year |> as.character()
 
-
-
-df <- df[sport %in% popular_sports]
-
-
-df$sex <- factor(df$sex, levels = c("F", "M"), labels = c("Female", "Male"))
-
-
-# Calculate the average height for each sport
-avg_height <- tapply(df$height, df$sport, mean)
-
-# Order the sports based on the average height (descending order)
-ordered_sports <- names(sort(avg_height, decreasing = FALSE))
-
-
-df$sport <- factor(df$sport, levels = ordered_sports)
-
-
-# colors 
-col = c('#565781', '#6f6e9a', '#8887b4', '#a2a0cf', '#bcbaea', '#d8d7f5', '#f9d2c6', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
-col_alpha <- adjustcolor(col, alpha.f = 0.9)
-
+df$Year <- NULL
 
 # plot --------
 
