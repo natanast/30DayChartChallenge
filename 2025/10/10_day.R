@@ -54,22 +54,23 @@ df$sport <- factor(df$sport, levels = ordered_sports)
 col = c('#565781', '#6f6e9a', '#8887b4', '#a2a0cf', '#bcbaea', '#d8d7f5', '#f9d2c6', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
 
 # Apply transparency (alpha = 0.7) to the color palette
-col_alpha <- adjustcolor(col, alpha.f = 0.85)
+col_alpha <- adjustcolor(col, alpha.f = 0.9)
 
 
 # plot --------
 
 
-ggplot(df, aes(x = height, y = sport, fill = sport)) +
+gr = ggplot(df, aes(x = height, y = sport, fill = sport)) +
     
-    geom_density_ridges_gradient(scale = 2, rel_min_height = 0.01, gradient_lwd = 1) +
+    geom_density_ridges_gradient(scale = 2, rel_min_height = 0.01, gradient_lwd = 0.05, lwd = 0.05) +
     
     scale_fill_manual(values = col_alpha) +
     
     
     labs(
-        title = "Distribution of Athlete Heights Across Sports",
-        subtitle = "Separate distributions for male and female athletes reveal body type diversity",
+        title = "Distribution of Athlete Heights Across Popular Olympic Sports",
+        subtitle = "Separate distributions for female and male athletes reveal body type diversity",
+        caption = "Source: <b> Olympic Games Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Height (cm)",
         y = "Sport"
     ) +
@@ -102,68 +103,6 @@ ggplot(df, aes(x = height, y = sport, fill = sport)) +
     
     facet_wrap(~sex) 
     
-
-
-
-# # plot ---------
-# 
-# 
-# gr = df |>
-#     ggplot(aes(x = reorder(name, rating_dev), y = rating_dev, fill = rating_dev)) +
-#     
-#     geom_segment(aes(xend = name, yend = 0, color = rating_dev), size = 0.7) +
-#     
-#     geom_point(
-#         shape = 21, size = 4, stroke = 0.15, color = "white"
-#     ) +
-#     
-#     scale_color_gradientn(
-#         colors = col,
-#         limits = c(min(df$rating_dev), max(df$rating_dev)),
-#         values = scales::rescale(c(min(df$rating_dev), 0, max(df$rating_dev))), # Rescale to ensure zero is the midpoint
-#         breaks = c(min(df$rating_dev), 0, max(df$rating_dev))
-#     ) +
-#     
-#     scale_fill_gradientn(
-#         colors = col,
-#         limits = c(min(df$rating_dev), max(df$rating_dev)),
-#         values = scales::rescale(c(min(df$rating_dev), 0, max(df$rating_dev))), # Rescale to ensure zero is the midpoint
-#         breaks = c(min(df$rating_dev), 0, max(df$rating_dev))
-#     ) +
-# 
-#     labs(
-#         title = "Ratings of Dungeons & Dragons Board Games",
-#         subtitle = "A chart showing how each D&D-themed board game's average rating deviates from the overall D&D average.",
-#         caption = "Source: <b> Board Games Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
-#         x = "Board Game",
-#         y = "Rating Deviation"
-#     ) +
-#     
-#     theme_minimal() +
-#     
-#     theme(
-#         
-#         legend.position = "none",
-#         
-#         axis.title.x = element_blank(),
-#         axis.title.y = element_text(size = 11, family = "Candara"),
-#         
-#         axis.text.y = element_text(size = 10, family = "Candara"),
-#         axis.text.x = element_text(size = 9, angle = 90, hjust = 1, vjust = 0.5, family = "Candara"),
-#         
-#         plot.title = element_markdown(size = 17, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
-#         plot.subtitle = element_markdown(size = 13, hjust = 0.5, family = "Candara", color = "grey40", margin = margin(t = 5, b = 20)),
-#         plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
-# 
-#         panel.grid.major = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
-#         panel.grid.minor = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
-#         
-#         plot.margin = margin(20, 20, 20, 20),
-#         
-#         plot.background = element_rect(fill = "#e4e4e3", color = NA)
-#         
-#     )
-# 
 
 
 # save ---------
