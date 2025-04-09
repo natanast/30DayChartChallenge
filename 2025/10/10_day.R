@@ -11,6 +11,7 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(extrafont)
+library(ggridges)
 
 
 # load data --------
@@ -18,44 +19,89 @@ library(extrafont)
 olympics <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2021/2021-07-27/olympics.csv')
 
 # data cleaning -----------
-library(tidyverse)
-library(ggridges)
-library(tidytuesdayR)
 
-# Load the dataset
-tt <- tt_load('2021-07-27')
-olympics <- tt$athletes
+df <- olympics[!is.na(height), ]
 
-# Filter: remove NAs and select top sports with enough weight data
-top_sports <- olympics %>%
-    filter(!is.na(height)) %>%
-    count(sport, sort = TRUE) %>%
-    top_n(10, n) %>%
-    pull(sport)
+# df <- df[, sport_count := .N, by = sport]
 
-# Filter main data
-olympics_filtered <- olympics %>%
-    filter(!is.na(weight), sport %in% top_sports)
 
-# Ridgeline plot
-ggplot(olympics_filtered, aes(x = weight, y = fct_rev(fct_infreq(sport)), fill = stat(x))) +
-    geom_density_ridges_gradient(scale = 2, rel_min_height = 0.01, gradient_lwd = 0.4) +
-    scale_fill_viridis_c(option = "C") +
+# Define your selected sports
+popular_sports <- c("Basketball", "Football", "Handball", 
+                    "Cycling", "Volleyball", "Tennis", 
+                    "Diving", "Gymnastics", "Swimming",
+                    "Taekwondo", "Weightlifting","Wrestling" )
+
+
+
+df <- df[sport %in% popular_sports]
+
+# df[, sport := factor(sport, levels = sort(unique(sport), decreasing = TRUE))]
+
+# Modify the sex column to replace "M" with "Male" and "F" with "Female"
+df$sex <- factor(df$sex, levels = c("F", "M"), labels = c("Female", "Male"))
+
+
+# Calculate the average height for each sport
+avg_height <- tapply(df$height, df$sport, mean)
+
+# Order the sports based on the average height (descending order)
+ordered_sports <- names(sort(avg_height, decreasing = FALSE))
+
+
+df$sport <- factor(df$sport, levels = ordered_sports)
+
+
+col = c('#565781', '#6f6e9a', '#8887b4', '#a2a0cf', '#bcbaea', '#d8d7f5', '#f9d2c6', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
+
+# Apply transparency (alpha = 0.7) to the color palette
+col_alpha <- adjustcolor(col, alpha.f = 0.85)
+
+
+# plot --------
+
+
+ggplot(df, aes(x = height, y = sport, fill = sport)) +
+    
+    geom_density_ridges_gradient(scale = 2, rel_min_height = 0.01, gradient_lwd = 1) +
+    
+    scale_fill_manual(values = col_alpha) +
+    
+    
     labs(
-        title = "Distribution of Athlete Weights Across Sports",
-        subtitle = "Multimodal distributions reflect different body types across Olympic disciplines",
-        x = "Weight (kg)",
+        title = "Distribution of Athlete Heights Across Sports",
+        subtitle = "Separate distributions for male and female athletes reveal body type diversity",
+        x = "Height (cm)",
         y = "Sport"
     ) +
+    
     theme_minimal(base_family = "Candara") +
+    
     theme(
-        plot.title = element_text(size = 16, face = "bold"),
-        plot.subtitle = element_text(size = 11),
-        axis.title.y = element_blank()
-    )
+        
+        legend.position = "none", 
+        
+        plot.title = element_markdown(size = 17, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.5, family = "Candara", color = "grey40", margin = margin(t = 5, b = 20)),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
 
+        panel.grid.major = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_line(linewidth = .25, color = "grey75", linetype = "dashed", lineend = "round"),
 
+        
+        axis.title.y = element_blank(),
 
+        plot.margin = margin(20, 20, 20, 20),
+
+        plot.background = element_rect(fill = "#e4e4e3", color = NA),
+        
+        panel.spacing = unit(1.5, "cm"),
+        
+        strip.text = element_text(size = 12, face = "bold", color = "grey30", hjust = 0.5, margin = margin(b = 10))
+        
+    ) +
+    
+    facet_wrap(~sex) 
+    
 
 
 
