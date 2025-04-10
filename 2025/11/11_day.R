@@ -46,7 +46,14 @@ gr <- ggplot(long_data, aes(x = Year, y = Month, fill = `Temperature Anomaly`)) 
     
     geom_tile(linewidth = .25, color = "grey20") +
     
-    scale_fill_gradientn(colors = col) +
+    scale_fill_gradientn(
+        colors = col,
+        guide = guide_colorbar(
+            barwidth = unit(5, "cm"),  # Make it thinner (adjust as needed)
+            barheight = unit(0.3, "cm")    # Adjust height if you want too
+        ),
+        name = "Temperatures Changes"
+    ) +
     
     # scale_fill_stepsn(
     #     colors =  col,
@@ -64,24 +71,24 @@ gr <- ggplot(long_data, aes(x = Year, y = Month, fill = `Temperature Anomaly`)) 
     theme_minimal() +
     
     labs(
-        title = "Global surface temperatures Changes",
-        subtitle = "Monthly Temperature Changes from 1990 to 2024",
+        title = "Global surface temperatures changes",
+        subtitle = "Monthly temperature changes from 1990 to 2024",
         caption = "Source: <b> NOAA Global Temperature Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "",
         x = ""
     ) +
     
     theme(
-        legend.position = "right",
-        legend.title.position = "left",
-        legend.title = element_text(size = 10, face = "bold", family = "Candara", color = "grey30", angle = 90, hjust = .5),
+        legend.position = "bottom",
+        legend.title.position = "top",
+        legend.title = element_text(size = 10, face = "bold", family = "Candara", color = "grey30", hjust = .5),
         legend.text = element_text(size = 8, family = "Candara", color = "grey30"),
         
         axis.text.x = element_text(size = 12, family = "Candara", angle = 90, hjust = 1, vjust = .25, margin = margin(t = 2)),
         axis.text.y = element_text(size = 12, family = "Candara", hjust = 1, vjust = .25, margin = margin(l = 5, r = 5)),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 5)),
-        plot.subtitle = element_markdown(size = 14, hjust = 0.45, family = "Candara", color = "grey30", margin = margin(b = 15, t = 5)),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.45, family = "Candara", color = "grey30", margin = margin(b = 15, t = 5)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 8, family = "Candara", hjust = 1.35),
         
         plot.margin = margin(20, 20, 20, 20),
