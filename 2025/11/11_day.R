@@ -44,17 +44,31 @@ col = c("#00429d", "#73a2c6", "#ffffe0", "#ff9a92", "#b24745")
 
 gr <- ggplot(long_data, aes(x = Year, y = Month, fill = `Temperature Anomaly`)) +
     
-    geom_tile(linewidth = .15, color = "grey20") +
+    geom_tile(linewidth = .25, color = "grey20") +
     
     scale_fill_gradientn(colors = col) +
+    
+    # scale_fill_stepsn(
+    #     colors =  col,
+    #     breaks = c(-2, -1, 0, 1, 2), 
+    #     # transform = "log10",  
+    #     labels = scales::comma,
+    #     # name = "No. of Animals",
+    #     na.value = "grey96",
+    #     guide = guide_colorsteps(
+    #         barheight = unit(8, "lines"), 
+    #         barwidth = unit(0.25, "lines")
+    #     )  # Centers the title
+    # ) +
     
     theme_minimal() +
     
     labs(
-        title = "Global Temperature Anomalies",
-        subtitle = "Monthly Temperature Anomalies from 1990 to 2024",
+        title = "Global surface temperatures Changes",
+        subtitle = "Monthly Temperature Changes from 1990 to 2024",
         caption = "Source: <b> NOAA Global Temperature Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
-        y = "Year"
+        y = "",
+        x = ""
     ) +
     
     theme(
@@ -66,9 +80,9 @@ gr <- ggplot(long_data, aes(x = Year, y = Month, fill = `Temperature Anomaly`)) 
         axis.text.x = element_text(size = 12, family = "Candara", angle = 90, hjust = 1, vjust = .25, margin = margin(t = 2)),
         axis.text.y = element_text(size = 12, family = "Candara", hjust = 1, vjust = .25, margin = margin(l = 5, r = 5)),
         
-        plot.title = element_markdown(size = 20, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 5)),
-        plot.subtitle = element_markdown(size = 16, hjust = 0.45, family = "Candara", color = "grey30", margin = margin(b = 15, t = 5)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 10, family = "Candara", hjust = 1.35),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.45, family = "Candara", color = "grey30", margin = margin(b = 15, t = 5)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, family = "Candara", hjust = 1.35),
         
         plot.margin = margin(20, 20, 20, 20),
         plot.background = element_rect(fill = "grey93", color = NA)
@@ -81,6 +95,6 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 10, height = 10, units = "in", dpi = 600
+   width = 10, height = 8, units = "in", dpi = 600
 )
 
