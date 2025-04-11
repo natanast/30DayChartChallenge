@@ -150,8 +150,8 @@ plt.text(
 
 
 # Add gridlines only for the x-axis
-ax.grid(axis="x", linestyle="--", alpha=0.2)
-
+ax.grid(axis = "x", linestyle = "--", alpha = 0.2)
+a
 
 # Display the plot
 plt.tight_layout()
