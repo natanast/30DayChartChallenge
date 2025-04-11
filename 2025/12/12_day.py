@@ -17,10 +17,6 @@ plt.rcParams["font.family"] = "Candara"
 col = ['#f4cd2c', '#C03028', '#78C850', '#6890F0']
 
 
-df = pokemon_df[['pokemon', 'type_1'] + stats]
-df = df[df['type_1'].isin(selected_types)].dropna()
-
-
 # Calculate the average obesity percentage across the states
 average_obesity = df['Obesity'].mean()
 
@@ -39,11 +35,11 @@ g = (
 
     + coord_flip()
 
-    + theme_minimal()
+    + theme_minimal(base_family = "Candara")
 
     + theme(
         legend_position = "none",  # No legend
-        axis_text_x = element_text(rotation=90),
+        axis_text_x = element_text(),
         plot_background = element_rect(fill = 'white', color = 'white'),
         panel_background = element_rect(fill = 'white', color = 'white')
     )
