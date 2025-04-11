@@ -39,9 +39,13 @@ g = (
 
     + theme(
         legend_position = "none",  # No legend
-        axis_text_x = element_text(),
+        
+        # axis_text_x = element_text(),
+        
         plot_background = element_rect(fill = 'white', color = 'white'),
-        panel_background = element_rect(fill = 'white', color = 'white')
+        panel_background = element_rect(fill = 'white', color = 'white'),
+
+        figure_size = (10, 6)
     )
 )
 
