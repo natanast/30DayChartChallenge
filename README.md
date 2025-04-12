@@ -5,5 +5,5 @@ This repository contains my contributions to the #30DayChartChallenge, a data vi
 Check out the challenge details on the official [GitHub](https://github.com/30DayChartChallenge/Edition2025) page.
 
 <p align="center">
-<img src="./2025/challenge.png" width="60%">
+<img src="./2025/challenge.png" width="80%">
 </p>
