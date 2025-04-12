@@ -33,6 +33,10 @@ df$Direction <- ifelse(df$diff_from_avg >= 0, "Above", "Below")
 df$NAME <- factor(df$NAME, levels = df$NAME[rev(order(df$diff_from_avg, decreasing = TRUE))])
 
 
+col = c("#73a2c6", "#b24745")
+
+col = c("#00429d", "#b24745")
+
 col <- c("Below" = "#73a2c6", "Above" = "#b24745")
 
 
@@ -54,7 +58,7 @@ gr = df |>
         title = "How Much Each U.S. State's Obesity Rate Differs from the National Average (29.3%)",
         subtitle = "This chart shows the difference in adult obesity rates by state compared to the U.S. average (1990–2022). 
                     <br>States <span style='color:#b24745;'><b>above</b></span> the average are in <span style='color:#b24745;'><b>red</b></span>, 
-                    while those <span style='color:#00429d;'><b>below</b></span> are in <span style='color:#00429d;'><b>blue</b></span></br>.",
+                    while those <span style='color:#00429d;'><b>below</b></span> are in <span style='color:#00429d;'><b>blue</b></span></br>",
         caption = "Source: <b> data.gov</b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "",
         x = ""

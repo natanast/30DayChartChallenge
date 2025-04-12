@@ -5,7 +5,6 @@ import pandas as pd
 from plotnine import *
 
 
-
 # Load data --------
 
 tornados = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-05-16/tornados.csv')
@@ -13,11 +12,7 @@ tornados = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytu
 
 # clean data ------
 
-# plt.rcParams["font.family"] = "Candara"
-
-# Remove rows with missing values in 'inj' or 'fat'
 df_clean = tornados.dropna(subset=['inj', 'fat'])
-
 
 # Calculate median values to draw the lines
 line_1 = 450
@@ -98,18 +93,18 @@ g = (
         panel_background = element_rect(fill = '#e9e9e9', color = '#e9e9e9'),
                 
         figure_size = (10, 6)
-    ) 
+    ) +
 
     #  Add text labels for each quadrant with static text
-    # geom_text(x = line_1 - 350, y = line_2 - 10, label = "Low Injuries, Low Fatalities", color = "#6F99AD", size = 8, fontweight = 'bold') +
-    # geom_text(x = line_1 + 1000, y = line_2 - 5 , label="High Injuries, Low Fatalities", color = "#D78D50", size = 8, fontweight = 'bold') +
-    # geom_text(x = line_1 - 350, y = line_2 + 5, label="Low Injuries, High Fatalities", color = "#BC3C29", size = 8, fontweight = 'bold') +
-    # geom_text(x = line_1 + 1000, y = line_2 + 80, label="High Injuries, High Fatalities", color = "#6f6e9a", size = 8, fontweight='bold')
+    geom_text(x = line_1 - 350, y = line_2 - 5, label = "Low Injuries, Low Fatalities", color = "#6F99AD", size = 9, fontweight = 'bold') +
+    geom_text(x = line_1 + 1000, y = line_2 - 5 , label="High Injuries, Low Fatalities", color = "#D78D50", size = 9, fontweight = 'bold') +
+    geom_text(x = line_1 - 350, y = line_2 + 80, label="Low Injuries, High Fatalities", color = "#BC3C29", size = 9, fontweight = 'bold') +
+    geom_text(x = line_1 + 1000, y = line_2 + 80, label="High Injuries, High Fatalities", color = "#6f6e9a", size = 9, fontweight='bold')
 
 )
 
 g
 
 # Save the plot with custom size and resolution
-ggsave(g, "08_day.png", width = 10, height = 6, dpi = 600)
+ggsave(g, "12_day.png", width = 10, height = 6, dpi = 600)
 
