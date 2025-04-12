@@ -38,6 +38,19 @@ df_clean['quadrant'] = pd.Series([
 ])
 
 
+
+# Create a new column for the formatted label
+df_clean['label'] = df_clean['yr'].apply(lambda x: f"Year {x}")
+
+# Filter the data for high injuries and fatalities categories
+df_clean['label'] = df_clean.apply(
+    lambda row: f"Year {row['yr']}" if (
+        (row['inj'] > line_1 + 500 and row['fat'] > line_2) or  # High Injuries, High Fatalities
+        (row['inj'] > line_1 + 500 and row['fat'] <= line_2)    # High Injuries, Low Fatalities
+    ) else None,
+    axis=1
+)
+
 # plot --------
 
 g = (
@@ -45,43 +58,45 @@ g = (
 
     aes(x = 'inj', y = 'fat', color='quadrant') +
     
-    geom_point(alpha = 0.85, size = 3) +
+    geom_point(alpha = 0.85, size = 3, stroke = 0.15) +
 
-    # Add lines to separate the plot into 4 quadrants
     geom_vline(xintercept = line_1, color = "#7B726F", linetype = "dashed", size = 0.5) + # Vertical line at median injuries
     geom_hline(yintercept = line_2, color = "#7B726F", linetype = "dashed", size = 0.5) + # Horizontal line at median fatalities
 
     scale_color_manual(values={"Bottom-Left": "#6F99AD", "Bottom-Right": "#D78D50", "Top-Left": "#BC3C29", "Top-Right": "#6f6e9a"}) + # Custom colors for each quadrant
     theme_minimal(base_family = "Candara") +
+
+    geom_text(
+            aes(label='label'),  # Use the new 'label' column
+            size=8, 
+            color='black', 
+            nudge_y=5  # Adjust vertical text position
+        ) +
     
     labs(
         title = "Tornado Injuries vs Fatalities: A State-by-State Breakdown",
         subtitle = "Exploring the relationship between the number of injuries and fatalities caused by tornadoes across U.S. states.",
         caption = "Source: Tornado dataset | Graphic: Natasa Anastasiadou",
-        x = 'No of Injuries',
-        y = 'No of Fatalities'
+        x = 'Number of Injuries',
+        y = 'Number of Fatalities'
     ) +
 
     theme(
         legend_position = 'none',
         
-        # axis_text = element_text(family = 'Candara', size = 8),
-        # axis_title = element_text(family = 'Candara', size = 9),
+        axis_text = element_text(family = 'Candara', size = 8),
+        axis_title = element_text(family = 'Candara', size = 10),
  
         plot_title = element_text(size = 12, weight='bold', ha='center'),
         plot_subtitle = element_text(size = 10, ha='center'),
         plot_caption = element_text(size = 7, ha='right'),
-        
-        # strip_text = element_text(size = 8, family='Candara'),
-        
+                
         panel_grid_major = element_line(color = '#c9c9c9', alpha = 0.75, size = 0.65, linetype = "dashed"),
         panel_grid_minor = element_blank(),
         
         plot_background = element_rect(fill = '#e9e9e9', color = '#e9e9e9'),
         panel_background = element_rect(fill = '#e9e9e9', color = '#e9e9e9'),
-        
-        # axis_ticks= element_blank(),
-        
+                
         figure_size = (10, 6)
     ) 
 
