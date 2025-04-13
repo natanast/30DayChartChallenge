@@ -33,10 +33,29 @@ friends <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/
 # plot --------
 
 
-df <- data.frame(id = c(1,2,3,4,5,6), sex = c(1,2,1,2,2,2), dadid = c(0,0,0,0,1,3), momid = c(0,0,0,0,2,4), famid = 1)
+df <- data.frame(
+    id = c(1,2,3,4,5,6), 
+    sex = c(1,2,1,2,2,2), 
+    dadid = c(0,0,0,0,1,3), 
+    momid = c(0,0,0,0,2,4), 
+    famid = 1
+)
+
+
+
 relation1 <- matrix(c(2,3,4,1), nrow = 1)
-foo <- pedigree(id = df$id, dadid = df$dadid, momid = df$momid, sex = df$sex, relation = relation1, famid = df$famid)
+
+foo <- pedigree(
+    id = df$id, 
+    dadid = df$dadid, 
+    momid = df$momid, 
+    sex = df$sex, 
+    relation = relation1, 
+    famid = df$famid
+)
+
 ped <- foo['1']
+
 plot(ped)
 
 
