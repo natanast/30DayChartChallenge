@@ -15,22 +15,11 @@ library(extrafont)
 
 # load data --------
 
-df <- fread("obesity_data.csv")
+friends <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv")
 
 
 # data cleaning -----------
 
-avg_ob <- mean(df$Obesity)
-
-
-df$diff_from_avg <- df$Obesity - avg_ob
-
-
-df$Direction <- ifelse(df$diff_from_avg >= 0, "Above", "Below")
-
-
-# Sort states by diff_from_avg
-df$NAME <- factor(df$NAME, levels = df$NAME[rev(order(df$diff_from_avg, decreasing = TRUE))])
 
 
 col = c("#73a2c6", "#b24745")
@@ -91,6 +80,9 @@ ggsave(
    plot = gr, filename = "Rplot.png",
    width = 10, height = 8, units = "in", dpi = 600
 )
+
+
+
 
 
 
