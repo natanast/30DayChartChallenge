@@ -15,28 +15,33 @@ library(extrafont)
 
 # create data --------
 
-# Extend the people dataframe with Chandler's family
-people <- data.frame(
+people <- data.table(
     name = c("Leonard", "Sandra", "Jill", "Amy", "Rachel", 
-             "Jack", "Judy", "Ross", "Monica", 
-             "Charles", "Nora", "Chandler"),
+             "Jack", "Judy", "Carol", "Monica", 
+             "Charles", "Nora", "Chandler",
+             "Ross", "Ben"),
     x = c(-2, -1, -2, -1, 0, 
           1, 2, 1, 2, 
-          3, 4, 3.5),
+          3, 4, 3.5,
+          0.5, 0.75),
     y = c(2, 2, 1, 1, 1, 
           2, 2, 1, 1, 
-          2, 2, 1)
+          2, 2, 1,
+          1, 0)
 )
 
+
+# Add Emma and Susan
 people <- rbind(
     people,
-    data.frame(name = c("Carol", "Ben"), x = c(0.5, 0.75), y = c(1, 0))
+    data.table(
+        name = c("Susan", "Emma"),
+        x = c(1.5, 0.25),
+        y = c(1, 0)
+    )
 )
 
-
-# plot ---------------
-
-# Plot with Chandler's family added
+# Updated plot with Emma and Susan
 ggplot() +
     geom_point(data = people, aes(x = x, y = y), size = 6) +
     geom_text(data = people, aes(x = x, y = y, label = name), vjust = -1) +
@@ -51,13 +56,13 @@ ggplot() +
     geom_segment(aes(x = 0, xend = 0, y = 1, yend = 1.5)) +
     
     # Ross & Rachel
-    geom_segment(aes(x = 0, xend = 1, y = 1, yend = 1), linetype = "dashed") +
+    geom_segment(aes(x = 0, xend = 1, y = 1, yend = 1)) +
     
     # Gellers
     geom_segment(aes(x = 1, xend = 2, y = 2, yend = 2)) +
     geom_segment(aes(x = 1.5, xend = 1.5, y = 1.5, yend = 2)) +
-    geom_segment(aes(x = 1, xend = 2, y = 1.5, yend = 1.5)) +
-    geom_segment(aes(x = 1, xend = 1, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = 0.5, xend = 2, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = 0.5, xend = 0.5, y = 1, yend = 1.5)) +
     geom_segment(aes(x = 2, xend = 2, y = 1, yend = 1.5)) +
     
     # Bings
@@ -66,18 +71,22 @@ ggplot() +
     geom_segment(aes(x = 2, xend = 3.5, y = 1, yend = 1)) +
     geom_segment(aes(x = 3.5, xend = 3.5, y = 1, yend = 1.5)) +
     
-    # Ross & Carol
+    # Ross & Carol (Ben)
     geom_segment(aes(x = 0.5, xend = 1, y = 1, yend = 1)) +
     geom_segment(aes(x = 0.65, xend = 0.75, y = 0.98, yend = 1.02), linewidth = .8) +
-    geom_segment(aes(x = 0.75, xend = 0.85, y = 0.98, yend = 1.02),linewidth = .8) +
-    
-    
+    geom_segment(aes(x = 0.75, xend = 0.85, y = 0.98, yend = 1.02), linewidth = .8) +
     geom_segment(aes(x = 0.75, xend = 0.75, y = 0, yend = 1)) +
     
-
+    # Ross & Rachel (Emma)
+    geom_segment(aes(x = 0, xend = 0.5, y = 1, yend = 1)) +
+    geom_segment(aes(x = 0.25, xend = 0.25, y = 0, yend = 1)) +
     
+    # Carol & Susan (partnership)
+    geom_segment(aes(x = 1, xend = 1.5, y = 1, yend = 1)) +
     
     theme_minimal()
+
+
 
 # plot -----------
 
@@ -131,5 +140,116 @@ ggsave(
    width = 10, height = 8, units = "in", dpi = 600
 )
 
+
+# clear environment
+rm(list = ls())
+gc()
+
+# load libraries
+library(data.table)
+library(ggplot2)
+library(stringr)
+library(ggtext)
+library(extrafont)
+
+# create data --------
+
+people <- data.table(
+    name = c(
+        "Leonard", "Sandra", "Jill", "Amy", "Rachel", 
+        "Jack", "Judy", "Carol", "Monica", 
+        "Charles", "Nora", "Chandler",
+        "Ross", "Ben", "Susan", "Emma",
+        "Phoebe", "Mike", "Ursula", "Frank Buffay Sr.", "Lily Buffay", 
+        "Triplet 1", "Triplet 2", "Triplet 3",
+        "Frank Jr.", "Alice", "Frank's Jr. Mum"
+        ),
+    x = c(
+        -2, -1, -2, -1, 0,
+         1, 2, 1, 2,
+         3, 4, 3.5,
+         0.5, 0.75, 1.35, 0.25,
+         7, 8, 6, 6, 7, 
+         4.5, 5, 5.5,
+         5.3, 4.5, 5
+    ),
+    y = c(
+        2, 2, 1, 1, 1,
+        2, 2, 1, 1,
+        2, 2, 1,
+        1, 0, 1, 0,
+        1, 1, 1, 2, 2, 
+        0, 0, 0,
+        1, 1, 2
+    )
+)
+
+
+
+
+# plot -----------
+
+ggplot() +
+    geom_point(data = people, aes(x = x, y = y), size = 4) +
+    geom_text(data = people, aes(x = x, y = y, label = name), vjust = -1, size = 3) +
+    
+    # Greens
+    geom_segment(aes(x = -2, xend = -1, y = 2, yend = 2)) +
+    geom_segment(aes(x = -1.5, xend = -1.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = -1.5, xend = -2, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = -1.5, xend = 0, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = -2, xend = -2, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = -1, xend = -1, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = 0, xend = 0, y = 1, yend = 1.5)) +
+    
+    # Ross & Rachel
+    geom_segment(aes(x = 0, xend = 1, y = 1, yend = 1)) +
+    geom_segment(aes(x = 0.25, xend = 0.25, y = 0, yend = 1)) +
+    
+    # Gellers
+    geom_segment(aes(x = 1, xend = 2, y = 2, yend = 2)) +
+    geom_segment(aes(x = 1.5, xend = 1.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = 0.5, xend = 2, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = 0.5, xend = 0.5, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = 2, xend = 2, y = 1, yend = 1.5)) +
+    
+    # Bings
+    geom_segment(aes(x = 3, xend = 4, y = 2, yend = 2)) +
+    geom_segment(aes(x = 3.5, xend = 3.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = 2, xend = 3.5, y = 1, yend = 1)) +
+    geom_segment(aes(x = 3.5, xend = 3.5, y = 1, yend = 1.5)) +
+    
+    # Ross & Carol
+    geom_segment(aes(x = 0.5, xend = 1, y = 1, yend = 1)) +
+    geom_segment(aes(x = 0.65, xend = 0.75, y = 0.98, yend = 1.02), linewidth = .8) +
+    geom_segment(aes(x = 0.75, xend = 0.85, y = 0.98, yend = 1.02),linewidth = .8) +
+    geom_segment(aes(x = 0.75, xend = 0.75, y = 0, yend = 1)) +
+    
+    # Buffays: Frank & Lily -> Phoebe & Ursula
+    geom_segment(aes(x = 6, xend = 7, y = 2, yend = 2)) +  # Frank Sr. + Lily
+    geom_segment(aes(x = 6.5, xend = 6.5, y = 1.5, yend = 2)) +  # Down to children
+    geom_segment(aes(x = 5.3, xend = 7, y = 1.5, yend = 1.5)) +  # Horizontal to connect kids
+    geom_segment(aes(x = 6, xend = 6, y = 1, yend = 1.5)) +  # Ursula
+    geom_segment(aes(x = 7, xend = 7, y = 1, yend = 1.5)) +  # Phoebe
+    geom_segment(aes(x = 5.3, xend = 5.3, y = 1, yend = 1.5)) + 
+    
+    # Phoebe + Mike
+    geom_segment(aes(x = 7, xend = 8, y = 1, yend = 1)) +
+    
+    # Frank Jr + Alice
+    geom_segment(aes(x = 4.5, xend = 5.3, y = 1, yend = 1)) +
+    
+    # triplets
+    geom_segment(aes(x = 5, xend = 5, y = 0.5, yend = 1)) +
+    geom_segment(aes(x = 4.5, xend = 5.5, y = 0.5, yend = 0.5)) +
+    geom_segment(aes(x = 4.5, xend = 4.5, y = 0, yend = 0.5)) +
+    geom_segment(aes(x = 5, xend = 5, y = 0, yend = 0.5)) +
+    geom_segment(aes(x = 5.5, xend = 5.5, y = 0, yend = 0.5)) +
+    
+    # susan carol
+    geom_segment(aes(x = 0.75, xend = 1.35, y = 1, yend = 1)) +
+    
+    
+    theme_minimal()
 
 
