@@ -61,7 +61,7 @@ gr <- ggplot(long_data, aes(x = Year, y = Month, fill = `Temperature Anomaly`)) 
     
     labs(
         title = "Global Surface Temperature Anomalies (°C)",
-        subtitle = "Monthly deviations from the 1951–1980 average, from 1990 to 2024",
+        subtitle = "Monthly deviations from the 1951–1980 average (1990 to 2024)",
         caption = "Source: <b> NOAA Global Temperature Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "",
         x = ""
