@@ -162,7 +162,8 @@ people <- data.table(
         "Ross", "Ben", "Susan", "Emma",
         "Phoebe", "Mike", "Ursula", "Frank Buffay Sr.", "Lily Buffay", 
         "Triplet 1", "Triplet 2", "Triplet 3",
-        "Frank Jr.", "Alice", "Frank's Jr. Mum"
+        "Frank Jr.", "Alice", "Frank's Jr. Mum",
+        "Joey", "Giovanni (Joey) Sr", "Gloria", "Joey's sisters"
         ),
     x = c(
         -2, -1, -2, -1, 0,
@@ -171,7 +172,8 @@ people <- data.table(
          0.5, 0.75, 1.35, 0.25,
          7, 8, 6, 6, 7, 
          4.5, 5, 5.5,
-         5.3, 4.5, 5
+         5.3, 4.5, 5,
+         9, 9, 10, 10
     ),
     y = c(
         2, 2, 1, 1, 1,
@@ -180,9 +182,28 @@ people <- data.table(
         1, 0, 1, 0,
         1, 1, 1, 2, 2, 
         0, 0, 0,
-        1, 1, 2
+        1, 1, 2,
+        1, 2, 2, 1
     )
 )
+
+people[, sex := c(
+    # Greens
+    "M", "F", "F", "F", "F",  
+    # Gellers
+    "M", "F", "F", "F",
+    # Bings
+    "M", "F", "M",
+    # Ross & kids
+    "M", "M", "F", "F",
+    # Phoebe’s side
+    "F", "M", "F", "M", "F",
+    "F", "F", "F",
+    "M", "F", "F",
+    # Tribbianis
+    "M", "M", "F", "F"
+)]
+
 
 
 
@@ -190,7 +211,7 @@ people <- data.table(
 # plot -----------
 
 ggplot() +
-    geom_point(data = people, aes(x = x, y = y), size = 4) +
+    geom_point(data = people, aes(x = x, y = y, color = sex), size = 4) +
     geom_text(data = people, aes(x = x, y = y, label = name), vjust = -1, size = 3) +
     
     # Greens
@@ -249,6 +270,13 @@ ggplot() +
     # susan carol
     geom_segment(aes(x = 0.75, xend = 1.35, y = 1, yend = 1)) +
     
+    #tribianni
+    geom_segment(aes(x = 9, xend = 10, y = 2, yend = 2)) +
+    geom_segment(aes(x = 9.5, xend = 9.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = 9, xend = 9.5, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = 9.5, xend = 10, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = 9, xend = 9, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = 10, xend = 10, y = 1, yend = 1.5)) +
     
     theme_minimal()
 
