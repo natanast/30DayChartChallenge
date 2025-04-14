@@ -124,6 +124,12 @@ people <- data.frame(
           2, 2, 1)
 )
 
+people <- rbind(
+    people,
+    data.frame(name = c("Carol", "Ben"), x = c(0.5, 1), y = c(1, 0))
+)
+
+
 # Plot with Chandler's family added
 ggplot() +
     geom_point(data = people, aes(x = x, y = y), size = 6) +
@@ -151,5 +157,16 @@ ggplot() +
     geom_segment(aes(x = 3.5, xend = 3.5, y = 1.5, yend = 2)) +
     geom_segment(aes(x = 2, xend = 3.5, y = 1, yend = 1)) +
     geom_segment(aes(x = 3.5, xend = 3.5, y = 1, yend = 1.5)) +
+    
+    # Add dashed line for Ross & Carol's past marriage
+    geom_segment(aes(x = 0.5, xend = 1, y = 1, yend = 1)) +
+    
+    # Add vertical line from Ben to the midpoint
+    geom_segment(aes(x = 1, xend = 1, y = 0, yend = 1)) +
+    
+    geom_segment(aes(x = 0.65, xend = 0.75, y = 0.98, yend = 1.02), linewidth = .8) +
+    geom_segment(aes(x = 0.75, xend = 0.85, y = 0.98, yend = 1.02),linewidth = .8) +
+    
+    
     
     theme_minimal()
