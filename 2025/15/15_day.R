@@ -15,82 +15,67 @@ library(extrafont)
 
 # load data --------
 
-df <- fread("obesity_data.csv")
+team_results <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/team-results.csv')
+public_picks <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/public-picks.csv')
 
 
 # data cleaning -----------
 
-avg_ob <- mean(df$Obesity)
+# Sort by PASE in descending order and select the top 5
+top_5_teams <- team_results[order(-PASE)][1:10]
 
-
-df$diff_from_avg <- df$Obesity - avg_ob
-
-
-df$Direction <- ifelse(df$diff_from_avg >= 0, "Above", "Below")
-
-
-# Sort states by diff_from_avg
-df$NAME <- factor(df$NAME, levels = df$NAME[rev(order(df$diff_from_avg, decreasing = TRUE))])
-
-
-col = c("#73a2c6", "#b24745")
-
-col = c("#00429d", "#b24745")
-
-col <- c("Below" = "#73a2c6", "Above" = "#b24745")
-
-
-# plot --------
-
-
-gr = df |>
-    
-    ggplot(aes(y = NAME, x = diff_from_avg, fill = Direction)) + 
-    
-    
-    geom_col(width = 0.7, alpha = 0.9) +
-    
-    geom_vline(xintercept = 0, color = "grey20", linetype = "dashed", size = 0.55) +
-    
-    scale_fill_manual(values = col) +
-    
-    labs(
-        title = "How Much Each U.S. State's Obesity Rate Differs from the National Average (29.3%)",
-        subtitle = "This chart shows the difference in adult obesity rates by state compared to the U.S. average (1990–2022). 
-                    <br>States <span style='color:#b24745;'><b>above</b></span> the average are in <span style='color:#b24745;'><b>red</b></span>, 
-                    while those <span style='color:#00429d;'><b>below</b></span> are in <span style='color:#00429d;'><b>blue</b></span></br>",
-        caption = "Source: <b> data.gov</b> | Graphic: <b>Natasa Anastasiadou</b>",
-        y = "",
-        x = ""
-    ) +
-    
-
-    theme_minimal(base_family = "Candara") +
-    
-    theme(
-        legend.position = "none",  
-        
-        plot.title = element_markdown(size = 14, face = "bold", hjust = .25, margin = margin(b = 5, t = 5)),
-        plot.subtitle = element_markdown(size = 10, hjust = 0.3, color = "grey30", margin = margin(b = 15, t = 5)),
-        plot.caption = element_markdown(size = 8, hjust = 1, margin = margin(t = 10)),
-        
-        panel.grid.major = element_line(linewidth = 0.45, color = "grey80"),
-        panel.grid.minor = element_blank(),
-
-        plot.margin = margin(20, 20, 20, 20),
-        plot.background = element_rect(fill = "grey93", color = NA)
-    )
-
-
-gr
-
-
-# save ---------
-
-ggsave(
-   plot = gr, filename = "Rplot.png",
-   width = 10, height = 8, units = "in", dpi = 600
-)
+# Sort by PASE in ascending order and select the bottom 5
+# bottom_5_teams <- team_results[order(PASE)][1:5]
 
 
 
+library(ggplot2)
+
+# Create the bar plot
+ggplot(top_5_teams, aes(x = TEAM, y = CHAMPPERCENT, fill = TEAM)) +
+    geom_bar(width = 0.5, stat = "identity") +
+    coord_polar(start = 0) +
+    # coord_flip() +  # Flip coordinates to make it horizontal
+    labs(title = "Top 5 and Bottom 5 Teams based on PASE",
+         x = "Team",
+         y = "PASE (Performance Against Seed Expectations)",
+         fill = "Group") +
+    theme_minimal() +
+    # scale_fill_manual(values = c("Top" = "blue", "Bottom" = "red")) +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))  # Rotate x-axis labels if needed
+
+
+rm(list = ls())
+gc()
+
+# Load libraries -------
+library(data.table)
+library(ggplot2)
+library(ggtext)
+library(extrafont)
+
+# Load data --------
+team_results <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-26/team-results.csv')
+
+# Data cleaning -----------
+
+# Sort by PASE in descending order and select the top 10
+top_10_teams <- team_results[order(-PASE)][1:10]
+
+
+
+top_10_teams$CHAMPPERCENT <- as.numeric(top_10_teams$CHAMPPERCENT)
+
+# Create a radial plot (polar coordinates)
+ggplot(top_10_teams, aes(x = factor(TEAM), y = CHAMPPERCENT, fill = TEAM)) +
+    geom_bar(stat = "identity", width = 0.8) +  # Bars represent CHAMPercent
+    coord_flip() +
+    # coord_polar(start = 0) +  # Convert to radial (polar) coordinates
+    labs(title = "Top 10 Teams based on PASE and their CHAMPPercent",
+         x = "Team",
+         y = "CHAMPPercent",
+         fill = "Team") +
+    theme_minimal() +
+    # scale_fill_manual(values = ggplot2::hue_pal()(10)) +  # Use different colors for each team
+    theme(axis.text.x = element_text(angle = 45, hjust = 1),  # Rotate x-axis labels
+          plot.title = element_text(hjust = 0.5))  # Center the title
