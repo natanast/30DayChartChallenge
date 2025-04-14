@@ -278,9 +278,9 @@ gr = ggplot() +
     geom_segment(aes(x = 9, xend = 9, y = 1, yend = 1.5), color = "grey75") +
     geom_segment(aes(x = 10, xend = 10, y = 1, yend = 1.5), color = "grey75") +
     
-    geom_text(data = people, aes(x = x, y = y, label = name), vjust = -2, size = 3.5, family = "Candara") +
+    geom_text(data = people, aes(x = x, y = y, label = name), vjust = -2, size = 2.5, family = "Candara") +
     
-    geom_point(data = people, aes(x = x, y = y, color = sex), size = 5,
+    geom_point(data = people, aes(x = x, y = y, color = sex), size = 3,
                shape = ifelse(people$sex == "M", 15, 16)) +
     
     scale_color_manual(values = col) +
@@ -300,8 +300,8 @@ gr = ggplot() +
     theme(
         legend.position = "none",  
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = .5, margin = margin(b = 5, t = 5)),
-        plot.subtitle = element_markdown(size = 15, hjust = 0.5, color = "grey30", margin = margin(b = 30, t = 5)),
+        plot.title = element_markdown(size = 15, face = "bold", hjust = .5, margin = margin(b = 5, t = 5)),
+        plot.subtitle = element_markdown(size = 11, hjust = 0.5, color = "grey30", margin = margin(b = 30, t = 5)),
         plot.caption = element_markdown(size = 8, hjust = 1, margin = margin(t = 10)),
         
         axis.text = element_blank(),
@@ -321,7 +321,7 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 15, height = 8, units = "in", dpi = 600
+    width = 10, height = 8, units = "in", dpi = 600
 )
 
 
