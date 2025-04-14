@@ -287,9 +287,9 @@ gr = ggplot() +
     
     labs(
         title = "The One with the Family Tree",
-        subtitle = "Relationships and connections between characters in <b>FRIENDS TV Series</b>.<br>
-                Squares are <b>males</b>, circles are <b>females</b>.",
-        caption = "Source: <b> FRIENDS</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        subtitle = "Relationships and connections between characters in <b>F·R·I·E·N·D·S</b>.<br>
+                Squares are <span style='color:#00429d;'><b>males</b></span>, circles are <span style='color:#b24745;'><b>females</b></span>.",
+        caption = "Source: <b> F·R·I·E·N·D·S</b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "",
         x = ""
     ) +
