@@ -11,53 +11,75 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(extrafont)
-library(kinship2)
 
 
-# load data --------
+# create data --------
 
-friends <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends.csv")
+# Extend the people dataframe with Chandler's family
+people <- data.frame(
+    name = c("Leonard", "Sandra", "Jill", "Amy", "Rachel", 
+             "Jack", "Judy", "Ross", "Monica", 
+             "Charles", "Nora", "Chandler"),
+    x = c(-2, -1, -2, -1, 0, 
+          1, 2, 1, 2, 
+          3, 4, 3.5),
+    y = c(2, 2, 1, 1, 1, 
+          2, 2, 1, 1, 
+          2, 2, 1)
+)
 
-
-# data cleaning -----------
-
-
-# 
-# col = c("#73a2c6", "#b24745")
-# 
-# col = c("#00429d", "#b24745")
-# 
-# col <- c("Below" = "#73a2c6", "Above" = "#b24745")
-# 
-
-# plot --------
-
-
-df <- data.frame(
-    id = c(1,2,3,4,5,6), 
-    sex = c(1,2,1,2,2,2), 
-    dadid = c(0,0,0,0,1,3), 
-    momid = c(0,0,0,0,2,4), 
-    famid = 1
+people <- rbind(
+    people,
+    data.frame(name = c("Carol", "Ben"), x = c(0.5, 0.75), y = c(1, 0))
 )
 
 
+# plot ---------------
 
-relation1 <- matrix(c(2,3,4,1), nrow = 1)
+# Plot with Chandler's family added
+ggplot() +
+    geom_point(data = people, aes(x = x, y = y), size = 6) +
+    geom_text(data = people, aes(x = x, y = y, label = name), vjust = -1) +
+    
+    # Greens
+    geom_segment(aes(x = -2, xend = -1, y = 2, yend = 2)) +
+    geom_segment(aes(x = -1.5, xend = -1.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = -1.5, xend = -2, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = -1.5, xend = 0, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = -2, xend = -2, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = -1, xend = -1, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = 0, xend = 0, y = 1, yend = 1.5)) +
+    
+    # Ross & Rachel
+    geom_segment(aes(x = 0, xend = 1, y = 1, yend = 1), linetype = "dashed") +
+    
+    # Gellers
+    geom_segment(aes(x = 1, xend = 2, y = 2, yend = 2)) +
+    geom_segment(aes(x = 1.5, xend = 1.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = 1, xend = 2, y = 1.5, yend = 1.5)) +
+    geom_segment(aes(x = 1, xend = 1, y = 1, yend = 1.5)) +
+    geom_segment(aes(x = 2, xend = 2, y = 1, yend = 1.5)) +
+    
+    # Bings
+    geom_segment(aes(x = 3, xend = 4, y = 2, yend = 2)) +
+    geom_segment(aes(x = 3.5, xend = 3.5, y = 1.5, yend = 2)) +
+    geom_segment(aes(x = 2, xend = 3.5, y = 1, yend = 1)) +
+    geom_segment(aes(x = 3.5, xend = 3.5, y = 1, yend = 1.5)) +
+    
+    # Ross & Carol
+    geom_segment(aes(x = 0.5, xend = 1, y = 1, yend = 1)) +
+    geom_segment(aes(x = 0.65, xend = 0.75, y = 0.98, yend = 1.02), linewidth = .8) +
+    geom_segment(aes(x = 0.75, xend = 0.85, y = 0.98, yend = 1.02),linewidth = .8) +
+    
+    
+    geom_segment(aes(x = 0.75, xend = 0.75, y = 0, yend = 1)) +
+    
 
-foo <- pedigree(
-    id = df$id, 
-    dadid = df$dadid, 
-    momid = df$momid, 
-    sex = df$sex, 
-    relation = relation1, 
-    famid = df$famid
-)
+    
+    
+    theme_minimal()
 
-ped <- foo['1']
-
-plot(ped)
-
+# plot -----------
 
 # 
 # gr = df |>
@@ -111,62 +133,3 @@ ggsave(
 
 
 
-# Extend the people dataframe with Chandler's family
-people <- data.frame(
-    name = c("Leonard", "Sandra", "Jill", "Amy", "Rachel", 
-             "Jack", "Judy", "Ross", "Monica", 
-             "Charles", "Nora", "Chandler"),
-    x = c(-2, -1, -2, -1, 0, 
-          1, 2, 1, 2, 
-          3, 4, 3.5),
-    y = c(2, 2, 1, 1, 1, 
-          2, 2, 1, 1, 
-          2, 2, 1)
-)
-
-people <- rbind(
-    people,
-    data.frame(name = c("Carol", "Ben"), x = c(0.5, 1), y = c(1, 0))
-)
-
-
-# Plot with Chandler's family added
-ggplot() +
-    geom_point(data = people, aes(x = x, y = y), size = 6) +
-    geom_text(data = people, aes(x = x, y = y, label = name), vjust = -1) +
-    
-    # Greens
-    geom_segment(aes(x = -2, xend = -1, y = 2, yend = 2)) +
-    geom_segment(aes(x = -1.5, xend = -1.5, y = 1.5, yend = 2)) +
-    geom_segment(aes(x = -1.5, xend = -2, y = 1.5, yend = 1.5)) +
-    geom_segment(aes(x = -1.5, xend = 0, y = 1.5, yend = 1.5)) +
-    geom_segment(aes(x = -2, xend = -2, y = 1, yend = 1.5)) +
-    geom_segment(aes(x = -1, xend = -1, y = 1, yend = 1.5)) +
-    geom_segment(aes(x = 0, xend = 0, y = 1, yend = 1.5)) +
-    geom_segment(aes(x = 0, xend = 1, y = 1, yend = 1)) +
-    
-    # Gellers
-    geom_segment(aes(x = 1, xend = 2, y = 2, yend = 2)) +
-    geom_segment(aes(x = 1.5, xend = 1.5, y = 1.5, yend = 2)) +
-    geom_segment(aes(x = 1, xend = 2, y = 1.5, yend = 1.5)) +
-    geom_segment(aes(x = 1, xend = 1, y = 1, yend = 1.5)) +
-    geom_segment(aes(x = 2, xend = 2, y = 1, yend = 1.5)) +
-    
-    # Bings
-    geom_segment(aes(x = 3, xend = 4, y = 2, yend = 2)) +
-    geom_segment(aes(x = 3.5, xend = 3.5, y = 1.5, yend = 2)) +
-    geom_segment(aes(x = 2, xend = 3.5, y = 1, yend = 1)) +
-    geom_segment(aes(x = 3.5, xend = 3.5, y = 1, yend = 1.5)) +
-    
-    # Add dashed line for Ross & Carol's past marriage
-    geom_segment(aes(x = 0.5, xend = 1, y = 1, yend = 1)) +
-    
-    # Add vertical line from Ben to the midpoint
-    geom_segment(aes(x = 1, xend = 1, y = 0, yend = 1)) +
-    
-    geom_segment(aes(x = 0.65, xend = 0.75, y = 0.98, yend = 1.02), linewidth = .8) +
-    geom_segment(aes(x = 0.75, xend = 0.85, y = 0.98, yend = 1.02),linewidth = .8) +
-    
-    
-    
-    theme_minimal()
