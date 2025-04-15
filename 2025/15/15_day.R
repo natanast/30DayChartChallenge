@@ -84,14 +84,14 @@ p <- df_plot |>
         
     ) +
 
-    scale_size_continuous(guide = "none", range = c(5, 8)) +
+    scale_size_continuous(guide = "none", range = c(5, 9)) +
     
     
     coord_equal() +
     
     labs(
-        title = "Reality Check: How the Top NCAA Teams Actually Performed in 2024",
-        subtitle = "Bubble size shows the team's likelihood of winning a championship (CHAMPPERCENT), <br> while the label indicates performance against seed expectations (PASE).",
+        title = "Reality Check: How the Top NCAA Men's March Madness Teams Actually Performed in 2024",
+        subtitle = "Bubble size shows the team's chance of winning a championship, and the label shows how they performed compared to expectations.",
         caption = "Source: <b> NCAA Men's March Madness</b> | Graphic: <b>Natasa Anastasiadou</b>"
     ) +
     
@@ -109,8 +109,8 @@ p <- df_plot |>
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5),
-        plot.subtitle = element_markdown(size = 14, hjust = 0.5,  color = "grey30"),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.1,  color = "grey30"),
         plot.caption  = element_markdown(margin = margin(t = 25), size = 10, hjust = 1.3),
         
         
