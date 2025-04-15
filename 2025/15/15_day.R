@@ -119,7 +119,7 @@ p <- df_plot |>
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 5, b = 5)),
         plot.subtitle = element_markdown(size = 12, hjust = 0.5,  color = "grey30"),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1.15),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1.25),
         
         
         plot.margin = margin(20, 20, 20, 20),
