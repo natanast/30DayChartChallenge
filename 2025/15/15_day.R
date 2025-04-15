@@ -11,6 +11,9 @@ library(ggplot2)
 library(stringr)
 library(ggtext)
 library(extrafont)
+library(packcircles)
+library(tidyverse)
+library(shadowtext)
 
 
 # load data --------
@@ -28,6 +31,8 @@ df <- top_10_teams[, .(TEAM, PASE, CHAMPPERCENT)]
 df$CHAMPPERCENT <- df$CHAMPPERCENT |> str_remove_all("%") |> as.numeric()
 
 
+
+
 # 🟣 CHAMPPERCENT = what people thought would happen (perception).
 # 
 # 🟢 PASE = what actually happened (performance).
@@ -37,6 +42,7 @@ df$CHAMPPERCENT <- df$CHAMPPERCENT |> str_remove_all("%") |> as.numeric()
 
 # Process the data 
 df_plot <- df[, {
+    
     dat.egg <- circleProgressiveLayout(CHAMPPERCENT)
     dat.egg <- circleLayoutVertices(dat.egg, npoints = 100)
     
@@ -53,6 +59,7 @@ df_plot_l <- df_plot |>
 
 
 df_plot_l$lbl = df_plot_l$PASE
+
 
 
 col = c('#396375', '#5a8192', '#7f9faa', '#a7bec0', '#d2ded1', '#febaad', '#f49992', '#e37b78', '#cc5f5e', '#b24745')
@@ -81,17 +88,18 @@ p <- df_plot |>
     
     scale_fill_manual(
         values = col,
+        name = "Team"
         
     ) +
 
     scale_size_continuous(guide = "none", range = c(5, 9)) +
     
     
-    coord_equal() +
+    # coord_equal() +
     
     labs(
-        title = "Reality Check: How the Top NCAA Men's March Madness Teams Actually Performed in 2024",
-        subtitle = "Bubble size shows the team's chance of winning a championship, and the label shows how they performed compared to expectations.",
+        title = "Expectations vs Performance: Top NCAA Men's March Madness Teams in 2024",
+        subtitle = "<b> Bubble size</b> represents each team's <b>championship likelihood</b> — bigger size indicated bigger likelihood. <br> <b>Label</b> shows their Performance Against Seed Expectations <b>(PASE)</b> — larger PASE indicates better performance.",
         caption = "Source: <b> NCAA Men's March Madness</b> | Graphic: <b>Natasa Anastasiadou</b>"
     ) +
     
@@ -109,9 +117,9 @@ p <- df_plot |>
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.1,  color = "grey30"),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 10, hjust = 1.3),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 5, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5,  color = "grey30"),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1.15),
         
         
         plot.margin = margin(20, 20, 20, 20),
@@ -125,7 +133,7 @@ p
 
 ggsave(
     plot = p, filename = "Rplot.png",
-    width = 12, height = 10, units = "in", dpi = 600
+    width = 10, height = 7, units = "in", dpi = 600
 )    
 
 
