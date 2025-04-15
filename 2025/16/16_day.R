@@ -8,82 +8,148 @@ gc()
 
 library(data.table)
 library(ggplot2)
-library(stringr)
-library(ggtext)
+library(palmerpenguins)
 library(extrafont)
+library(ggtext)
+library(patchwork)
+
 
 
 # load data --------
 
-penguins <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-15/penguins.csv')
-penguins_raw <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-04-15/penguins_raw.csv')
+penguins <- as.data.table(penguins)
 
 
 # data cleaning -----------
 
-avg_ob <- mean(df$Obesity)
+
+penguins_clean <- penguins[!is.na(bill_length_mm) & !is.na(bill_depth_mm) & !is.na(species)]
 
 
-df$diff_from_avg <- df$Obesity - avg_ob
+# col = c("#73a2c6", "#b24745")
+# 
+# col = c("#00429d", "#b24745")
+# 
+# col <- c("Below" = "#73a2c6", "Above" = "#b24745")
 
-
-df$Direction <- ifelse(df$diff_from_avg >= 0, "Above", "Below")
-
-
-# Sort states by diff_from_avg
-df$NAME <- factor(df$NAME, levels = df$NAME[rev(order(df$diff_from_avg, decreasing = TRUE))])
-
-
-col = c("#73a2c6", "#b24745")
-
-col = c("#00429d", "#b24745")
-
-col <- c("Below" = "#73a2c6", "Above" = "#b24745")
-
+font = "Candara"
 
 # plot --------
 
+library(colorspace)
 
-gr = df |>
+p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
     
-    ggplot(aes(y = NAME, x = diff_from_avg, fill = Direction)) + 
-    
-    
-    geom_col(width = 0.7, alpha = 0.9) +
-    
-    geom_vline(xintercept = 0, color = "grey20", linetype = "dashed", size = 0.55) +
-    
-    scale_fill_manual(values = col) +
-    
-    labs(
-        title = "How Much Each U.S. State's Obesity Rate Differs from the National Average (29.3%)",
-        subtitle = "This chart shows the difference in adult obesity rates by state compared to the U.S. average (1990–2022). 
-                    <br>States <span style='color:#b24745;'><b>above</b></span> the average are in <span style='color:#b24745;'><b>red</b></span>, 
-                    while those <span style='color:#00429d;'><b>below</b></span> are in <span style='color:#00429d;'><b>blue</b></span></br>",
-        caption = "Source: <b> data.gov</b> | Graphic: <b>Natasa Anastasiadou</b>",
-        y = "",
-        x = ""
+    geom_smooth(
+        method = "lm", 
+        color = "#4B7F9C", 
+        fill = "#4B7F9C",
+        linewidth = 0.75, 
+        lineend = "round"
     ) +
     
-
-    theme_minimal(base_family = "Candara") +
+    geom_point(
+        color = "#4B7F9C", 
+        fill = "#4B7F9C",
+        shape = 21, 
+        size = 1.5, 
+        stroke = 0.5,
+        alpha = 0.8
+    ) +
     
+    # scale_x_continuous(expand = c(0, 0)) +
+    # scale_y_continuous(expand = c(0, 0)) +
+    # 
+    labs(
+        # title = "Negative Relationship: All Penguins Combined",
+        # subtitle = "Bill length vs bill depth (ignoring species)",
+        x = "Bill Length (mm)",
+        y = "Bill Depth (mm)"
+    ) +
+    
+    theme_minimal(base_family = font) +
     theme(
-        legend.position = "none",  
-        
-        plot.title = element_markdown(size = 14, face = "bold", hjust = .25, margin = margin(b = 5, t = 5)),
-        plot.subtitle = element_markdown(size = 10, hjust = 0.3, color = "grey30", margin = margin(b = 15, t = 5)),
-        plot.caption = element_markdown(size = 8, hjust = 1, margin = margin(t = 10)),
-        
-        panel.grid.major = element_line(linewidth = 0.45, color = "grey80"),
-        panel.grid.minor = element_blank(),
 
-        plot.margin = margin(20, 20, 20, 20),
-        plot.background = element_rect(fill = "grey93", color = NA)
+        legend.position = "none",
+
+        axis.line = element_line(),
+        axis.ticks = element_line(),
+        
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey85")
     )
 
+p1
 
-gr
+
+# Colors inspired by your palette
+penguin_colors <- c(
+    "Adelie" = "#FF6F00", 
+    "Chinstrap" = "#FF95A8", 
+    "Gentoo" = "#008EA0"
+)
+
+# penguin_fills <- lighten(penguin_colors, amount = 0.75)
+
+p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
+    
+    geom_smooth(
+        aes(color = species, fill = species), 
+        method = "lm", 
+        linewidth = 0.75, 
+        lineend = "round"
+    ) +
+    
+    geom_point(
+        aes(color = species, fill = species), 
+        shape = 21, 
+        size = 1.5, 
+        stroke = 0.5, 
+        alpha = 0.8
+    ) +
+    
+    scale_color_manual(values = penguin_colors) +
+    
+    scale_fill_manual(values = penguin_colors) +
+    
+
+    labs(
+        x = "Bill Length (mm)",
+        y = "Bill Depth (mm)",
+    ) +
+    
+    theme_minimal(base_family = font) +
+    theme(
+        # legend.position = "right",
+        legend.position = c(.9, .15),
+        legend.title = element_blank(),
+        
+
+        axis.line = element_line(),
+        axis.ticks = element_line(),
+        
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey85")
+    )
+
+p2
+
+# Combine plots using patchwork
+final_plot <- (p1 | p2) +
+    plot_annotation(
+        # title = "Simpson’s Paradox in Palmer Penguins 🐧",
+        # subtitle = "Ignoring species, bill length and depth appear negatively correlated.\nBut within each species, the relationship is positive!",
+        caption = "Source: #TidyTuesday • Data: Palmer Station LTER • Viz: Natasa Anastasiadou",
+        theme = theme(
+            plot.title = element_text(face = "bold", size = 16, hjust = 0.5),
+            plot.subtitle = element_text(size = 11, hjust = 0.5, color = "grey30"),
+            plot.caption = element_text(size = 8, hjust = 1)
+        )
+    )
+
+# Print the final plot
+final_plot
+
 
 
 # save ---------
@@ -96,36 +162,4 @@ ggsave(
 
 
 
-
-
-
-
-library(tidyverse)
-library(palmerpenguins)
-library(ggtext)
-
-# Filter out missing values
-penguins_clean <- penguins |>
-    filter(!is.na(bill_len), !is.na(bill_dep), !is.na(species))
-
-# Plot
-ggplot(penguins_clean, aes(x = bill_len, y = bill_dep, color = species)) +
-    geom_point(alpha = 0.7, size = 2.5) +
-    geom_smooth(method = "lm", se = FALSE, linewidth = 1) +
-    scale_color_manual(values = c("#2a9d8f", "#e76f51", "#264653")) +
-    labs(
-        title = "Bill Shape Tradeoff in Penguins",
-        subtitle = "Negative relationship between bill length and bill depth reveals species-specific adaptations.",
-        x = "Bill Length (mm)",
-        y = "Bill Depth (mm)",
-        color = "Species",
-        caption = "Data: #TidyTuesday | Viz: Natasa Anastasiadou"
-    ) +
-    theme_minimal(base_family = "Candara") +
-    theme(
-        plot.title = element_markdown(size = 16, face = "bold"),
-        plot.subtitle = element_markdown(size = 11, color = "grey20"),
-        plot.caption = element_text(size = 8, color = "grey40"),
-        legend.position = "bottom"
-    )
 
