@@ -142,7 +142,7 @@ p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
 p2
 
 
-
+# x axis ------
 x_axis_label <- ggplot() +
     theme_void(base_family = font) +
     annotate("text", x = 0.5, y = 0.5, label = "Bill Length (mm)", family = font, size = 2.5, hjust = 0.5, vjust = -0.85)
@@ -163,7 +163,7 @@ final_plot <- ((p1 | p2) / x_axis_label) +
         plot.subtitle = element_text(size = 10, hjust = 0.5, family = font, color = "grey30"),
         plot.caption  = element_markdown(margin = margin(t = -10), family = font, size = 6, hjust = 1.05),
         plot.margin = margin(15, 15, 15, 15),
-        plot.background = element_rect(fill = "#e4e4e3", color = NA)
+        plot.background = element_rect(fill = "white", color = NA)
         
     )
 
@@ -171,14 +171,27 @@ final_plot <- ((p1 | p2) / x_axis_label) +
 final_plot
 
 
+# image -------
+
+library(cowplot)
+
+img <- png::readPNG("culmen_depth.png")
+logo <- grid::rasterGrob(img, interpolate = TRUE)
+
+# Combine your plot and the image
+final_plot_with_logo <- ggdraw(final_plot) +
+    draw_grob(logo, x = 0.98, y = 0.99, width = 0.15, height = 0.15, hjust = 1, vjust = 1) +
+    draw_plot_label(
+    label = "Source: {palmerpenguins} R package | Graphic: Natasa Anastasiadou",
+    x = 0.78, y = 0.07, hjust = 0, size = 5, family = "Candara"
+    )
+
+
 # save ---------
 
 ggsave(
-   plot = final_plot, filename = "Rplot.png",
-   width = 10, height = 7, units = "in", dpi = 600
+    plot = final_plot_with_logo, filename = "Rplot.png",
+    width = 10, height = 7, units = "in", dpi = 600
 )
-
-
-
 
 
