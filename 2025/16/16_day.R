@@ -69,8 +69,8 @@ p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
         
         axis.title.x = element_blank(),
         
-        axis.text = element_text(size = 8),
-        axis.title = element_text(size = 8),
+        axis.text = element_text(size = 7),
+        axis.title = element_text(size = 7),
         
         panel.grid.minor = element_blank(),
         panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey75")
@@ -119,19 +119,21 @@ p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
     ) +
     
     theme_minimal(base_family = font) +
+    
     theme(
-        # legend.position = "right",
+        
         legend.position = c(.85, .15),
+        legend.key.size = unit(0.4, "cm"),
         legend.title = element_blank(),
-        legend.text = element_text(size = 8),
+        legend.text = element_text(size = 5),
         
         axis.title.x = element_blank(),
 
         axis.line = element_line(),
         axis.ticks = element_line(),
         
-        axis.text = element_text(size = 8),
-        axis.title = element_text(size = 8),
+        axis.text = element_text(size = 7),
+        axis.title = element_text(size = 7),
         
         panel.grid.minor = element_blank(),
         panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey75")
@@ -143,13 +145,13 @@ p2
 
 x_axis_label <- ggplot() +
     theme_void(base_family = font) +
-    annotate("text", x = 0.5, y = 0.5, label = "Bill Length (mm)", family = font, size = 3, hjust = 0.5)
+    annotate("text", x = 0.5, y = 0.5, label = "Bill Length (mm)", family = font, size = 2.5, hjust = 0.5, vjust = -0.85)
 
 
 # Combine plots 
 
 final_plot <- ((p1 | p2) / x_axis_label) +
-    plot_layout(heights = c(1, 0.025)) +
+    plot_layout(heights = c(1, 0.05)) +
     plot_annotation(
         title = "Simpson’s Paradox in Palmer Penguins",
         subtitle = "Ignoring species, bill length and depth appear negatively correlated.\nBut within each species, the relationship is positive.",
@@ -157,10 +159,10 @@ final_plot <- ((p1 | p2) / x_axis_label) +
     ) &
     
     theme(
-        plot.title = element_text(face = "bold", size = 16, family = font, hjust = 0.5),
-        plot.subtitle = element_text(size = 11, hjust = 0.5, family = font, color = "grey30"),
-        plot.caption  = element_markdown(margin = margin(t = 10), family = font, size = 7, hjust = 1),
-        plot.margin = margin(10, 10, 10, 10),
+        plot.title = element_text(face = "bold", size = 14, family = font, hjust = 0.5),
+        plot.subtitle = element_text(size = 10, hjust = 0.5, family = font, color = "grey30"),
+        plot.caption  = element_markdown(margin = margin(t = -10), family = font, size = 6, hjust = 1.05),
+        plot.margin = margin(15, 15, 15, 15),
         plot.background = element_rect(fill = "#e4e4e3", color = NA)
         
     )
@@ -173,7 +175,7 @@ final_plot
 
 ggsave(
    plot = final_plot, filename = "Rplot.png",
-   width = 10, height = 8, units = "in", dpi = 600
+   width = 10, height = 7, units = "in", dpi = 600
 )
 
 
