@@ -14,7 +14,6 @@ library(ggtext)
 library(patchwork)
 
 
-
 # load data --------
 
 penguins <- as.data.table(penguins)
@@ -27,9 +26,10 @@ penguins_clean <- penguins[!is.na(bill_length_mm) & !is.na(bill_depth_mm) & !is.
 
 font = "Candara"
 
+
 # p1 --------
 
-library(colorspace)
+# library(colorspace)
 
 p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
     
@@ -45,8 +45,8 @@ p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
         color = "white", 
         fill = "#396375",
         shape = 21, 
-        size = 2.5, 
-        stroke = 0.25,
+        size = 2, 
+        stroke = 0.15,
         alpha = 0.8
     ) +
     
@@ -54,11 +54,12 @@ p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
     labs(
         # title = "Negative Relationship: All Penguins Combined",
         # subtitle = "Bill length vs bill depth (ignoring species)",
-        x = "Bill Length (mm)",
+        x = "",
         y = "Bill Depth (mm)"
     ) +
     
     theme_minimal(base_family = font) +
+    
     theme(
 
         legend.position = "none",
@@ -66,8 +67,13 @@ p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
         axis.line = element_line(),
         axis.ticks = element_line(),
         
+        axis.title.x = element_blank(),
+        
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 8),
+        
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey85")
+        panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey75")
     )
 
 p1
@@ -96,8 +102,8 @@ p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
     geom_point(
         aes(color = species, fill = species), 
         shape = 21, 
-        size = 2.5, 
-        stroke = 0.25, 
+        size = 2, 
+        stroke = 0.15, 
         color = "white",
         alpha = 0.8
     ) +
@@ -108,7 +114,7 @@ p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
     
 
     labs(
-        x = "Bill Length (mm)",
+        x = "",
         y = "",
     ) +
     
@@ -117,22 +123,33 @@ p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
         # legend.position = "right",
         legend.position = c(.85, .15),
         legend.title = element_blank(),
+        legend.text = element_text(size = 8),
         
+        axis.title.x = element_blank(),
 
         axis.line = element_line(),
         axis.ticks = element_line(),
         
+        axis.text = element_text(size = 8),
+        axis.title = element_text(size = 8),
+        
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey85")
+        panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey75")
     )
 
 p2
 
 
+
+x_axis_label <- ggplot() +
+    theme_void(base_family = font) +
+    annotate("text", x = 0.5, y = 0.5, label = "Bill Length (mm)", family = font, size = 3, hjust = 0.5)
+
+
 # Combine plots 
 
-final_plot <- (p1 | p2) +
-    
+final_plot <- ((p1 | p2) / x_axis_label) +
+    plot_layout(heights = c(1, 0.025)) +
     plot_annotation(
         title = "Simpson’s Paradox in Palmer Penguins",
         subtitle = "Ignoring species, bill length and depth appear negatively correlated.\nBut within each species, the relationship is positive.",
@@ -142,7 +159,9 @@ final_plot <- (p1 | p2) +
     theme(
         plot.title = element_text(face = "bold", size = 16, family = font, hjust = 0.5),
         plot.subtitle = element_text(size = 11, hjust = 0.5, family = font, color = "grey30"),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1),
+        plot.caption  = element_markdown(margin = margin(t = 10), family = font, size = 7, hjust = 1),
+        plot.margin = margin(10, 10, 10, 10),
+        plot.background = element_rect(fill = "#e4e4e3", color = NA)
         
     )
 
