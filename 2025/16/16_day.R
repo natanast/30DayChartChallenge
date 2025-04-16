@@ -65,10 +65,10 @@ p1 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
         axis.line = element_line(),
         axis.ticks = element_line(),
         
-        axis.title.x = element_text(size = 7, hjust = 1.25),
-        axis.title.y = element_text(size = 7, vjust = 5),
+        axis.title.x = element_text(size = 9, hjust = 1.25),
+        axis.title.y = element_text(size = 9, vjust = 5),
         
-        axis.text = element_text(size = 7),
+        axis.text = element_text(size = 8),
         
         
         panel.grid.minor = element_blank(),
@@ -130,8 +130,8 @@ p2 <- ggplot(penguins_clean, aes(x = bill_length_mm, y = bill_depth_mm)) +
         axis.line = element_line(),
         axis.ticks = element_line(),
         
-        axis.text = element_text(size = 7),
-        axis.title = element_text(size = 7),
+        axis.text = element_text(size = 8),
+        # axis.title = element_text(size = 7),
         
         panel.grid.minor = element_blank(),
         panel.grid.major = element_line(linetype = "dashed", lineend = "round", color = "grey75")
@@ -148,13 +148,13 @@ final_plot <- (p1 | p2) +
     plot_annotation(
         title = "Simpson’s Paradox in Palmer Penguins: When Grouped Data Tells a Different Story",
         subtitle = "Ignoring species, bill length and depth appear negatively correlated.\nBut within each species, the relationship is positive.",
-        caption = "Source: <b> {palmerpenguins} R package</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        # caption = "Source: <b> {palmerpenguins} R package</b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) &
     
     theme(
         plot.title = element_text(face = "bold", size = 12, family = font, hjust = 0.5),
         plot.subtitle = element_text(size = 10, hjust = 0.5, family = font, color = "grey30"),
-        plot.caption  = element_markdown(margin = margin(t = 10), family = font, size = 9, hjust = 1.05),
+        # plot.caption  = element_text(margin = margin(t = 10), family = font, size = 12, hjust = 1.05),
         plot.margin = margin(15, 15, 15, 15),
         plot.background = element_rect(fill = "white", color = NA)
         
@@ -176,7 +176,7 @@ final_plot_with_logo <- ggdraw(final_plot) +
     draw_grob(logo, x = 1, y = 1, width = 0.18, height = 0.18, hjust = 1, vjust = 1) +
     draw_plot_label(
     label = "Source: {palmerpenguins} R package | Graphic: Natasa Anastasiadou",
-    x = 0.78, y = 0.07, hjust = 0, size = 5, family = "Candara"
+    x = 0.68, y = 0.03, hjust = 0, size = 7, family = "Candara"
     )
 
 
