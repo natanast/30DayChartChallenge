@@ -1,50 +1,31 @@
 
-# import numpy as np
+import numpy as np
 import matplotlib.pyplot as plt
 import pandas as pd
 from plotnine import *
 
 
 # Load data --------
+# https://www.kaggle.com/datasets/anoopjohny/birdsoftheworld-unprocessed?resource=download
 
-tornados = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-05-16/tornados.csv')
-
+birds = pd.read_csv('Birdsoftheworld.csv')
 
 # clean data ------
 
-df_clean = tornados.dropna(subset=['inj', 'fat'])
 
-# Calculate median values to draw the lines
-line_1 = 450
-line_2 = 60
+df_clean = birds.dropna(subset=['species', 'location'])
 
-# Create a new column to categorize points into quadrants based on their position
-df_clean['quadrant'] = pd.cut(
-    df_clean['inj'],
-    bins=[-float('inf'), line_1, float('inf')], 
-    labels=["Left", "Right"]
-)
-
-df_clean['quadrant'] = pd.Series([
-    'Bottom-Left' if (row['inj'] <= line_1 and row['fat'] <= line_2) else 
-    'Bottom-Right' if (row['inj'] > line_1 and row['fat'] <= line_2) else 
-    'Top-Left' if (row['inj'] <= line_1 and row['fat'] > line_2) else 
-    'Top-Right' for _, row in df_clean.iterrows()
-])
+df_clean = df_clean[['species', 'location']]
 
 
+# Count occurrences of each species
+species_counts = df_clean['species'].value_counts()
 
-# Create a new column for the formatted label
-df_clean['label'] = df_clean['yr'].apply(lambda x: f"Year {x}")
 
-# Filter the data for high injuries and fatalities categories
-df_clean['label'] = df_clean.apply(
-    lambda row: f"Year {row['yr']}" if (
-        (row['inj'] > line_1 + 500 and row['fat'] > line_2) or  # High Injuries, High Fatalities
-        (row['inj'] > line_1 + 500 and row['fat'] <= line_2)    # High Injuries, Low Fatalities
-    ) else None,
-    axis=1
-)
+# Get the top 10 most frequent species
+top_10_species = species_counts.head(10)
+
+
 
 # plot --------
 
