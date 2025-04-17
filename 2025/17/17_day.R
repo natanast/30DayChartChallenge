@@ -36,13 +36,6 @@ df2 = df2[, .(species, location)]
 df2 = df2[, .N, by = .(species, location)]
 
 
-# df <- most_visited_nps_species_data[, c("ParkName","ParkCode", "CategoryName")] |> 
-#     as.data.table()
-# 
-# df1 <- df[, .(count = .N), by = .(ParkName, ParkCode, CategoryName)] 
-# 
-# df1$Legend <- paste0(df1$ParkCode, " - ", str_remove_all(df1$ParkName, "National|Park"))
-
 
 # df_plot --------------
 
@@ -54,12 +47,6 @@ rownames(t1) <- t1$species
 t1 <- t1[, -1]
 
 
-# t <- dcast(df1, ParkCode ~ CategoryName, value.var = "count", fill = 0) |>
-#     as.data.frame()
-# 
-# rownames(t) <- t$ParkCode  
-# t <- t[, -1]
-
 
 df_plot <- as.matrix(t1)
 
@@ -67,12 +54,6 @@ df_plot <- as.matrix(t1)
 df_plot <- df_plot[order(rev(rownames(df_plot))), order(colnames(df_plot))]
 
 
-# # Define new order 
-new_order <- c("ZION", "YOSE", "YELL", "ROMO", "OLYM", "JOTR", "INDU", "HOSP",
-               "GRSM", "GRTE", "GRCA", "GLAC", "CUVA", "BRCA", "ACAD")
-
-
-df_plot <- df_plot[new_order, ]
 
 
 # colors ------------------
