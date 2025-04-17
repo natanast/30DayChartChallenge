@@ -8,7 +8,7 @@ gc()
 # load libraries -----------
 
 library(data.table)
-library(dplyr)
+# library(dplyr)
 library(circlize)
 library(stringr)
 # library(ComplexHeatmap)
@@ -113,12 +113,12 @@ chordDiagram(
 
 # labs
 title("Bird Connections Around the World",
-      cex.main = 6,
+      cex.main = 5.5,
       font.main = 1,
-      line = -2)
+      line = -1.5)
 
-mtext("Exploring the top 10 most frequently observed bird species and their global distribution across.",
-      side = 3, line = -4, cex = 4)
+mtext("Exploring the top 10 most frequently observed bird species and their distribution across locations.",
+      side = 3, line = -4, cex = 3.5)
 
 mtext("Source: Bird Sightings Dataset | Graphic: Natasa Anastasiadou",
       side = 3, line = -73, cex = 2.5, adj = 1)
@@ -138,26 +138,6 @@ circos.track(
         )
     }, bg.border = NA
 )
-
-
-
-# # legend
-# lgd = Legend(
-#     at = unique(df1$Legend), 
-#     type = "points", 
-#     legend_gp = gpar(col = grid_colors, cex = 1.5),  
-#     title_gp = gpar(fontsize = 15, fontface = "bold"),
-#     labels_gp = gpar(fontsize = 12),  
-#     title = "National Park name",
-#     nrow = 5
-# )
-
-# draw(
-#     lgd, 
-#     x = unit(4, "mm"), 
-#     y = unit(4, "mm"), 
-#     just = c("left", "bottom")
-# )
 
 
 dev.off()
