@@ -16,9 +16,8 @@ library(ComplexHeatmap)
 
 
 # data cleaning ------------
-# tuesdata <- tidytuesdayR::tt_load('2024-10-08')
-# 
-# most_visited_nps_species_data <- tuesdata$most_visited_nps_species_data
+
+# https://www.kaggle.com/datasets/anoopjohny/birdsoftheworld-unprocessed?resource=download
 
 birds <- fread("Birdsoftheworld.csv", header = TRUE)
 
@@ -99,20 +98,20 @@ chordDiagram(
 
 
 # labs
-# title("National Park Species",
-#       cex.main = 3,  
-#       font.main = 1,
-#       line = -2)
+title("Bird Connections Around the World",
+      cex.main = 3,
+      font.main = 1,
+      line = -2)
 
 
-# mtext("Species distribution across national parks",
-#       side = 3, line = -4, cex = 1.5)
+mtext("Exploring the top 10 most frequently observed bird species and their global distribution across.",
+      side = 3, line = -4, cex = 1.5)
 
 mtext("Source: National Park Service | Graphic: Natasa Anastasiadou",
       side = 3, line = -73, cex = 1, adj = 1)
 
 
-# # Customize labels
+# Customize labels
 circos.track(
     track.index = 1, panel.fun = function(x, y) {
         circos.text(
