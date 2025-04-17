@@ -11,9 +11,8 @@ library(data.table)
 library(dplyr)
 library(circlize)
 library(stringr)
-library(ComplexHeatmap)
-
-
+# library(ComplexHeatmap)
+library(showtext)
 
 # data cleaning ------------
 
@@ -72,12 +71,27 @@ grid_colors = c(
 )
 
 
+# Add gray30 color for locations
+locations <- setdiff(colnames(df_plot), names(grid_colors))
+for (loc in locations) {
+    grid_colors[loc] <- "gray30"
+}
 
 # plot --------------
 
 png("Rplot.png", width = 3000, height = 3000, res = 200) 
 
-par(bg = "grey94")
+
+
+# Automatically use showtext in all plots
+showtext_auto()
+
+# Add Candara (make sure it’s installed on your system)
+font_add("candara", regular = "Candara.ttf")
+
+# Use the font
+par(family = "candara", bg = "grey94")
+
 
 
 circos.par(
@@ -99,16 +113,15 @@ chordDiagram(
 
 # labs
 title("Bird Connections Around the World",
-      cex.main = 3,
+      cex.main = 6,
       font.main = 1,
       line = -2)
 
-
 mtext("Exploring the top 10 most frequently observed bird species and their global distribution across.",
-      side = 3, line = -4, cex = 1.5)
+      side = 3, line = -4, cex = 4)
 
-mtext("Source: National Park Service | Graphic: Natasa Anastasiadou",
-      side = 3, line = -73, cex = 1, adj = 1)
+mtext("Source: Bird Sightings Dataset | Graphic: Natasa Anastasiadou",
+      side = 3, line = -73, cex = 2.5, adj = 1)
 
 
 # Customize labels
@@ -121,7 +134,7 @@ circos.track(
             facing = "clockwise",
             niceFacing = TRUE,
             adj = c(0, 0.5),
-            cex = 1.2
+            cex = 2.5
         )
     }, bg.border = NA
 )
