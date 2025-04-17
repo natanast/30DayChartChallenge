@@ -63,55 +63,35 @@ t1 <- t1[, -1]
 
 df_plot <- as.matrix(t1)
 
+# Reorder rows and columns alphabetically by sector names
+df_plot <- df_plot[order(rev(rownames(df_plot))), order(colnames(df_plot))]
+
+
 # # Define new order 
-# new_order <- c("ZION", "YOSE", "YELL", "ROMO", "OLYM", "JOTR", "INDU", "HOSP", 
-#                "GRSM", "GRTE", "GRCA", "GLAC", "CUVA", "BRCA", "ACAD")
+new_order <- c("ZION", "YOSE", "YELL", "ROMO", "OLYM", "JOTR", "INDU", "HOSP",
+               "GRSM", "GRTE", "GRCA", "GLAC", "CUVA", "BRCA", "ACAD")
 
 
-# df_plot <- df_plot[new_order, ]
+df_plot <- df_plot[new_order, ]
 
 
 # colors ------------------
 
-grid_colors <- c(
-    "ACAD" = "#FDAE61",
-    "BRCA" = "#5E4FA2",
-    "CUVA" = "#66C2A5",
-    "GLAC" = "#BC3C29",
-    "GRCA" = "#0072B5",
-    "GRTE" = "#91D1C2",   
-    "GRSM" = "#984EA3",
-    "HOSP" = "#b24745",
-    "INDU" = "#E18727",
-    "JOTR" = "#ffdac4",
-    "OLYM" = "#B09C85",
-    "ROMO" = "#fb8a8c",
-    "YELL" = "#A65628",
-    "YOSE" = "#FF7F00",
-    "ZION" = "#20854E"
+
+grid_colors = c(
+    "American Crow"             = '#6f6e9a',
+    "American Goldfinch"        = "#A65628",
+    "American Robin"            = "#b24745",
+    "Belted Kingfisher"         = "#00429d",
+    "Blue Jay"                  = "#396375",
+    "Downy Woodpecker"          = '#a2a0cf',
+    "Green Heron"               = "#FDAE61",
+    "Northern Flicker"          = "#e37b78",
+    "Ruby-throated Hummingbird" = "#73a2c6", 
+    "Scarlet Tanager"           = "#7f9faa"
 )
 
 
-grid_colors = c('#396375', '#5a8192', '#7f9faa', '#a7bec0', '#d2ded1', '#febaad', '#f49992', '#e37b78', '#cc5f5e', '#b24745')
-
-c(IGLJ3 = "#D53E4F",IGLJ2 = "#5E4FA2", IGLJ1 ="#66C2A5")
-
-col = c("#00429d", "#73a2c6", "#ffffe0", "#ff9a92", "#b24745")
-
-
-
-grid_colors = c('#7f9faa', '#b24745', "#5E4FA2", "#66C2A5", "#73a2c6", "#A65628", "#FDAE61", "#a7bec0", '#396375', '#f49992')
-
-
-grid_colors = c("#00429d", "#73a2c6", "#ff9a92", "#b24745", "#396375", "#7f9faa", "#A65628", "#FDAE61", '#6f6e9a', '#a2a0cf')
-
-
-# Get all unique sectors (species + locations)
-sectors <- unique(c(df2$species, df2$location))
-
-# Assign colors to each sector
-# Recycle the color palette if there are more sectors than colors
-grid_colors <- setNames(rep(grid_colors, length.out = length(sectors)), sectors)
 
 # plot --------------
 
@@ -138,14 +118,14 @@ chordDiagram(
 
 
 # labs
-title("National Park Species",
-      cex.main = 3,  
-      font.main = 1,
-      line = -2)
+# title("National Park Species",
+#       cex.main = 3,  
+#       font.main = 1,
+#       line = -2)
 
 
-mtext("Species distribution across national parks",
-      side = 3, line = -4, cex = 1.5)
+# mtext("Species distribution across national parks",
+#       side = 3, line = -4, cex = 1.5)
 
 mtext("Source: National Park Service | Graphic: Natasa Anastasiadou",
       side = 3, line = -73, cex = 1, adj = 1)
@@ -191,3 +171,4 @@ dev.off()
 
 
 circos.clear()
+
