@@ -7,7 +7,7 @@ gc()
 
 library(ggplot2)
 library(dplyr)
-# library(readr)
+library(stringr)
 library(data.table)
 library(gghighlight)
 library(ggtext)
@@ -26,30 +26,51 @@ big_tech_stock_prices$year <- format(big_tech_stock_prices$date, "%Y")
 
 big_tech_stock_prices <- big_tech_stock_prices[year != "2023"]
 
+# Convert data to a data.table
+setDT(big_tech_stock_prices)
+
 # Calculate yearly average adjusted close price
-yearly_avg <- big_tech_stock_prices %>%
-    group_by(stock_symbol, year) %>%
-    summarise(adj_close = mean(adj_close, na.rm = TRUE)) %>%
-    ungroup()
+yearly_avg <- big_tech_stock_prices[, .(adj_close = mean(adj_close, na.rm = TRUE)), by = .(stock_symbol, year)]
+
+
+df <- merge(yearly_avg, big_tech_companies, by = "stock_symbol", all.x = TRUE)
+
+
+df$company <- str_replace_all(df$company, " Inc\\.|,", "")
+
+df$company <- ifelse(df$company == "International Business Machines Corporation", df$stock_symbol, df$company)
+
+
+
+# plot -------
+
+col = c('#6f6e9a',"#A65628","#b24745", "#00429d", "#396375", "#D54C45FF","#FDAE61", 
+        "#e37b78","#73a2c6", "#7f9faa", "#33608CFF","#9768A5FF","#E7718AFF", "#ED7846FF")
+
+
 
 
 # Plot
-g <- ggplot(yearly_avg, aes(x = as.numeric(year), y = adj_close, color = stock_symbol)) +
+g <- ggplot(df, aes(x = as.numeric(year), y = adj_close, color = company)) +
     
-    geom_line(size = 0.85) +
+    geom_smooth(size = 0.5, se = FALSE, span = .4) +
+    # geom_smooth(method = "loess", size = 1, span = 0.5, se = FALSE) +  # Smooth the lines
+    # geom_line(size = 0.5) +
     
     gghighlight(use_direct_label = FALSE,
-                unhighlighted_params = list(colour = alpha("grey85", 1))) +
+                unhighlighted_params = list(colour = alpha("grey80", 1))) +
     
-    facet_wrap('~stock_symbol', ncol = 7) +
+    facet_wrap('~company', ncol = 7) +
     
     scale_x_continuous( breaks = c(2010, 2016, 2022)) +
+    
+    scale_color_manual(values = col) +
     
     labs(
         title = "Big Tech Stock Trends Over Time",
         subtitle = "Each facet highlights one company",
         x = "",
-        y = "Avg Adjusted Close Price"
+        y = "Avg Adj Close Price"
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -57,10 +78,17 @@ g <- ggplot(yearly_avg, aes(x = as.numeric(year), y = adj_close, color = stock_s
     theme(
         legend.position = "none",
         
-        plot.title = element_text(size = 16, face = "bold", hjust = 0.5),
-        plot.subtitle = element_text(size = 11, hjust = 0.5),
+        plot.title = element_markdown(size = 11, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
+        plot.subtitle = element_markdown(size = 9, hjust = 0.5, family = "Candara", color = "grey40", margin = margin(t = 5, b = 20)),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
         
-        axis.text.x = element_text(size = 10, angle = 90, vjust = 0.5),
+        panel.grid.major = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
+        
+        axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5),
+        axis.text.y = element_text(size = 8),
+        
+        plot.background = element_rect(fill = "#e4e4e3", color = NA),
         
         plot.margin = margin(20, 20, 20, 20)
     )
