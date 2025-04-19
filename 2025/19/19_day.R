@@ -41,10 +41,14 @@ df$company <- str_replace_all(df$company, " Inc\\.|,", "")
 df$company <- ifelse(df$company == "International Business Machines Corporation", df$stock_symbol, df$company)
 
 
+# Filter data for the year 2022
+df_2022 <- df[df$year == 2022, ]
+
+
 
 # plot -------
 
-col = c('#6f6e9a',"#A65628","#b24745", "#00429d", "#396375", "#D54C45FF","#FDAE61", 
+col = c('#6f6e9a',"#A65628","#b24745", "#00429d", "#396375", "#D54C45FF","#db9044", 
         "#e37b78","#73a2c6", "#7f9faa", "#33608CFF","#9768A5FF","#E7718AFF", "#ED7846FF")
 
 
@@ -53,12 +57,29 @@ col = c('#6f6e9a',"#A65628","#b24745", "#00429d", "#396375", "#D54C45FF","#FDAE6
 # Plot
 g <- ggplot(df, aes(x = as.numeric(year), y = adj_close, color = company)) +
     
-    geom_smooth(size = 0.5, se = FALSE, span = .4) +
-    # geom_smooth(method = "loess", size = 1, span = 0.5, se = FALSE) +  # Smooth the lines
-    # geom_line(size = 0.5) +
+    geom_smooth(size = 0.4, se = FALSE, span = .4) +
+    
+    geom_point(data = df_2022, aes(x = as.numeric(year), y = adj_close, fill = company), 
+               size = 2.5, shape = 21, stroke = 0.1, color = "white") +  
+    
+
     
     gghighlight(use_direct_label = FALSE,
                 unhighlighted_params = list(colour = alpha("grey80", 1))) +
+    
+    geom_text(
+        data = df_2022,
+        aes(
+            x = as.numeric(year),
+            y = adj_close,
+            label = round(adj_close),
+            color = company
+        ),
+        size = 2,
+        vjust = 2.5,
+        hjust = 0.6,
+        fontface = "bold"
+    ) +
     
     facet_wrap('~company', ncol = 7) +
     
@@ -66,9 +87,12 @@ g <- ggplot(df, aes(x = as.numeric(year), y = adj_close, color = company)) +
     
     scale_color_manual(values = col) +
     
+    scale_fill_manual(values = col) +
+    
     labs(
         title = "Big Tech Stock Trends Over Time",
         subtitle = "Each facet highlights one company",
+        caption = "30DayChartChallenge 2025: <b> Day 19</b> | Source: <b> Big Tech Stock Prices (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "",
         y = "Avg Adj Close Price"
     ) +
@@ -79,14 +103,18 @@ g <- ggplot(df, aes(x = as.numeric(year), y = adj_close, color = company)) +
         legend.position = "none",
         
         plot.title = element_markdown(size = 11, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
-        plot.subtitle = element_markdown(size = 9, hjust = 0.5, family = "Candara", color = "grey40", margin = margin(t = 5, b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 8.5, family = "Candara", hjust = 1),
+        plot.subtitle = element_markdown(size = 9, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
+        plot.caption = element_markdown(margin = margin(t = 5), size = 7, hjust = 1),
         
         panel.grid.major = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
         
-        axis.text.x = element_text(size = 8, angle = 90, vjust = 0.5),
-        axis.text.y = element_text(size = 8),
+        axis.title.y = element_text(size = 8, vjust = 5),
+        
+        axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5),
+        axis.text.y = element_text(size = 6),
+        
+        strip.text.x.top = element_text(size = 7),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         
