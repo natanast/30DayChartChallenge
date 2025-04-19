@@ -31,7 +31,7 @@ selected_countries = ['NGA', 'EGY', 'USA', 'CAN', 'CHN', 'DEU', 'GRC', 'BRA', 'A
 
 df_filtered = df_long[df_long['country_code'].isin(selected_countries)]
 
-col = c('#396375', )
+#  "Top-Left": "#BC3C29", "Top-Right": "#6f6e9a"
 
 # Plot --------
 g = (
@@ -43,12 +43,12 @@ g = (
 
     facet_wrap('~country_code') +  
 
-    scale_color_manual(values={"Bottom-Left": "#6F99AD", "Bottom-Right": "#D78D50", "Top-Left": "#BC3C29", "Top-Right": "#6f6e9a"}) + # Custom colors for each quadrant
+    scale_fill_manual(values={"Urban": "#6F99AD", "Rural": "#BC3C29"}) + # Custom colors for each quadrant
 
     labs(
-        title = "Urban vs Rural Population % Over Time",
-        subtitle = "Stream-like area plots for selected countries (USA, IND, CHN, BRA, NGA)",
-        x = 'Year',
+        title = "Urban vs Rural Population % Over Time (1960 - 2023)",
+        subtitle = "Stream-like area plots for selected countries",
+        x = '',
         y = 'Population (%)',
         fill = 'Type'
     ) +
@@ -71,5 +71,5 @@ g = (
 g
 
 #  Save the plot with custom size and resolution
-ggsave(g, "12_day.png", width = 10, height = 6, dpi = 600)
+ggsave(g, "20_day.png", width = 10, height = 6, dpi = 600)
 
