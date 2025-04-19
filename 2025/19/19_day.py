@@ -7,49 +7,31 @@ from plotnine import *
 
 # Load data --------
 
-tornados = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-05-16/tornados.csv')
+big_tech_stock_prices = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv')
+big_tech_companies = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_companies.csv')
 
 
 # clean data ------
 
 df_clean = tornados.dropna(subset=['inj', 'fat'])
 
-# Calculate median values to draw the lines
-line_1 = 450
-line_2 = 60
-
-# Create a new column to categorize points into quadrants based on their position
-df_clean['quadrant'] = pd.cut(
-    df_clean['inj'],
-    bins=[-float('inf'), line_1, float('inf')], 
-    labels=["Left", "Right"]
-)
-
-df_clean['quadrant'] = pd.Series([
-    'Bottom-Left' if (row['inj'] <= line_1 and row['fat'] <= line_2) else 
-    'Bottom-Right' if (row['inj'] > line_1 and row['fat'] <= line_2) else 
-    'Top-Left' if (row['inj'] <= line_1 and row['fat'] > line_2) else 
-    'Top-Right' for _, row in df_clean.iterrows()
-])
 
 
+# Convert the 'date' column to datetime if not already
+big_tech_stock_prices['date'] = pd.to_datetime(big_tech_stock_prices['date'])
 
-# Create a new column for the formatted label
-df_clean['label'] = df_clean['yr'].apply(lambda x: f"Year {x}")
+# Extract the year from the date
+big_tech_stock_prices['year'] = big_tech_stock_prices['date'].dt.year
 
-# Filter the data for high injuries and fatalities categories
-df_clean['label'] = df_clean.apply(
-    lambda row: f"Year {row['yr']}" if (
-        (row['inj'] > line_1 + 500 and row['fat'] > line_2) or  # High Injuries, High Fatalities
-        (row['inj'] > line_1 + 500 and row['fat'] <= line_2)    # High Injuries, Low Fatalities
-    ) else None,
-    axis=1
-)
+# Calculate the yearly average closing price per company
+yearly_avg = big_tech_stock_prices.groupby(['stock_symbol', 'year'])['adj_close'].mean().reset_index()
+
+
 
 # plot --------
 
 g = (
-    ggplot(df_clean) +
+    ggplot(yearly_avg) +
 
     aes(x = 'inj', y = 'fat', color='quadrant') +
     
