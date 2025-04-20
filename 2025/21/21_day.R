@@ -60,7 +60,19 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     
     scale_fill_manual(values = col) +
     
-    scale_x_continuous(breaks = c(1930, 1950, 1975, 2000, 2022), limits = c(1930, 2022)) +
+    scale_x_continuous(breaks = c(1930, 1950, 1975, 2000, 2022), limits = c(1930, 2027)) +
+    
+    # China(Coal)
+    annotate(
+        "text", 
+        x = 2022.2, y = 16000,
+        label = "China(Coal)",
+        hjust = 0,
+        size = 2.5,
+        lineheight = .8,
+        fontface = "bold",
+        color = col[1]
+    ) +
     
     labs(
         title = "Top 10 Emitting Entities Over Time",
@@ -73,14 +85,14 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        legend.position = "none",
+        legend.position = "bottom",
         
         axis.title.y = element_text(size = 10, vjust = 5),
         axis.text = element_text(size = 9),
         
         plot.title = element_markdown(size = 14, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 7, hjust = 1),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 6, hjust = 1),
 
         panel.grid.major = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
@@ -90,35 +102,7 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
         plot.margin = margin(20, 20, 20, 20)
     )
 
-    # labs(
-    #     title = "Stock Trends of Big Tech Companies Over the Years",
-    #     subtitle = "Tracking the Annual Adjusted Closing Prices of Leading Tech Giants from 2010 to 2022",
-    #     caption = "30DayChartChallenge 2025: <b> Day 19</b> | Source: <b> Big Tech Stock Prices (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
-    #     x = "",
-    #     y = "Avg Adj Close Price"
-    # ) +
-    # 
-    # theme(
-    #     legend.position = "none",
-    #     
-    #     plot.title = element_markdown(size = 11, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
-    #     plot.subtitle = element_markdown(size = 9, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
-    #     plot.caption = element_markdown(margin = margin(t = 5), size = 5.5, hjust = 1),
-    #     
-    #     panel.grid.major = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
-    #     panel.grid.minor = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
-    #     
-    #     axis.title.y = element_text(size = 8, vjust = 5),
-    #     
-    #     axis.text.x = element_text(size = 6, angle = 90, vjust = 0.5),
-    #     axis.text.y = element_text(size = 6),
-    #     
-    #     strip.text.x.top = element_text(size = 7),
-    #     
-    #     plot.background = element_rect(fill = "#e4e4e3", color = NA),
-    #     
-    #     plot.margin = margin(20, 20, 20, 20)
-    # ) 
+
 
 g
 
