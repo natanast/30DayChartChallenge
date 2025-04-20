@@ -74,6 +74,18 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
         color = col[1]
     ) +
     
+    # Chevron
+    annotate(
+        "text", 
+        x = 2022.2, y = 10000,
+        label = "China(Coal)",
+        hjust = 0,
+        size = 2.5,
+        lineheight = .8,
+        fontface = "bold",
+        color = col[2]
+    ) +
+    
     labs(
         title = "Top 10 Emitting Entities Over Time",
         subtitle = "Emissions measured in million tonnes of CO₂ equivalent (MtCO₂e)",
