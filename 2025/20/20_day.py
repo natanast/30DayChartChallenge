@@ -14,8 +14,8 @@ df['year'].unique()
 
 # clean data ------
 
-df_long = df[['year', 'country_code', 'urban_pop_perc', 'rural_pop_perc']].melt(
-    id_vars=['year', 'country_code'],
+df_long = df[['year', 'country', 'urban_pop_perc', 'rural_pop_perc']].melt(
+    id_vars=['year', 'country'],
     value_vars=['urban_pop_perc', 'rural_pop_perc'],
     var_name='Population_Type',
     value_name='Percentage'
@@ -25,9 +25,12 @@ df_long = df[['year', 'country_code', 'urban_pop_perc', 'rural_pop_perc']].melt(
 df_long['Population_Type'] = df_long['Population_Type'].str.replace('_pop_perc', '').str.capitalize()
 
 
-selected_countries = ['NGA', 'EGY', 'USA', 'CAN', 'CHN', 'DEU', 'GRC', 'BRA', 'AUS'] 
+# selected_countries = ['NGA', 'EGY', 'USA', 'CAN', 'CHN', 'DEU', 'GRC', 'BRA', 'AUS'] 
 
-df_filtered = df_long[df_long['country_code'].isin(selected_countries)]
+selected_countries = ['United States', 'China', 'Greece', 'Germany', 'Brazil', 'Australia', 'Nigeria', 'Canada', 'South Africa']
+
+
+df_filtered = df_long[df_long['country'].isin(selected_countries)]
 
 
 # Plot --------
@@ -38,7 +41,7 @@ g = (
 
     geom_area(alpha=0.7) +
 
-    facet_wrap('~country_code') +  
+    facet_wrap('~country') +  
 
     scale_fill_manual(values={"Urban": "#6F99AD", "Rural": "#BC3C29"}) + # Custom colors for each quadrant
 
@@ -59,7 +62,7 @@ g = (
         
         plot_title = element_text(size = 12, weight = 'bold', ha = 'center'),
         plot_subtitle = element_text(size = 10, ha = 'center'),
-        plot_caption = element_text(size = 7, ha = 'right'),
+        plot_caption = element_text(size = 5, ha = 'right'),
         
         panel_grid_major = element_line(color = '#c9c9c9', alpha = 0.75, size = 0.65, linetype="dashed"),
         plot_background = element_rect(fill = '#f8f8f8', color = '#f8f8f8'),
