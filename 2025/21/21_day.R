@@ -28,10 +28,8 @@ top_emitters_dt <- emissions[
 
 top_emitters_dt = top_emitters_dt[order(-total_emissions)]
 
-# Extract top 10 emitter names as a character vector
 top_emitters <- top_emitters_dt[1:10, parent_entity]
 
-# Step 2: Filter and aggregate emissions over time for top emitters
 df <- emissions[parent_entity %in% top_emitters]
 
 
@@ -45,6 +43,31 @@ df_plot <- df[, .(total_emissions = sum(total_emissions_MtCO2e, na.rm = TRUE)),
 
 col = c('#6f6e9a',"#A65628","#b24745", "#00429d", "#396375", "#D54C45FF","#db9044", 
         "#e37b78","#73a2c6", "#7f9faa", "#33608CFF","#9768A5FF","#E7718AFF", "#ED7846FF")
+
+
+
+
+
+# Step 3: Create Streamgraph
+ggplot(stream_data, aes(x = year, y = total_emissions, fill = parent_entity)) +
+    geom_stream(type = "ridge") +
+    scale_fill_brewer(palette = "Paired") +
+    labs(
+        title = "Top 10 Emitting Entities Over Time",
+        subtitle = "Emissions measured in million tonnes of CO₂ equivalent (MtCO₂e)",
+        x = "Year",
+        y = "Emissions (MtCO₂e)",
+        fill = "Entity",
+        caption = "#30DayChartChallenge | Data: Carbon Majors via TidyTuesday"
+    ) +
+    theme_minimal(base_family = "Helvetica") +
+    theme(
+        legend.position = "bottom",
+        plot.title = element_text(face = "bold", size = 14),
+        plot.subtitle = element_text(size = 10),
+        plot.caption = element_text(size = 8, face = "italic"),
+        panel.grid.minor = element_blank()
+    )
 
 
 
@@ -121,47 +144,3 @@ g
 ggsave("19_day.png", plot = g, width = 10, height = 6, dpi = 600)
 
 
-
-
-# Load libraries
-library(tidyverse)
-library(ggstream)
-
-# Read the data
-emissions <- readr::read_csv("emissions.csv")
-
-# Step 1: Get Top 10 Emitters by Total Emissions
-top_emitters <- emissions %>%
-    group_by(parent_entity) %>%
-    summarise(total_emissions = sum(total_emissions_MtCO2e, na.rm = TRUE)) %>%
-    arrange(desc(total_emissions)) %>%
-    slice_head(n = 10) %>%
-    pull(parent_entity)
-
-# Step 2: Filter for Top Emitters and Summarize per Year
-stream_data <- emissions %>%
-    filter(parent_entity %in% top_emitters) %>%
-    group_by(year, parent_entity) %>%
-    summarise(total_emissions = sum(total_emissions_MtCO2e, na.rm = TRUE)) %>%
-    ungroup()
-
-# Step 3: Create Streamgraph
-ggplot(stream_data, aes(x = year, y = total_emissions, fill = parent_entity)) +
-    geom_stream(type = "ridge") +
-    scale_fill_brewer(palette = "Paired") +
-    labs(
-        title = "Top 10 Emitting Entities Over Time",
-        subtitle = "Emissions measured in million tonnes of CO₂ equivalent (MtCO₂e)",
-        x = "Year",
-        y = "Emissions (MtCO₂e)",
-        fill = "Entity",
-        caption = "#30DayChartChallenge | Data: Carbon Majors via TidyTuesday"
-    ) +
-    theme_minimal(base_family = "Helvetica") +
-    theme(
-        legend.position = "bottom",
-        plot.title = element_text(face = "bold", size = 14),
-        plot.subtitle = element_text(size = 10),
-        plot.caption = element_text(size = 8, face = "italic"),
-        panel.grid.minor = element_blank()
-    )
