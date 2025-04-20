@@ -65,10 +65,9 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     labs(
         title = "Top 10 Emitting Entities Over Time",
         subtitle = "Emissions measured in million tonnes of CO₂ equivalent (MtCO₂e)",
-        x = "Year",
+        x = "",
         y = "Emissions (MtCO₂e)",
-        fill = "Entity",
-        caption = "#30DayChartChallenge | Data: Carbon Majors via TidyTuesday"
+        caption = "30DayChartChallenge 2025: <b> Day 19</b> | Source: <b> Big Tech Stock Prices (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -76,10 +75,14 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     theme(
         legend.position = "none",
         
-        plot.title = element_text(face = "bold", size = 14),
-        plot.subtitle = element_text(size = 10),
-        plot.caption = element_markdown(size = 8, face = "italic"),
+        axis.title.y = element_text(size = 10, vjust = 5),
+        axis.text = element_text(size = 9),
         
+        plot.title = element_markdown(size = 14, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 7, hjust = 1),
+
+        panel.grid.major = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
