@@ -68,22 +68,119 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
         x = 2022.2, y = 16000,
         label = "China(Coal)",
         hjust = 0,
-        size = 2.5,
-        lineheight = .8,
+        size = 2.25,
+        lineheight = .7,
         fontface = "bold",
         color = col[1]
     ) +
     
-    # Chevron
+    # BP
     annotate(
         "text", 
         x = 2022.2, y = 10000,
-        label = "China(Coal)",
+        label = "BP",
         hjust = 0,
-        size = 2.5,
-        lineheight = .8,
+        size = 2.25,
+        lineheight = .7,
         fontface = "bold",
         color = col[2]
+    ) +
+    
+    
+    # Chevron
+    annotate(
+        "text", 
+        x = 2022.2, y = 9250,
+        label = "Chevron",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[3]
+    ) +
+    
+    # Coal India
+    annotate(
+        "text", 
+        x = 2022.2, y = 8200,
+        label = "Coal India",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[4]
+    ) +
+    
+    # Former Soviet Union
+    annotate(
+        "text", 
+        x = 1975, y = 7100,
+        label = "Former Soviet Union",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = "white"
+    ) +
+    
+    # ExxonMobil
+    annotate(
+        "text", 
+        x = 2022.2, y = 7000,
+        label = "ExxonMobil",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[6]
+    ) +
+    
+    # National Iranian Oil Co.
+    annotate(
+        "text", 
+        x = 2022.2, y = 6180,
+        label = "National Iranian",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[7]
+    ) +
+    
+    # Saudi Aramco
+    annotate(
+        "text", 
+        x = 2022.2, y = 4800,
+        label = "Saudi Aramco",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[8]
+    ) +
+    
+    # Shell
+    annotate(
+        "text", 
+        x = 2022.2, y = 3750,
+        label = "Shell",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[9]
+    ) +
+    
+    # Gazprom
+    annotate(
+        "text", 
+        x = 2022.2, y = 2000,
+        label = "Gazprom",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[10]
     ) +
     
     labs(
@@ -97,7 +194,7 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        legend.position = "bottom",
+        legend.position = "none",
         
         axis.title.y = element_text(size = 10, vjust = 5),
         axis.text = element_text(size = 9),
