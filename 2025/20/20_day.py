@@ -7,7 +7,7 @@ from plotnine import *
 
 # Load data --------
 
-df = pd.read_csv('20\\global_urbanization_climate_metrics.csv')
+df = pd.read_csv('global_urbanization_climate_metrics.csv')
 
 df['year'].unique()
 
@@ -25,13 +25,10 @@ df_long = df[['year', 'country_code', 'urban_pop_perc', 'rural_pop_perc']].melt(
 df_long['Population_Type'] = df_long['Population_Type'].str.replace('_pop_perc', '').str.capitalize()
 
 
-# selected_countries = ['USA', 'CHN', 'GRC', 'DEU', 'ESP', 'SWE']
-
 selected_countries = ['NGA', 'EGY', 'USA', 'CAN', 'CHN', 'DEU', 'GRC', 'BRA', 'AUS'] 
 
 df_filtered = df_long[df_long['country_code'].isin(selected_countries)]
 
-#  "Top-Left": "#BC3C29", "Top-Right": "#6f6e9a"
 
 # Plot --------
 g = (
@@ -46,8 +43,9 @@ g = (
     scale_fill_manual(values={"Urban": "#6F99AD", "Rural": "#BC3C29"}) + # Custom colors for each quadrant
 
     labs(
-        title = "Urban vs Rural Population % Over Time (1960 - 2023)",
-        subtitle = "Stream-like area plots for selected countries",
+        title = "Urbanization Over Time Across the Globe",
+        subtitle = "Tracking the shift from rural to urban living in selected countries (1960–2023)",
+        caption = "30DayChartChallenge 2025: Day 20 | Source: Urbanization & Climate Metrics Insights (Kaggle) | Graphic: Natasa Anastasiadou",
         x = '',
         y = 'Population (%)',
         fill = 'Type'
@@ -63,6 +61,12 @@ g = (
         plot_caption=element_text(size=7, ha='right'),
         panel_grid_major=element_line(color='#c9c9c9', alpha=0.75, size=0.65, linetype="dashed"),
         plot_background=element_rect(fill='#f8f8f8', color='#f8f8f8'),
+
+        legend_title=element_text(size=8),
+        legend_text=element_text(size=7),
+        # legend_key=element_rect(fill='white', width=6, height=6),
+
+
         figure_size=(10, 6)
     )
 )
