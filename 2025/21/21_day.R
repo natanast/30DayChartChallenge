@@ -49,25 +49,10 @@ df_plot$parent_entity <- df_plot$parent_entity |> factor(levels = custom_order)
 
 # plot -------
 
-col = c("#00429d", "#73a2c6", "#ffffe0", "#ff9a92", "#b24745")
-
-
-col = c('#396375', '#5a8192', '#7f9faa', '#a7bec0', '#d2ded1', '#febaad', '#f49992', '#e37b78', '#cc5f5e', '#b24745')
-
-
-
-col = c('#6f6e9a',"#A65628","#b24745", "#00429d", "#396375", "#D54C45FF","#db9044", 
-        "#e37b78","#73a2c6", "#7f9faa", "#33608CFF","#9768A5FF","#E7718AFF", "#ED7846FF")
-
-
-col = c('#6f6e9a', "#b24745", "#00429d", "#396375", "#db9044", "#9768A5FF","#E7718AFF", "#e37b78","#73a2c6", "#7f9faa")
-
-
-col = c("#396375", "#7f9faa", )
-
 library(paletteer)
 
 col = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 10)
+
 
 g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     
