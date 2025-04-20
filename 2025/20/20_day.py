@@ -62,7 +62,7 @@ g = (
         
         plot_title = element_text(size = 12, weight = 'bold', ha = 'center'),
         plot_subtitle = element_text(size = 10, ha = 'center'),
-        plot_caption = element_text(size = 5, ha = 'right'),
+        plot_caption = element_text(size = 6, ha = 'right'),
         
         panel_grid_major = element_line(color = '#c9c9c9', alpha = 0.75, size = 0.65, linetype="dashed"),
         plot_background = element_rect(fill = '#f8f8f8', color = '#f8f8f8'),
