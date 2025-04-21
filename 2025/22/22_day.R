@@ -35,14 +35,16 @@ index <- df[1:10, Entity]
 
 df1 <- outer_space_objects[Entity %in% index]
 
+
+df1$label <- ifelse(df1$Year == 2023, df1$Entity, "")
+
+
 df1$Entity <- df1$Entity |> factor(levels = rev(index))
 
 
 # plot -------
 
-col = c('#476670', '#62828c', '#7f9faa', '#9cbcc8', '#c2dae2', '#badaf4', '#8ebde2', '#70a0c3', '#5383a5', '#366788')
 
-col = c('#405f69', '#587782', '#70909b', '#8aaab5', '#a3c4cf', '#96c5ea', '#7babcf', '#6191b4', '#48789a', '#2f6181')
 
 col = c('#405f69', '#587782', '#70909b', '#8aaab5', '#a3c4cf', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
 
@@ -63,17 +65,13 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     scale_fill_manual(values = rev(col), guide = "none") +
     
     # Adjust x-axis limits to start from 1
-    scale_x_continuous(limits = c(1960, 2028), expand = c(0, 0)) +
+    scale_x_continuous(limits = c(1960, 2030), expand = c(0, 0)) +
     
-    
-    geom_text(aes(label = Entity),
+    geom_text(aes(label = label),
               na.rm = TRUE,
-              color = "grey50",
+              color = "grey90",
               size = 2.5,
-              fontface = "bold",
-              hjust = 1.75,
-              vjust = 0.35) +
-    
+              fontface = "bold") +
     
     # labs(
     #     title = "Fueling the Footprint: Major Emitters Since 1930",
