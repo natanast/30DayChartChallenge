@@ -94,7 +94,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         size = 3.5,
         lineheight = .7,
         fontface = "bold",
-        color = col[2] |> darken()
+        color = col[2]
     ) +
     
 
@@ -127,7 +127,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         panel.grid.major = element_line(linewidth = .15, color = "grey75", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
         
-        plot.background = element_rect(fill = "grey55", color = NA),
+        plot.background = element_rect(fill = "grey60", color = NA),
         
         plot.margin = margin(20, 20, 20, 20)
 
