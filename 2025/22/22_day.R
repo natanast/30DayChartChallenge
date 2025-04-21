@@ -44,25 +44,36 @@ col = c('#476670', '#62828c', '#7f9faa', '#9cbcc8', '#c2dae2', '#badaf4', '#8ebd
 
 col = c('#405f69', '#587782', '#70909b', '#8aaab5', '#a3c4cf', '#96c5ea', '#7babcf', '#6191b4', '#48789a', '#2f6181')
 
-col = c('#565781', '#6f6e9a', '#8887b4', '#a2a0cf', '#bcbaea', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
+col = c('#405f69', '#587782', '#70909b', '#8aaab5', '#a3c4cf', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
 
-ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
+
+
+g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     
     geom_point(
         shape = 21,
-        stroke = 0.15,
-        alpha = 0.9,
+        stroke = 0.1,
         color = "white"
     ) +
     
     coord_radial(inner.radius = .3) +
     
-    scale_size_continuous(range = c(3.5, 9)) +
+    scale_size_continuous(range = c(3, 7), name = "No. of objects") +
     
-    # scale_fill_brewer(palette = "Dark2") +
+    scale_fill_manual(values = rev(col), guide = "none") +
+    
+    # Adjust x-axis limits to start from 1
+    scale_x_continuous(limits = c(1960, 2028), expand = c(0, 0)) +
     
     
-    scale_fill_manual(values = rev(col)) +
+    geom_text(aes(label = Entity),
+              na.rm = TRUE,
+              color = "grey50",
+              size = 2.5,
+              fontface = "bold",
+              hjust = 1.75,
+              vjust = 0.35) +
+    
     
     # labs(
     #     title = "Fueling the Footprint: Major Emitters Since 1930",
@@ -75,8 +86,12 @@ ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        legend.position = "none",
+        legend.position = "right",
+        legend.title.position = "left",
         
+        legend.title = element_text(size = 10, face = "bold", color = "grey80", angle = 90, hjust = .5),
+        legend.text = element_text(size = 8, color = "grey90"),
+     
         axis.text.x = element_text(size = 10, vjust = 5, color = "grey80"),
         axis.text.y = element_blank(),
         
@@ -89,7 +104,7 @@ ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         panel.grid.major = element_line(linewidth = .15, color = "grey80", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
         
-        plot.background = element_rect(fill = "grey20", color = NA),
+        plot.background = element_rect(fill = "grey50", color = NA),
         
         plot.margin = margin(20, 20, 20, 20)
 
@@ -99,6 +114,6 @@ ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
 g
 
 # Save the plot with custom size and resolution
-ggsave("21_day.png", plot = g, width = 10, height = 6, dpi = 600)
+ggsave("21_day.png", plot = g, width = 10, height = 10, dpi = 600)
 
 
