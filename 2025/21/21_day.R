@@ -184,11 +184,11 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     ) +
     
     labs(
-        title = "Top 10 Emitting Entities Over Time",
-        subtitle = "Emissions measured in million tonnes of CO₂ equivalent (MtCO₂e)",
+        title = "Fueling the Footprint: Major Emitters Since 1930",
+        subtitle = "Ten entities that shaped the planet’s carbon footprint, measured in million tonnes of CO₂-equivalent (MtCO₂e), over nearly a century",
         x = "",
         y = "Emissions (MtCO₂e)",
-        caption = "30DayChartChallenge 2025: <b> Day 19</b> | Source: <b> Big Tech Stock Prices (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2025: <b> Day 21</b> | Source: <b> Carbon Majors Emissions Data (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
     theme_minimal(base_family = "Candara") +
