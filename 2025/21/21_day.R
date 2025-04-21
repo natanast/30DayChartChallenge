@@ -77,7 +77,7 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     # BP
     annotate(
         "text", 
-        x = 2022.2, y = 10000,
+        x = 2022.2, y = 9800,
         label = "BP",
         hjust = 0,
         size = 2.25,
@@ -90,7 +90,7 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     # Chevron
     annotate(
         "text", 
-        x = 2022.2, y = 9250,
+        x = 2022.2, y = 9280,
         label = "Chevron",
         hjust = 0,
         size = 2.25,
@@ -162,7 +162,7 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     # Shell
     annotate(
         "text", 
-        x = 2022.2, y = 3750,
+        x = 2022.2, y = 3600,
         label = "Shell",
         hjust = 0,
         size = 2.25,
@@ -185,9 +185,9 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
     
     labs(
         title = "Fueling the Footprint: Major Emitters Since 1930",
-        subtitle = "Ten entities that shaped the planet’s carbon footprint, measured in million tonnes of CO₂-equivalent (MtCO₂e), over nearly a century",
+        subtitle = "Ten entities that shaped the planet’s carbon footprint, measured in million tonnes of CO₂-equivalent (MtCO₂e)",
         x = "",
-        y = "Emissions (MtCO₂e)",
+        y = "MtCO₂e",
         caption = "30DayChartChallenge 2025: <b> Day 21</b> | Source: <b> Carbon Majors Emissions Data (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
@@ -200,8 +200,8 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
         axis.text = element_text(size = 9),
         
         plot.title = element_markdown(size = 14, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 6, hjust = 1),
+        plot.subtitle = element_markdown(size = 11, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 7, hjust = 1),
 
         panel.grid.major = element_line(linewidth = .25, color = "grey80", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
