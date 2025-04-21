@@ -35,19 +35,13 @@ index <- df[1:10, Entity]
 
 df1 <- outer_space_objects[Entity %in% index]
 
-
-df1$label <- ifelse(df1$Year == 2023, df1$Entity, "")
-
-
 df1$Entity <- df1$Entity |> factor(levels = rev(index))
+
 
 
 # plot -------
 
-
-
 col = c('#405f69', '#587782', '#70909b', '#8aaab5', '#a3c4cf', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
-
 
 
 g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
@@ -65,14 +59,45 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     scale_fill_manual(values = rev(col), guide = "none") +
     
     # Adjust x-axis limits to start from 1
-    scale_x_continuous(limits = c(1960, 2030), expand = c(0, 0)) +
+    scale_x_continuous(limits = c(1960, 2028), expand = c(0, 0)) +
     
-    geom_text(aes(label = label),
-              na.rm = TRUE,
-              color = "grey90",
-              size = 2.5,
-              fontface = "bold") +
+    # World
+    annotate(
+        "text", 
+        x = 2026, y = 10.2,
+        label = "World",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[1]
+    ) +
     
+    # World
+    annotate(
+        "text", 
+        x = 2026, y = 10.2,
+        label = "World",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[1]
+    ) +
+    
+    # United States
+    annotate(
+        "text", 
+        x = 2024.5, y = 9.8,
+        label = "United States",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = col[2] |> darken()
+    ) +
+    
+
     # labs(
     #     title = "Fueling the Footprint: Major Emitters Since 1930",
     #     subtitle = "Ten entities that shaped the planet’s carbon footprint, measured in million tonnes of CO₂-equivalent (MtCO₂e)",
@@ -99,10 +124,10 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         plot.subtitle = element_markdown(size = 11, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
         plot.caption = element_markdown(margin = margin(t = 10), size = 7, hjust = 1),
         
-        panel.grid.major = element_line(linewidth = .15, color = "grey80", linetype = "dashed", lineend = "round"),
+        panel.grid.major = element_line(linewidth = .15, color = "grey75", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
         
-        plot.background = element_rect(fill = "grey50", color = NA),
+        plot.background = element_rect(fill = "grey55", color = NA),
         
         plot.margin = margin(20, 20, 20, 20)
 
