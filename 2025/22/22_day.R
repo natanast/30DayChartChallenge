@@ -1,4 +1,5 @@
 
+
 rm(list = ls())
 gc()
 
@@ -13,176 +14,65 @@ library(ggtext)
 library(extrafont)
 library(ggstream)
 
+
 # Load data -------
 
-emissions <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-05-21/emissions.csv')
+outer_space_objects <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-04-23/outer_space_objects.csv')
 
 
 # Clean data ------
 
-top_emitters_dt <- emissions[
-    , .(total_emissions = sum(total_emissions_MtCO2e, na.rm = TRUE)),
-    by = parent_entity
+df <- outer_space_objects[
+    , .(total_objects = sum(num_objects, na.rm = TRUE)), 
+    by = Entity
 ]
 
 
-top_emitters_dt = top_emitters_dt[order(-total_emissions)]
-
-top_emitters <- top_emitters_dt[1:10, parent_entity]
-
-df <- emissions[parent_entity %in% top_emitters]
+df = df[order(-total_objects)]
 
 
-df_plot <- df[, .(total_emissions = sum(total_emissions_MtCO2e, na.rm = TRUE)),
-    by = .(year, parent_entity)
-]
+index <- df[1:10, Entity]
 
+df1 <- outer_space_objects[Entity %in% index]
 
-custom_order <- c("China (Coal)",  "BP", "Chevron", "Coal India", 
-                  "Former Soviet Union", "ExxonMobil",
-                  "National Iranian Oil Co.", "Saudi Aramco",
-                  "Shell", "Gazprom")
-
-
-df_plot$parent_entity <- df_plot$parent_entity |> factor(levels = custom_order)
+df1$Entity <- df1$Entity |> factor(levels = rev(index))
 
 
 # plot -------
 
-library(paletteer)
-
-col = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 10)
-
-
-g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
+ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     
-    geom_stream(type = "ridge", color = "white", lwd = 0.1) +
+    geom_point(
+        shape = 21,
+        stroke = 0.15,
+        alpha = 0.9,
+        color = "white"
+    ) +
+    
+    
+    coord_radial(inner.radius = .3) +
+    
+    scale_size_continuous(range = c(3.5, 9)) +
+    
+    theme_minimal(base_family = "Candara") +
+    
+    theme(
+        legend.position = "none",
+        
+        axis.title = element_blank(),
+        
+        
+    )
+        
+    
+    
+
     
     scale_fill_manual(values = col) +
     
     scale_x_continuous(breaks = c(1930, 1950, 1975, 2000, 2022), limits = c(1930, 2027)) +
     
-    # China(Coal)
-    annotate(
-        "text", 
-        x = 2022.2, y = 16000,
-        label = "China(Coal)",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[1]
-    ) +
-    
-    # BP
-    annotate(
-        "text", 
-        x = 2022.2, y = 9800,
-        label = "BP",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[2]
-    ) +
-    
-    
-    # Chevron
-    annotate(
-        "text", 
-        x = 2022.2, y = 9280,
-        label = "Chevron",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[3]
-    ) +
-    
-    # Coal India
-    annotate(
-        "text", 
-        x = 2022.2, y = 8200,
-        label = "Coal India",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[4]
-    ) +
-    
-    # Former Soviet Union
-    annotate(
-        "text", 
-        x = 1975, y = 7100,
-        label = "Former Soviet Union",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = "white"
-    ) +
-    
-    # ExxonMobil
-    annotate(
-        "text", 
-        x = 2022.2, y = 7000,
-        label = "ExxonMobil",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[6]
-    ) +
-    
-    # National Iranian Oil Co.
-    annotate(
-        "text", 
-        x = 2022.2, y = 6180,
-        label = "National Iranian",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[7]
-    ) +
-    
-    # Saudi Aramco
-    annotate(
-        "text", 
-        x = 2022.2, y = 4800,
-        label = "Saudi Aramco",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[8]
-    ) +
-    
-    # Shell
-    annotate(
-        "text", 
-        x = 2022.2, y = 3600,
-        label = "Shell",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[9]
-    ) +
-    
-    # Gazprom
-    annotate(
-        "text", 
-        x = 2022.2, y = 2000,
-        label = "Gazprom",
-        hjust = 0,
-        size = 2.25,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[10]
-    ) +
-    
+
     labs(
         title = "Fueling the Footprint: Major Emitters Since 1930",
         subtitle = "Ten entities that shaped the planet’s carbon footprint, measured in million tonnes of CO₂-equivalent (MtCO₂e)",
@@ -191,7 +81,7 @@ g = ggplot(df_plot, aes(x = year, y = total_emissions, fill = parent_entity)) +
         caption = "30DayChartChallenge 2025: <b> Day 21</b> | Source: <b> Carbon Majors Emissions Data (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
-    theme_minimal(base_family = "Candara") +
+
     
     theme(
         legend.position = "none",
@@ -218,4 +108,29 @@ g
 # Save the plot with custom size and resolution
 ggsave("21_day.png", plot = g, width = 10, height = 6, dpi = 600)
 
+
+
+
+ggplot(df1, aes(x = Year, y = Entity, size = num_objects, fill = Entity)) +
+    geom_point(shape = 21, color = "white", alpha = 0.9, stroke = 0.2) +
+    scale_size_continuous(range = c(1, 6)) +
+    coord_polar() +
+    scale_fill_brewer(palette = "Dark2") +
+    theme_minimal(base_family = "Candara") +
+    theme(
+        axis.title = element_blank(),
+        axis.text.y = element_text(size = 8),
+        axis.text.x = element_text(size = 6, angle = 90),
+        panel.grid = element_line(color = "grey80", linewidth = 0.2),
+        legend.position = "bottom",
+        plot.background = element_rect(fill = "#000010", color = NA),
+        panel.background = element_rect(fill = "#000010", color = NA),
+        plot.title = element_text(color = "white", size = 14, face = "bold", hjust = 0.5),
+        plot.caption = element_text(color = "grey70", size = 6, hjust = 1)
+    ) +
+    labs(
+        title = "Starburst of Space Launches",
+        subtitle = "Each point shows the number of objects launched into space by major entities across years",
+        caption = "Data: TidyTuesday | Viz: Natasa Anastasiadou"
+    )
 
