@@ -55,16 +55,20 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     coord_radial(inner.radius = .3) +
     
     scale_size_continuous(
-        range = c(2.5, 7.5),   
-        # breaks = c(500, 1500, 2500), 
-        # labels = c("500", "1,500", "2,500"), 
+        range = c(2.5, 7.5),
         name = "No. of objects"
     ) +
     
-    scale_fill_manual(values = rev(col), guide = "none") +
+    scale_fill_manual(
+        values = rev(col), 
+        guide = "none"
+    ) +
     
-    # Adjust x-axis limits to start from 1
-    scale_x_continuous(limits = c(1960, 2029), expand = c(0, 0)) +
+
+    scale_x_continuous(
+        limits = c(1960, 2029), 
+        expand = c(0, 0)
+    ) +
 
     # World
     annotate(
@@ -208,8 +212,8 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         axis.title = element_blank(),
         
         plot.title = element_markdown(size = 16, face = "bold", color = "grey10", hjust = 0.75, margin = margin(t = 25, b = 5)),
-        plot.subtitle = element_markdown(size = 13, hjust = 0.25, color = "grey30", margin = margin(t = 10, b = 10)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 8, hjust = 1.35),
+        plot.subtitle = element_markdown(size = 13, hjust = -.1, color = "grey30", margin = margin(t = 10, b = 5)),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 9, hjust = 1.35),
         
         panel.grid.major = element_line(linewidth = .15, color = "grey75", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
