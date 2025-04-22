@@ -12,8 +12,9 @@ daily_accidents_420 = pd.read_csv('https://raw.githubusercontent.com/rfordatasci
 
 # clean data ------
 
+
 # Mark True for both July 4 and 4/20
-daily_accidents_420['e420'] = ((daily_accidents_420['date'].dt.month == 4) & (daily_accidents_420['date'].dt.day == 20)) | ((daily_accidents_420
+daily_accidents_420['e420'] = ((daily_accidents_420['date'].dt.month == 4) & (daily_accidents_420['date'].dt.day == 20)) | ((daily_accidents_420['date'].dt.month == 7) & (daily_accidents_420['date'].dt.day == 4))
 
 # Keep only the rows where e420 is True
 df_july4_420 = daily_accidents_420[daily_accidents_420['e420']]
