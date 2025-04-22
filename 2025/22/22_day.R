@@ -13,7 +13,7 @@ library(data.table)
 library(ggtext)
 library(extrafont)
 library(ggstream)
-
+library(colorspace)
 
 # Load data -------
 
@@ -82,7 +82,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         size = 3.5,
         lineheight = .7,
         fontface = "bold",
-        color = col[1]
+        color = darken(col[1], 0.25)
     ) +
     
     # United States
@@ -94,7 +94,19 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         size = 3.5,
         lineheight = .7,
         fontface = "bold",
-        color = col[2]
+        color = darken(col[2], 0.25)
+    ) +
+    
+    # Russia 
+    annotate(
+        "text", 
+        x = 2025.5, y = 8.5,
+        label = "Russia ",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[3], 0.25)
     ) +
     
 
@@ -112,10 +124,10 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         legend.position = "right",
         legend.title.position = "left",
         
-        legend.title = element_text(size = 10, face = "bold", color = "grey80", angle = 90, hjust = .5),
+        legend.title = element_text(size = 10, face = "bold", color = "grey90", angle = 90, hjust = .5),
         legend.text = element_text(size = 8, color = "grey90"),
      
-        axis.text.x = element_text(size = 10, vjust = 5, color = "grey80"),
+        axis.text.x = element_text(size = 10, vjust = 5, color = "grey90"),
         axis.text.y = element_blank(),
         
         axis.title = element_blank(),
@@ -133,6 +145,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
 
     )
         
+
 
 g
 
