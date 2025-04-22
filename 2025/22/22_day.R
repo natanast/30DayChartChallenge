@@ -54,7 +54,12 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     
     coord_radial(inner.radius = .3) +
     
-    scale_size_continuous(range = c(3, 7), name = "No. of objects") +
+    scale_size_continuous(
+        range = c(2.5, 7.5),   
+        # breaks = c(500, 1500, 2500), 
+        # labels = c("500", "1,500", "2,500"), 
+        name = "No. of objects"
+    ) +
     
     scale_fill_manual(values = rev(col), guide = "none") +
     
@@ -163,7 +168,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         x = 2024.15, y = 2.75,
         label = "Germany",
         hjust = 0,
-        size = 3.5,
+        size = 3.25,
         lineheight = .7,
         fontface = "bold",
         color = darken(col[9], 0.25)
@@ -172,40 +177,39 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # European Space Agency    
     annotate(
         "text", 
-        x = 2024.95, y = 1.55,
-        label = "ESA",
+        x = 2023.8, y = 1.55,
+        label = "European Space Agency",
         hjust = 0,
-        size = 3.5,
+        size = 2.25,
         lineheight = .7,
         fontface = "bold",
         color = darken(col[10], 0.25)
     ) +
-
-    # labs(
-    #     title = "Fueling the Footprint: Major Emitters Since 1930",
-    #     subtitle = "Ten entities that shaped the planet’s carbon footprint, measured in million tonnes of CO₂-equivalent (MtCO₂e)",
-    #     x = "",
-    #     y = "MtCO₂e",
-    #     caption = "30DayChartChallenge 2025: <b> Day 21</b> | Source: <b> Carbon Majors Emissions Data (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
-    # ) +
     
+
+    labs(
+        title = "Racing for the Stars: Who’s Launching Objects into Space?",
+        subtitle = "A visual chronicle of satellite and space object launches since 1960, highlighting the major players in the orbital age",
+        caption = "30DayChartChallenge 2025: <b> Day 22</b> | Source: <b> Objects Launched into Space (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+    ) +
+
     theme_minimal(base_family = "Candara") +
     
     theme(
         legend.position = "right",
         legend.title.position = "left",
         
-        legend.title = element_text(size = 10, face = "bold", color = "grey90", angle = 90, hjust = .5),
-        legend.text = element_text(size = 8, color = "grey90"),
+        legend.title = element_text(size = 10, face = "bold", color = "grey20", angle = 90, hjust = .5),
+        legend.text = element_text(size = 9, color = "grey20"),
      
-        axis.text.x = element_text(size = 10, vjust = 5, color = "grey90"),
+        axis.text.x = element_text(size = 11, vjust = 5, color = "grey20"),
         axis.text.y = element_blank(),
         
         axis.title = element_blank(),
         
-        plot.title = element_markdown(size = 14, face = "bold", color = "grey20", hjust = 0.5, family = "Candara", margin = margin(t = 2, b = 5)),
-        plot.subtitle = element_markdown(size = 11, hjust = 0.5, color = "grey40", margin = margin(t = 5, b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 7, hjust = 1),
+        plot.title = element_markdown(size = 16, face = "bold", color = "grey10", hjust = 0.75, margin = margin(t = 25, b = 5)),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.25, color = "grey30", margin = margin(t = 10, b = 10)),
+        plot.caption = element_markdown(margin = margin(t = 10), size = 8, hjust = 1.35),
         
         panel.grid.major = element_line(linewidth = .15, color = "grey75", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
@@ -214,6 +218,10 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         
         plot.margin = margin(20, 20, 20, 20)
 
+    ) +
+    
+    guides(
+        size = guide_legend(override.aes = list(shape = 21, color = "grey30", stroke = 0.5))
     )
         
 
@@ -221,6 +229,5 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
 g
 
 # Save the plot with custom size and resolution
-ggsave("21_day.png", plot = g, width = 10, height = 10, dpi = 600)
-
+ggsave("22_day.png", plot = g, width = 10, height = 10, dpi = 600)
 
