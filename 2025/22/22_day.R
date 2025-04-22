@@ -193,7 +193,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
 
     labs(
         title = "Racing for the Stars: Who’s Launching Objects into Space?",
-        subtitle = "A visual chronicle of satellite and space object launches since 1960, highlighting the major players in the orbital age",
+        subtitle = "A visual chronicle of satellite and space object launches since 1960, highlighting the major players.",
         caption = "30DayChartChallenge 2025: <b> Day 22</b> | Source: <b> Objects Launched into Space (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
 
@@ -212,7 +212,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         axis.title = element_blank(),
         
         plot.title = element_markdown(size = 16, face = "bold", color = "grey10", hjust = 0.75, margin = margin(t = 25, b = 5)),
-        plot.subtitle = element_markdown(size = 13, hjust = -.1, color = "grey30", margin = margin(t = 10, b = 5)),
+        plot.subtitle = element_markdown(size = 13, hjust = 1.25, color = "grey30", margin = margin(t = 10, b = 5)),
         plot.caption = element_markdown(margin = margin(t = 10), size = 9, hjust = 1.35),
         
         panel.grid.major = element_line(linewidth = .15, color = "grey75", linetype = "dashed", lineend = "round"),
