@@ -6,148 +6,138 @@ gc()
 
 # libraries ---------
 
-library(ggplot2)
-library(dplyr)
-library(stringr)
 library(data.table)
-library(ggtext)
-library(extrafont)
-library(ggstream)
+library(stringr)
+library(ggplot2)
+library(ggrepel)
 library(colorspace)
+library(ggplot2)
+library(shadowtext)
+
+library(airway)
+library(DESeq2)
+
 
 # Load data -------
 
-outer_space_objects <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-04-23/outer_space_objects.csv')
+data("airway")
+airway$dex <- relevel(airway$dex, ref = "untrt")  
 
 
-# Clean data ------
+# Data analysis -----
 
-df <- outer_space_objects[
-    , .(total_objects = sum(num_objects, na.rm = TRUE)), 
-    by = Entity
-]
+dds <- DESeqDataSet(airway, design = ~ dex)
 
 
-df = df[order(-total_objects)]
+dds <- DESeq(dds)
+
+res <- results(dds) |>
+    as.data.frame() |>
+    setDT(keep.rownames = "GeneID")
 
 
-index <- df[1:10, Entity]
+df = res[which( !is.na(res$pvalue) )]
 
-df1 <- outer_space_objects[Entity %in% index]
-
-df1$Entity <- df1$Entity |> factor(levels = rev(index))
+df$y = -log10(df$pvalue)
 
 
+df$ann = ifelse(
+    df$pvalue > .05, "Not significant",
+    ifelse(
+        df$log2FoldChange > 0, "Up regulated", "Down regulated"
+    )
+)
 
-# plot -------
 
-col = c('#405f69', '#587782', '#70909b', '#8aaab5', '#a3c4cf', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
+df$ann = ifelse(
+    df$pvalue <= 0.05 & df$log2FoldChange > -1 & df$log2FoldChange < 1, 
+    paste0(df$ann, " (low)"),
+    df$ann
+)
 
 
-g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
+
+df2 = df[which(pvalue <= .05 & abs(log2FoldChange) > 1)]
+
+df2 = df2[order( abs(log2FoldChange), decreasing = TRUE )]
+
+df2 = df2[, by = ann, head(.SD, 10) ]
+
+
+
+# plot -----
+
+gr = ggplot(data = df) +
     
-    geom_point(
-        shape = 21,
-        stroke = 0.1,
-        color = "white"
-    ) +
+    geom_point(aes(x = log2FoldChange, y = -log10(pvalue), fill = ann),
+               shape = 21, stroke = NA, size = 2, alpha = .5) +
     
-    coord_radial(inner.radius = .3) +
+    geom_vline(xintercept = c(-1, 1), linewidth = .3, linetype = "dashed", lineend = "round") +
+    geom_hline(yintercept = -log10(.05), linewidth = .3, linetype = "dashed", lineend = "round") +
     
-    scale_size_continuous(
-        range = c(2.5, 7.5),
-        name = "No. of objects"
+    geom_point(data = df2, aes(x = log2FoldChange, y = -log10(pvalue), fill = ann), 
+               shape = 21, stroke = .15, size = 2, color = "white") +
+    
+    geom_text_repel(
+        data = df2, aes(x = log2FoldChange, y = -log10(pvalue), label = GeneID),
+        max.overlaps = Inf, 
+        fontface = "bold", size = 3, bg.color = "white", bg.r = .05
     ) +
     
     scale_fill_manual(
-        values = rev(col), 
-        guide = "none"
+        values = c(
+            "Up regulated" = "#990000",
+            "Up regulated (low)" = lighten("#990000", .5),
+            
+            "Down regulated" = "#004d99",
+            "Down regulated (low)" = lighten("#004d99", .5),
+            
+            "Not significant" = "grey"
+        ),
+        
+        breaks = c("Up regulated", "Not significant", "Down regulated"),
+        
+        guide = guide_legend(
+            override.aes = list(size = 3, alpha = 1)
+        ),
+        
     ) +
     
-
     scale_x_continuous(
-        limits = c(1960, 2029), 
-        expand = c(0, 0)
-    ) +
-
-    # World
-    annotate(
-        "text", 
-        x = 2026.95, y = 10.2,
-        label = "World",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = darken(col[1], 0.25)
+        breaks = c(-5, -2.5, -1, 0, 1, 2.5, 5),
+        trans = scales::pseudo_log_trans()
     ) +
     
-    # United States
-    annotate(
-        "text", 
-        x = 2025.55, y = 9.8,
-        label = "United States",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = darken(col[2], 0.25)
+    scale_y_continuous(
+        expand = c(0, 0), breaks = c(2, 5, 10, 20, 30, 40),
+        trans = scales::pseudo_log_trans()
     ) +
     
-    # Russia 
-    annotate(
-        "text", 
-        x = 2026.55, y = 8.55,
-        label = "Russia",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = darken(col[3], 0.25)
-    ) +
+    coord_cartesian(clip = "off") +
     
-
-    labs(
-        title = "Racing for the Stars: Who’s Launching Objects into Space?",
-        subtitle = "A visual chronicle of satellite and space object launches since 1960, highlighting the major players in the orbital age",
-        caption = "30DayChartChallenge 2025: <b> Day 22</b> | Source: <b> Objects Launched into Space (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
-    ) +
-
-    theme_minimal(base_family = "Candara") +
+    theme_minimal() +
     
     theme(
-        legend.position = "right",
-        legend.title.position = "left",
+        legend.title = element_blank(),
+        legend.position = "bottom",
         
-        legend.title = element_text(size = 10, face = "bold", color = "grey20", angle = 90, hjust = .5),
-        legend.text = element_text(size = 9, color = "grey20"),
-     
-        axis.text.x = element_text(size = 11, vjust = 5, color = "grey20"),
-        axis.text.y = element_blank(),
         
-        axis.title = element_blank(),
+        axis.line = element_line(linewidth = .3, color = "black"),
+        axis.ticks = element_line(linewidth = .3, color = "black"),
         
-        plot.title = element_markdown(size = 16, face = "bold", color = "grey10", hjust = 0.75, margin = margin(t = 25, b = 5)),
-        plot.subtitle = element_markdown(size = 13, hjust = -.1, color = "grey30", margin = margin(t = 10, b = 5)),
-        plot.caption = element_markdown(margin = margin(t = 10), size = 9, hjust = 1.35),
-        
-        panel.grid.major = element_line(linewidth = .15, color = "grey75", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(linewidth = .3, linetype = "dashed", color = "grey85"),
         
-        plot.background = element_rect(fill = "grey60", color = NA),
+        plot.margin = margin(20, 20, 20, 20),
         
-        plot.margin = margin(20, 20, 20, 20)
-
+        
     ) +
     
-    guides(
-        size = guide_legend(override.aes = list(shape = 21, color = "grey30", stroke = 0.5))
-    )
-        
+    labs(y = "-log10(pvalue)", x = "log2(Fold Change)")
 
 
-g
+gr
 
 # Save the plot with custom size and resolution
-ggsave("22_day.png", plot = g, width = 10, height = 10, dpi = 600)
+ggsave("23_day.png", plot = gr, width = 10, height = 10, dpi = 600)
 
