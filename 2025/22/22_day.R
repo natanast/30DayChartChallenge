@@ -59,24 +59,12 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     scale_fill_manual(values = rev(col), guide = "none") +
     
     # Adjust x-axis limits to start from 1
-    scale_x_continuous(limits = c(1960, 2028), expand = c(0, 0)) +
-    
+    scale_x_continuous(limits = c(1960, 2029), expand = c(0, 0)) +
+
     # World
     annotate(
         "text", 
-        x = 2026.25, y = 10.2,
-        label = "World",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[1]
-    ) +
-    
-    # World
-    annotate(
-        "text", 
-        x = 2026.25, y = 10.2,
+        x = 2026.95, y = 10.2,
         label = "World",
         hjust = 0,
         size = 3.5,
@@ -88,7 +76,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # United States
     annotate(
         "text", 
-        x = 2024.5, y = 9.8,
+        x = 2025.55, y = 9.8,
         label = "United States",
         hjust = 0,
         size = 3.5,
@@ -100,7 +88,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # Russia 
     annotate(
         "text", 
-        x = 2025.85, y = 8.5,
+        x = 2026.55, y = 8.55,
         label = "Russia",
         hjust = 0,
         size = 3.5,
@@ -112,7 +100,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # China  
     annotate(
         "text", 
-        x = 2025.95, y = 7.5,
+        x = 2026.65, y = 7.5,
         label = "China",
         hjust = 0,
         size = 3.5,
@@ -124,19 +112,19 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # United Kingdom  
     annotate(
         "text", 
-        x = 2023.8, y = 7,
+        x = 2024.95, y = 7,
         label = "United Kingdom",
         hjust = 0,
         size = 3.25,
         lineheight = .7,
         fontface = "bold",
-        color = darken(col[5], 0.3)
+        color = darken(col[5], 0.35)
     ) +
     
     # Japan 
     annotate(
         "text", 
-        x = 2025.5, y = 5.5,
+        x = 2026.15, y = 5.55,
         label = "Japan",
         hjust = 0,
         size = 3.5,
@@ -148,13 +136,49 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # France   
     annotate(
         "text", 
-        x = 2025.15, y = 4.5,
+        x = 2025.65, y = 4.55,
         label = "France",
         hjust = 0,
         size = 3.5,
         lineheight = .7,
         fontface = "bold",
         color = darken(col[7], 0.25)
+    ) +
+    
+    # India    
+    annotate(
+        "text", 
+        x = 2025.85, y = 3.5,
+        label = "India",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[8], 0.25)
+    ) +
+    
+    # Germany     
+    annotate(
+        "text", 
+        x = 2024.15, y = 2.75,
+        label = "Germany",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[9], 0.25)
+    ) +
+    
+    # European Space Agency    
+    annotate(
+        "text", 
+        x = 2024.95, y = 1.55,
+        label = "ESA",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[10], 0.25)
     ) +
 
     # labs(
