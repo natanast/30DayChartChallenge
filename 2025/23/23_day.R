@@ -115,7 +115,7 @@ gr = ggplot(data = df) +
     
     coord_cartesian(clip = "off") +
     
-    theme_minimal() +
+    theme_minimal(base_family = "Candara") +
     
     theme(
         legend.title = element_blank(),
