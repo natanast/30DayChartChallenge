@@ -36,6 +36,17 @@ df_july4_420_aggregated['Group'] = df_july4_420_aggregated['date'].apply(lambda 
 
 # Plot --------
 
+from plotnine import scale_y_log10
+
+
+import numpy as np
+
+# Apply log transformation to fatalities_count
+df_july4_420_aggregated['log_fatalities'] = np.log1p(df_july4_420_aggregated['fatalities_count'])
+
+# Volcano plot idea: compare log-transformed fatalities count for 20/4 vs July 4
+df_july4_420_aggregated['difference'] = df_july4_420_aggregated.groupby('Group')['log_fatalities'].transform('mean') - df_july4_420_aggregated['log_fatalities']
+
 # Plot the log-transformed fatalities vs difference
 g = (
     ggplot(df_july4_420_aggregated) +
