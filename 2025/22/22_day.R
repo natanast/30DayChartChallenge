@@ -64,7 +64,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # World
     annotate(
         "text", 
-        x = 2026, y = 10.2,
+        x = 2026.25, y = 10.2,
         label = "World",
         hjust = 0,
         size = 3.5,
@@ -76,7 +76,7 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # World
     annotate(
         "text", 
-        x = 2026, y = 10.2,
+        x = 2026.25, y = 10.2,
         label = "World",
         hjust = 0,
         size = 3.5,
@@ -100,8 +100,8 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
     # Russia 
     annotate(
         "text", 
-        x = 2025.5, y = 8.5,
-        label = "Russia ",
+        x = 2025.85, y = 8.5,
+        label = "Russia",
         hjust = 0,
         size = 3.5,
         lineheight = .7,
@@ -109,6 +109,53 @@ g = ggplot(df1, aes(x = Year, y = Entity, fill = Entity, size = num_objects)) +
         color = darken(col[3], 0.25)
     ) +
     
+    # China  
+    annotate(
+        "text", 
+        x = 2025.95, y = 7.5,
+        label = "China",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[4], 0.25)
+    ) +
+    
+    # United Kingdom  
+    annotate(
+        "text", 
+        x = 2023.8, y = 7,
+        label = "United Kingdom",
+        hjust = 0,
+        size = 3.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[5], 0.3)
+    ) +
+    
+    # Japan 
+    annotate(
+        "text", 
+        x = 2025.5, y = 5.5,
+        label = "Japan",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[6], 0.25)
+    ) +
+    
+    # France   
+    annotate(
+        "text", 
+        x = 2025.15, y = 4.5,
+        label = "France",
+        hjust = 0,
+        size = 3.5,
+        lineheight = .7,
+        fontface = "bold",
+        color = darken(col[7], 0.25)
+    ) +
 
     # labs(
     #     title = "Fueling the Footprint: Major Emitters Since 1930",
