@@ -17,6 +17,19 @@ library(shadowtext)
 library(airway)
 library(DESeq2)
 
+library(genekitr)
+
+library(ggtext)
+library(extrafont)
+library(showtext)
+# library(geneset)
+
+
+# Load showtext and register Candara
+library(showtext)
+font_add("Candara", regular = "C:/Windows/Fonts/candara.ttf")  # Path to Candara font
+showtext_auto()
+
 
 # Load data -------
 
@@ -39,6 +52,18 @@ res <- results(dds) |>
 df = res[which( !is.na(res$pvalue) )]
 
 df$y = -log10(df$pvalue)
+
+
+
+gene_map = df$GeneID |> transId(transTo = c("symbol", "entrez", "ensembl"), unique = TRUE) |> setDT()
+
+gene_map = gene_map[which(
+    !is.na(symbol) & !is.na(entrezid) & !is.na(ensembl)
+)]
+
+df = df |> merge(gene_map, by.x = "GeneID", by.y = "input_id")
+
+df = df[!is.na(padj)]
 
 
 df$ann = ifelse(
@@ -70,18 +95,18 @@ df2 = df2[, by = ann, head(.SD, 10) ]
 gr = ggplot(data = df) +
     
     geom_point(aes(x = log2FoldChange, y = -log10(pvalue), fill = ann),
-               shape = 21, stroke = NA, size = 2, alpha = .5) +
+               shape = 21, stroke = .05, size = 2, alpha = .5, color = "white") +
     
     geom_vline(xintercept = c(-1, 1), linewidth = .3, linetype = "dashed", lineend = "round") +
     geom_hline(yintercept = -log10(.05), linewidth = .3, linetype = "dashed", lineend = "round") +
     
     geom_point(data = df2, aes(x = log2FoldChange, y = -log10(pvalue), fill = ann), 
-               shape = 21, stroke = .15, size = 2, color = "white") +
+               shape = 21, stroke = .2, size = 2.5, color = "white") +
     
     geom_text_repel(
-        data = df2, aes(x = log2FoldChange, y = -log10(pvalue), label = GeneID),
+        data = df2, aes(x = log2FoldChange, y = -log10(pvalue), label = symbol),
         max.overlaps = Inf, 
-        fontface = "bold", size = 3, bg.color = "white", bg.r = .05
+        fontface = "bold", size = 13, bg.color = "white", bg.r = .05
     ) +
     
     scale_fill_manual(
@@ -121,12 +146,19 @@ gr = ggplot(data = df) +
         legend.title = element_blank(),
         legend.position = "bottom",
         
+        legend.text = element_text(size = 25),
+        
+        
+        axis.title = element_text(size = 50),
+        axis.text = element_text(size = 50),
         
         axis.line = element_line(linewidth = .3, color = "black"),
         axis.ticks = element_line(linewidth = .3, color = "black"),
         
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_line(linewidth = .3, linetype = "dashed", color = "grey85"),
+        panel.grid.major = element_line(linewidth = .3, linetype = "dashed", lineend = "round", color = "grey80"),
+        
+        plot.background = element_rect(fill = "grey98", color = NA),
         
         plot.margin = margin(20, 20, 20, 20),
         
@@ -139,5 +171,5 @@ gr = ggplot(data = df) +
 gr
 
 # Save the plot with custom size and resolution
-ggsave("23_day.png", plot = gr, width = 10, height = 10, dpi = 600)
+ggsave("23_day.png", plot = gr, width = 9, height = 9, dpi = 600)
 
