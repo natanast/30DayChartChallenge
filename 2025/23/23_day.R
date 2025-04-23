@@ -26,9 +26,9 @@ library(showtext)
 
 
 # Load showtext and register Candara
-library(showtext)
-font_add("Candara", regular = "C:/Windows/Fonts/candara.ttf")  # Path to Candara font
-showtext_auto()
+# library(showtext)
+# font_add("Candara", regular = "C:/Windows/Fonts/candara.ttf")  # Path to Candara font
+# showtext_auto()
 
 
 # Load data -------
@@ -98,6 +98,7 @@ gr = ggplot(data = df) +
                shape = 21, stroke = .05, size = 2, alpha = .5, color = "white") +
     
     geom_vline(xintercept = c(-1, 1), linewidth = .3, linetype = "dashed", lineend = "round") +
+    
     geom_hline(yintercept = -log10(.05), linewidth = .3, linetype = "dashed", lineend = "round") +
     
     geom_point(data = df2, aes(x = log2FoldChange, y = -log10(pvalue), fill = ann), 
@@ -140,36 +141,47 @@ gr = ggplot(data = df) +
     
     coord_cartesian(clip = "off") +
     
+    labs(
+        y = "-log10(pvalue)", 
+        x = "log2(Fold Change)", 
+        title = "Glucocorticoid Response in Airway Cells",
+        subtitle = "Differential gene expression in human airway smooth muscle cells treated with dexamethasone vs. untreated control",
+        caption = "30DayChartChallenge: <b> Day 23</b> | Source: <b> {airway} R package </b> | Graphic: <b>Natasa Anastasiadou</b>",
+    ) +
+    
     theme_minimal(base_family = "Candara") +
     
     theme(
         legend.title = element_blank(),
         legend.position = "bottom",
         
-        legend.text = element_text(size = 25),
+        legend.text = element_text(size = 55),
+        
+        plot.title = element_markdown(size = 85, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
+        plot.subtitle = element_markdown(size = 75, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 20)),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 50, hjust = 1),
         
         
-        axis.title = element_text(size = 50),
-        axis.text = element_text(size = 50),
+        axis.title = element_text(size = 55),
+        axis.text = element_text(size = 55),
         
         axis.line = element_line(linewidth = .3, color = "black"),
         axis.ticks = element_line(linewidth = .3, color = "black"),
         
         panel.grid.minor = element_blank(),
-        panel.grid.major = element_line(linewidth = .3, linetype = "dashed", lineend = "round", color = "grey80"),
+        panel.grid.major = element_line(linewidth = .25, linetype = "dashed", lineend = "round", color = "grey80"),
         
         plot.background = element_rect(fill = "grey98", color = NA),
         
         plot.margin = margin(20, 20, 20, 20),
         
         
-    ) +
-    
-    labs(y = "-log10(pvalue)", x = "log2(Fold Change)")
+    )
 
 
 gr
 
-# Save the plot with custom size and resolution
+
+# Save the plot
 ggsave("23_day.png", plot = gr, width = 9, height = 9, dpi = 600)
 
