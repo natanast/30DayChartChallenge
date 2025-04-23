@@ -33,24 +33,29 @@ stock_yearly_avg <- big_tech_filtered[, .(avg_close = mean(close, na.rm = TRUE))
 
 
 
+df_plot <- merge(
+    stock_yearly_avg,
+    big_tech_companies[, .(stock_symbol, company)],  
+    by = "stock_symbol"
+)
 
 
-
+df_plot$company <- df_plot$company |> str_remove_all(",? Inc\\.?$") |> str_squish()
 
 # plot -----------
 
 col = c('#5a8192', '#b24745','#a2a0cf', "#00429d" )
 
 
-p = ggplot(stock_yearly_avg, aes(x = year, y = avg_close)) +
+p = ggplot(df_plot, aes(x = year, y = avg_close)) +
     
     geom_line(
-        linewidth = .75, aes(color = stock_symbol)
+        linewidth = .75, aes(color = company)
     ) +
     
     geom_point(
         shape = 21, stroke = .85, size = 4,
-        aes(color = stock_symbol), fill = "grey95"
+        aes(color = company), fill = "grey95"
     ) +
     
     scale_y_log10() +
@@ -64,17 +69,9 @@ p = ggplot(stock_yearly_avg, aes(x = year, y = avg_close)) +
         name = "Companies"
     ) +
     
-    # labs(
-    #     title    = "Netflix Monthly Avg Closing Price",
-    #     subtitle = "#30DayChartChallenge – TimeSeries + Log Scale",
-    #     x        = "Month",
-    #     y        = "Avg Closing Price (log scale)"
-    # ) +
-    # 
-    # 
     labs(
-        title = "Yearly Average Closing Prices of Big Tech Stocks",
-        subtitle = "Top 5 Guardian news sections published each year from 2016 to 2021.",
+        title = "Annual Closing Price Trends of Big Tech Giants",
+        subtitle = "Year-over-year growth of Apple, Amazon, Netflix & Tesla from 2010 to 2022",
         caption = "30DayChartChallenge 2025: <b> Day 23</b> | Source: <b> Big Tech Stock Prices (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "Avg Closing Price (log scale)",
         fill = "Type"
@@ -90,9 +87,9 @@ p = ggplot(stock_yearly_avg, aes(x = year, y = avg_close)) +
         
         axis.text = element_text(size = 10),
         
-        legend.position = c(.85, .28),
-        legend.text = element_text(size = 9),         
-        legend.title = element_text(size = 10),        
+        legend.position = c(.87, .25),
+        legend.text = element_text(size = 10),         
+        legend.title = element_text(size = 11),        
         legend.key.size = unit(0.8, "lines"),
         legend.spacing.y = unit(0.5, "lines"),
         
@@ -100,9 +97,9 @@ p = ggplot(stock_yearly_avg, aes(x = year, y = avg_close)) +
         panel.grid.major = element_line(color = "grey75", linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 14, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
-        plot.subtitle = element_markdown(size = 10, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 10)),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 6, hjust = 1),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 10)),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1),
         
         
         plot.margin = margin(20, 20, 20, 20),
