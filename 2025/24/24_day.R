@@ -20,26 +20,78 @@ df = "WHO_data.csv" |> fread()
     
 # data cleaning -----------
 
-
-big_tech_stock_prices[, year := year(date)]
-
-selected <- c("AAPL","AMZN","NFLX","TSLA")
-
-big_tech_filtered <- big_tech_stock_prices[stock_symbol %in% selected]
+df <- df[, .(`World Bank income group`, Year, 
+             `Life expectancy at birth (years)  Both sexes`,
+             `Life expectancy at birth (years)  Male`, 
+             `Life expectancy at birth (years)  Female`)]
 
 
-stock_yearly_avg <- big_tech_filtered[, .(avg_close = mean(close, na.rm = TRUE)), by = .(stock_symbol, year)]
+colnames(df) <- c("Income_group", "Year", "LE_birth_both_sexes", "LE_birth_male", "LE_birth_female")
 
 
 
-df_plot <- merge(
-    stock_yearly_avg,
-    big_tech_companies[, .(stock_symbol, company)],  
-    by = "stock_symbol"
-)
 
 
-df_plot$company <- df_plot$company |> str_remove_all(",? Inc\\.?$") |> str_squish()
+library(ggplot2)
+library(data.table)
+
+# Filter and factor income groups
+df_plot <- df[Year %in% c(2000, 2019) & Income_group != "Global"]
+df_plot[, Income_group := factor(Income_group, levels = c("Low-income", "Lower-middle-income", "Upper-middle-income", "High-income"))]
+
+ggplot(df_plot, aes(x = as.factor(Year), y = LE_birth_both_sexes, group = Income_group)) +
+    # geom_segment(aes(x = "2000", xend = "2019", 
+    #                  y = LE_birth_both_sexes[Year == 2000], 
+    #                  yend = LE_birth_both_sexes[Year == 2019]),
+    #              data = dcast(df_plot, Income_group ~ Year, value.var = "LE_birth_both_sexes"),
+    #              color = "gray70", size = 1.2) +
+    geom_point(aes(color = as.factor(Year)), size = 4) +
+    facet_wrap(~Income_group, ncol = 4) +
+    labs(
+        title = "Change in Life Expectancy at Birth (2000 vs 2019)",
+        subtitle = "#30DayChartChallenge • Timeseries | WHO Data",
+        x = "Year",
+        y = "Life Expectancy (Years)",
+        color = "Year"
+    ) +
+    scale_color_manual(values = c("2000" = "#F8766D", "2019" = "#00BFC4")) +
+    theme_minimal(base_size = 14) +
+    theme(
+        panel.grid.major.x = element_blank(),
+        legend.position = "top"
+    )
+# 
+# library(data.table)
+# library(ggplot2)
+# 
+# # Filter for years 2000 and 2019 only
+# df_plot <- df[Year %in% c(2000, 2019) & Income_group != "Global"]
+# 
+# # Make sure Income_group is a factor for ordered plotting
+# df_plot[, Income_group := factor(Income_group, levels = unique(Income_group))]
+#
+# # Plot
+# ggplot(df_plot, aes(x = LE_birth_both_sexes, 
+#                     y = Income_group, 
+#                     color = as.factor(Year), 
+#                     group = Income_group)) +
+#     geom_segment(data = dcast(df_plot, Income_group ~ Year, value.var = "LE_birth_both_sexes"),
+#                  aes(x = `2000`, xend = `2019`, y = Income_group, yend = Income_group),
+#                  color = "gray70", size = 1.2) +
+#     geom_point(size = 4) +
+#     labs(
+#         title = "Life Expectancy at Birth by Income Group (2000 vs 2019)",
+#         subtitle = "Based on WHO data | #30DayChartChallenge - Timeseries • WHO",
+#         x = "Life Expectancy (Years)",
+#         y = NULL,
+#         color = "Year"
+#     ) +
+#     scale_color_manual(values = c("2000" = "#F8766D", "2019" = "#00BFC4")) +
+#     theme_minimal(base_size = 14) +
+#     theme(legend.position = "top")
+
+
+
 
 # plot -----------
 
