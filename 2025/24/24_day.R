@@ -15,10 +15,9 @@ library(extrafont)
 
 # load data --------
 
-big_tech_stock_prices <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_stock_prices.csv')
-big_tech_companies <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-02-07/big_tech_companies.csv')
-
-
+df = "WHO_data.csv" |> fread()
+    
+    
 # data cleaning -----------
 
 
