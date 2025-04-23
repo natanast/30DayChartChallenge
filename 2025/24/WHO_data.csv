@@ -1,0 +1,21 @@
+World Bank income group,Year,Life expectancy at birth (years)  Both sexes,Life expectancy at birth (years)  Male,Life expectancy at birth (years)  Female,Life expectancy at age 60 (years)  Both sexes,Life expectancy at age 60 (years)  Male,Life expectancy at age 60 (years)  Female,Healthy life expectancy (HALE) at birth (years)  Both sexes,Healthy life expectancy (HALE) at birth (years)  Male,Healthy life expectancy (HALE) at birth (years)  Female,Healthy life expectancy (HALE) at age 60 (years)  Both sexes,Healthy life expectancy (HALE) at age 60 (years)  Male,Healthy life expectancy (HALE) at age 60 (years)  Female
+Global,2019,73.3,70.8,75.9,21.1,19.5,22.7,63.7,62.5,64.9,15.8,14.8,16.6
+Global,2015,72.3,69.8,74.9,20.8,19.1,22.3,62.9,61.7,64.2,15.5,14.6,16.4
+Global,2010,70.5,68,73.2,20.1,18.4,21.7,61.5,60.2,62.9,15.1,14.1,16.1
+Global,2000,66.8,64.4,69.3,18.8,17.2,20.4,58.3,57.1,59.6,14.1,13.1,15.1
+Low-income,2019,65.1,63,67.2,17.4,16.2,18.5,56.7,55.7,57.7,13,12.3,13.7
+Low-income,2015,63.2,61,65.4,17,15.7,18.1,55.1,54,56.2,12.8,12,13.4
+Low-income,2010,60.1,58.2,62.1,16.5,15.2,17.6,52.5,51.6,53.5,12.4,11.7,13.1
+Low-income,2000,53.8,52.2,55.3,15.2,14,16.3,46.9,46.2,47.6,11.4,10.7,12.1
+Lower-middle-income,2019,69.4,67.6,71.3,18.6,17.6,19.6,60,59.3,60.6,13.5,13,14
+Lower-middle-income,2015,68.2,66.4,70.1,18.3,17.2,19.3,59,58.4,59.7,13.3,12.8,13.8
+Lower-middle-income,2010,66.4,64.5,68.4,17.8,16.6,19,57.5,56.7,58.3,12.9,12.3,13.5
+Lower-middle-income,2000,62.2,60.7,63.8,16.6,15.5,17.6,53.8,53.3,54.3,12.1,11.5,12.6
+Upper-middle-income,2019,76.3,73.4,79.4,21.2,19.3,23,67,65.5,68.6,16,14.9,17
+Upper-middle-income,2015,75.4,72.4,78.7,20.7,18.8,22.5,66.4,64.7,68.1,15.7,14.5,16.7
+Upper-middle-income,2010,73.7,70.7,76.9,19.8,18,21.5,65.1,63.4,66.9,15,13.9,16
+Upper-middle-income,2000,70.6,67.7,73.8,18.5,16.8,20.2,62.4,60.8,64.1,14,13,15
+High-income,2019,80.9,78.4,83.3,24.3,22.5,25.9,69.8,68.7,70.9,18.2,17.1,19.2
+High-income,2015,80.3,77.8,82.8,23.8,22,25.5,69.6,68.4,70.8,18,16.8,19
+High-income,2010,79.8,77.1,82.5,23.5,21.6,25.2,69.3,67.9,70.6,17.8,16.5,18.9
+High-income,2000,77.6,74.6,80.6,21.9,19.7,23.7,67.7,66.1,69.3,16.6,15.2,17.8
