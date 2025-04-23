@@ -21,67 +21,96 @@ big_tech_companies <- fread('https://raw.githubusercontent.com/rfordatascience/t
 
 # data cleaning -----------
 
-# Step 2: Create 'year' column from the 'date' column
+
 big_tech_stock_prices[, year := year(date)]
 
 selected <- c("AAPL","AMZN","NFLX","TSLA")
 
 big_tech_filtered <- big_tech_stock_prices[stock_symbol %in% selected]
 
-# Step 4: Calculate yearly average closing prices for each selected stock
+
 stock_yearly_avg <- big_tech_filtered[, .(avg_close = mean(close, na.rm = TRUE)), by = .(stock_symbol, year)]
 
 
+# col = c("#00429d", "#73a2c6", '#396375', '#5a8192', '#6f6e9a', '#a2a0cf', '#e37b78',"#A65628", '#b24745')
 
 
 
+col = c('#5a8192', '#b24745','#a2a0cf', "#00429d" )
 
 # plot -----------
 
-ggplot(stock_yearly_avg, aes(x = year, y = avg_close, color = stock_symbol )) +
+p = ggplot(stock_yearly_avg, aes(x = year, y = avg_close)) +
     
-    geom_line() +
-    # geom_segment(aes(xend = year, y = min(avg_close, na.rm=TRUE)/10, yend = avg_close),
-    #              color = "gray70") +
+    geom_line(
+        linewidth = .75, aes(color = stock_symbol)
+    ) +
     
-    geom_point(size = 2.5) +
+    geom_point(
+        shape = 21, stroke = .85, size = 4,
+        aes(color = stock_symbol), fill = "grey95"
+    ) +
     
     scale_y_log10() +
     
-    labs(
-        title    = "Netflix Monthly Avg Closing Price",
-        subtitle = "#30DayChartChallenge – TimeSeries + Log Scale",
-        x        = "Month",
-        y        = "Avg Closing Price (log scale)"
-    ) +
+    scale_color_manual(values = col) +
     
-    theme_minimal(base_size = 14) +
+    # labs(
+    #     title    = "Netflix Monthly Avg Closing Price",
+    #     subtitle = "#30DayChartChallenge – TimeSeries + Log Scale",
+    #     x        = "Month",
+    #     y        = "Avg Closing Price (log scale)"
+    # ) +
+    # 
+    # 
+    # labs(
+    #     title = "Media & Time: Tracking Section Popularity by Year",
+    #     subtitle = "Top 5 Guardian news sections published each year from 2016 to 2021.",
+    #     caption = "30DayChartChallenge: <b> Day 18</b> | Source: <b> Guardian News Articles (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+    #     y = "No. of Article", 
+    #     fill = "Type"
+    # ) +
+    # 
+    theme_minimal(base_family = "Candara") +
     
     theme(
-        axis.text.x = element_text(angle = 45, hjust = 1)
+        
+        axis.title.x = element_blank(),
+        
+        axis.title.y = element_text(size = 9),
+        
+        axis.text.x = element_text(size = 7),
+        axis.text.y = element_text(size = 7),
+        
+        legend.text = element_text(size = 7),         # Smaller text
+        legend.title = element_text(size = 8),        # Optional: smaller title
+        legend.key.size = unit(0.8, "lines"),         # Smaller boxes
+        legend.spacing.y = unit(0.5, "lines"),
+        
+        legend.position = "right",
+        # legend.title = element_text(size = 8),
+        # legend.text = element_text(size = 7),
+        
+        panel.grid.major = element_line(color = "grey75", linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_blank(),
+        
+        plot.title = element_markdown(size = 14, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
+        plot.subtitle = element_markdown(size = 10, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 10)),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 6, hjust = 1.38),
+        
+        
+        plot.margin = margin(20, 20, 20, 20),
+        
+        plot.background = element_rect(fill = "#e4e4e3", color = NA)
+        
     )
 
 
 
 
 
+p
 
-
-col = c("#00429d", "#73a2c6", '#396375', '#5a8192', '#6f6e9a', '#a2a0cf', '#e37b78',"#A65628", '#b24745')
-
-
-grid_colors = c(
-    "American Crow"             = '#6f6e9a',
-    "American Goldfinch"        = "#A65628",
-    "American Robin"            = "#b24745",
-    "Belted Kingfisher"         = "#00429d",
-    "Blue Jay"                  = "#396375",
-    "Downy Woodpecker"          = '#a2a0cf',
-    "Green Heron"               = "#FDAE61",
-    "Northern Flicker"          = "#e37b78",
-    "Ruby-throated Hummingbird" = "#73a2c6", 
-    "Scarlet Tanager"           = "#7f9faa"
-)
 
 
 
@@ -142,7 +171,7 @@ p
 
 
 ggsave(
-    plot = g, filename = "Rplot.png",
+    plot = p, filename = "Rplot.png",
     width = 10, height = 10, units = "in", dpi = 600
 )    
 
