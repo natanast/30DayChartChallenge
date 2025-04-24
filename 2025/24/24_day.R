@@ -58,16 +58,9 @@ ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     
     facet_wrap(~Income_group, ncol = 2) +
     
-    # labs(
-    #     title = "Life Expectancy at Birth by Income Group (2000–2019)",
-    #     subtitle = "Lollipop timeseries by WHO | #30DayChartChallenge - Timeseries • WHO",
-    #     x = "Year",
-    #     y = "Life Expectancy (Years)"
-    # ) +
-    
     labs(
-        title = "Annual Closing Price Trends of Big Tech Giants",
-        subtitle = "Year-over-year growth of Apple, Amazon, Netflix & Tesla from 2010 to 2022",
+        title = "Life Expectancy at Birth by Income Group (2000–2019)",
+        subtitle = "Lollipop timeseries by WHO",
         caption = "30DayChartChallenge 2025: <b> Day 23</b> | Source: <b> Big Tech Stock Prices (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "Life Expectancy (Years)",
         x = "Year"
