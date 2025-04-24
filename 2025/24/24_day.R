@@ -75,8 +75,8 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     facet_wrap(~Income_group, ncol = 2) +
     
     labs(
-        title = "Life Expectancy at Birth by Income Group (2000–2019)",
-        subtitle = "Lollipop timeseries by WHO",
+        title = "Life Expectancy Trends at Birth by Income Group from 2000 to 2019",
+        subtitle = "Comparing life expectancy changes across different income groups over two decades, based on WHO data.",
         caption = "30DayChartChallenge 2025: <b> Day 24</b> 
                    | Source: <b> Life Expectancy WHO data (Kaggle) </b> 
                    | Graphic: <b>Natasa Anastasiadou</b>",
@@ -88,14 +88,17 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        # strip.text = element_text(face = "bold", size = 14),
+        strip.text = element_text(face = "bold", size = 11),
         
         legend.position = "right",
-        
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9),
 
         axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 12.5, vjust = 3),
         
-        axis.text.x = element_text(angle = 45, hjust = 1),
+        axis.text.x = element_text(size = 11, angle = 45, hjust = 1),
+        axis.text.y = element_text(size = 11),
         
 
         panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
@@ -103,8 +106,8 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
         
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
-        plot.subtitle = element_markdown(size = 13, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 10)),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 20)),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 8.5, hjust = 1.45),
         
         plot.margin = margin(20, 20, 20, 20),
         
@@ -122,6 +125,6 @@ p
 
 ggsave(
     plot = p, filename = "24_day.png",
-    width = 9, height = 9, units = "in", dpi = 600
+    width = 10, height = 10, units = "in", dpi = 600
 )    
 
