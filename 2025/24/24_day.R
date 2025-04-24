@@ -39,6 +39,10 @@ df_plot[, Income_group := factor(Income_group, levels = c("Low-income", "High-in
 
 
 
+df_plot[, size_group := ifelse(LE_birth_both_sexes < 65, "small",
+                                ifelse(LE_birth_both_sexes <= 75, "medium", "large"))]
+
+
 
 # plot -----------
 
@@ -48,20 +52,25 @@ col = c('#5a8192', '#b24745','#a2a0cf', "#00429d" )
 p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     
     geom_segment(
-        aes(x = Year, xend = Year, y = 0, yend = LE_birth_both_sexes), 
-        color = "grey65", 
-        size = .75
+        aes(x = Year, xend = Year, y = 0, yend = LE_birth_both_sexes, col = Income_group), 
+        size = 0.75
     ) +
     
     geom_point(
-        aes(fill = Income_group),
+        aes(fill = Income_group, col = Income_group, size = size_group),
         shape = 21, 
-        stroke = .85, 
-        size = 5,
+        stroke = .2, 
         color = "white"
     ) +
     
-    scale_fill_manual(values = col) +
+    scale_fill_manual(values = col, guide = "none") +
+    
+    scale_color_manual(values = col, guide = "none") +
+    
+    scale_size_manual(
+        values = c(small = 4, medium = 5.5, large = 7),
+        labels = c("> 75", "65–75", "< 65")
+    ) +
     
     facet_wrap(~Income_group, ncol = 2) +
     
@@ -72,8 +81,8 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
                    | Source: <b> Life Expectancy WHO data (Kaggle) </b> 
                    | Graphic: <b>Natasa Anastasiadou</b>",
         y = "Life Expectancy (Years)",
-        x = "Year"
-        # fill = "Type"
+        x = "Year",
+        size = "Type"
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -81,7 +90,11 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     theme(
         # strip.text = element_text(face = "bold", size = 14),
         
-        legend.position = "none",
+        legend.position = "right",
+        
+
+        axis.title.x = element_blank(),
+        
         axis.text.x = element_text(angle = 45, hjust = 1),
         
 
@@ -95,8 +108,12 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
         
         plot.margin = margin(20, 20, 20, 20),
         
-        plot.background = element_rect(fill = "grey93", color = NA)
+        plot.background = element_rect(fill = "grey93", color = NA),
         
+    ) +
+    
+    guides(
+        size = guide_legend(override.aes = list(shape = 21, color = "grey30", stroke = 0.5))
     )
 
 
