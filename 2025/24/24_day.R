@@ -45,16 +45,23 @@ df_plot[, Income_group := factor(Income_group, levels = c("Low-income", "High-in
 col = c('#5a8192', '#b24745','#a2a0cf', "#00429d" )
 
 
-ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
+p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     
-    geom_segment(aes(x = Year, xend = Year, y = 0, yend = LE_birth_both_sexes), color = "gray70", size = 1) +
+    geom_segment(
+        aes(x = Year, xend = Year, y = 0, yend = LE_birth_both_sexes), 
+        color = "grey65", 
+        size = .75
+    ) +
     
     geom_point(
+        aes(fill = Income_group),
         shape = 21, 
         stroke = .85, 
-        size = 4,
-       fill = "grey95"
+        size = 5,
+        color = "white"
     ) +
+    
+    scale_fill_manual(values = col) +
     
     facet_wrap(~Income_group, ncol = 2) +
     
@@ -73,9 +80,12 @@ ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     
     theme(
         # strip.text = element_text(face = "bold", size = 14),
+        
+        legend.position = "none",
         axis.text.x = element_text(angle = 45, hjust = 1),
+        
 
-        panel.grid.major = element_line(color = "grey85", linewidth = 0.15, linetype = "dashed", lineend = "round"),
+        panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
         
         
@@ -94,7 +104,7 @@ ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
 p 
 
 ggsave(
-    plot = p, filename = "Rplot.png",
-    width = 10, height = 10, units = "in", dpi = 600
+    plot = p, filename = "24_day.png",
+    width = 9, height = 9, units = "in", dpi = 600
 )    
 
