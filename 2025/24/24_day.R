@@ -82,7 +82,7 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
                    | Graphic: <b>Natasa Anastasiadou</b>",
         y = "Life Expectancy (Years)",
         x = "Year",
-        size = "Type"
+        size = "Years"
     ) +
     
     theme_minimal(base_family = "Candara") +
