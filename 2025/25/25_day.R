@@ -68,32 +68,54 @@ df_avg_country$RiskCategory <- factor(df_avg_country$RiskCategory, levels = c("V
 
 
 
+# Label top 5 
+top5 <- df_avg_country[order(-avg_Exposure)][1:5, Region]
+
+df_avg_country[, label := ifelse(Region %in% top5, Region, NA)]
+
+
+
 # Plotting -------
 
 col =  c('#2c5769', '#6F99AD', '#ffb39a', '#df7775', '#ab403f')
 
 
 
-p = ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, fill = RiskCategory)) +
+p = df_avg_country |>
     
-    geom_point(shape = 21, alpha = 0.85, stroke = 0.2, color = "white") +
+    ggplot(aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, fill = RiskCategory)) +
     
-    scale_size(range = c(1.5, 10)) +
+    geom_point(
+        shape = 21, 
+        alpha = 0.85, 
+        stroke = 0.2, 
+        color = "white"
+    ) +
     
-    # geom_text(aes(label = Region), hjust = 0.5, vjust = -0.5, size = 3, color = "black") +
+    scale_size(range = c(1.5, 9)) +
     
-    scale_fill_manual(values = rev(col)) +
+    geom_text(
+        aes(label = label),
+        hjust = 0.5, 
+        vjust = -1.75, 
+        size = 3, 
+        color = "black"
+    ) +
+
+    scale_fill_manual(
+        values = rev(col)
+    ) +
     
     labs(
-        title = "Average Risk Amplified by Lack of Coping Capacity by Country",
-        subtitle = "Global average values across countries for 2011–2021",
+        title = "Disaster Risk Across Countries: How Exposure and Coping Capacity Shape Vulnerability (2011-2021)",
+        subtitle = "Each point represents a country’s average disaster risk (WRI) based on its exposure to hazards and its ability to cope. <br> Larger circles indicate higher overall risk.</br>",
         caption = "30DayChartChallenge 2025: <b> Day 25</b> 
                    | Source: <b> World Disaster Risk Dataset (Kaggle) </b> 
                    | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Average Exposure to Hazards",
         y = "Average Lack of Coping Capabilities",
         size = "Average WRI",
-        color = "Risk Category"
+        fill = "Risk Category"
     ) +
     
     
@@ -101,11 +123,19 @@ p = ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI,
     
     theme(
 
-        legend.position = "bottom",
+        legend.position = "right",
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 9),
+        legend.box = "vertical",
+        
+        axis.title.y = element_text(size = 11, vjust = 5),
+        axis.title.x = element_text(size = 11, vjust = -2),
+        
+        axis.text = element_text(size = 10),
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 20)),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1),
+        plot.caption  = element_markdown(margin = margin(t = 35), size = 8, hjust = 1.45),
         
         panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_blank(),
@@ -117,7 +147,8 @@ p = ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI,
     ) +
     
     guides(
-        size = guide_legend(override.aes = list(shape = 21, color = "grey30", stroke = 0.5))
+        size = guide_legend(override.aes = list(shape = 21, color = "grey30", stroke = 0.5)),
+        fill = guide_legend(override.aes = list(size = 5))
     )
 
 
