@@ -87,103 +87,38 @@ p = ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI,
     labs(
         title = "Average Risk Amplified by Lack of Coping Capacity by Country",
         subtitle = "Global average values across countries for 2011–2021",
+        caption = "30DayChartChallenge 2025: <b> Day 25</b> 
+                   | Source: <b> World Disaster Risk Dataset (Kaggle) </b> 
+                   | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Average Exposure to Hazards",
         y = "Average Lack of Coping Capabilities",
         size = "Average WRI",
         color = "Risk Category"
     ) +
     
+    
     theme_minimal(base_family = "Candara") +
     
     theme(
-        plot.title = element_text(size = 16, face = "bold"),
+
         legend.position = "bottom",
-        
-        panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
-        panel.grid.minor = element_blank(),
-        
-        
-        plot.margin = margin(20, 20, 20, 20),
-        
-        plot.background = element_rect(fill = "grey93", color = NA),
-    )
-
-
-p
-
-
-# plot -----------
-
-p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
-    
-    geom_segment(
-        aes(x = Year, xend = Year, y = 0, yend = LE_birth_both_sexes, col = Income_group), 
-        size = 0.75
-    ) +
-    
-    geom_point(
-        aes(fill = Income_group, col = Income_group, size = size_group),
-        shape = 21, 
-        stroke = .2, 
-        color = "white"
-    ) +
-    
-    scale_fill_manual(values = col, guide = "none") +
-    
-    scale_color_manual(values = col, guide = "none") +
-    
-    scale_size_manual(
-        values = c(small = 4, medium = 5.5, large = 7),
-        labels = c("> 75", "65–75", "< 65")
-    ) +
-    
-    facet_wrap(~Income_group, ncol = 2) +
-    
-    labs(
-        title = "Life Expectancy Trends at Birth by Income Group from 2000 to 2019",
-        subtitle = "Comparing life expectancy changes across different income groups over two decades, based on WHO data.",
-        caption = "30DayChartChallenge 2025: <b> Day 24</b> 
-                   | Source: <b> Life Expectancy WHO data (Kaggle) </b> 
-                   | Graphic: <b>Natasa Anastasiadou</b>",
-        y = "Life Expectancy (Years)",
-        x = "Year",
-        size = "Years"
-    ) +
-    
-    theme_minimal(base_family = "Candara") +
-    
-    theme(
-        strip.text = element_text(face = "bold", size = 11),
-        
-        legend.position = "right",
-        legend.title = element_text(size = 10),
-        legend.text = element_text(size = 9),
-
-        axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 12.5, vjust = 3),
-        
-        axis.text.x = element_text(size = 11, angle = 45, hjust = 1),
-        axis.text.y = element_text(size = 11),
-        
-
-        panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
-        panel.grid.minor = element_blank(),
-        
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 20)),
-        plot.caption  = element_markdown(margin = margin(t = 25), size = 8.5, hjust = 1.45),
+        plot.caption  = element_markdown(margin = margin(t = 25), size = 8, hjust = 1),
+        
+        panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_blank(),
+        
         
         plot.margin = margin(20, 20, 20, 20),
         
         plot.background = element_rect(fill = "grey93", color = NA),
-        
     ) +
     
     guides(
         size = guide_legend(override.aes = list(shape = 21, color = "grey30", stroke = 0.5))
     )
-
 
 
 p 
