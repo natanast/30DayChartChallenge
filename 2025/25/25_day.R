@@ -42,13 +42,10 @@ country_map <- c(
     "Luxemburg" = "Luxembourg", "Finnland" = "Finland", "Norwegen" = "Norway"
 )
 
-# Replace inconsistent names in Region column
-df$Region <- recode(df$Region, !!!country_map)
-
-
-
-
-
+# Replace inconsistent names in Region column using stringr's str_replace_all
+for (key in names(country_map)) {
+    df$Region <- str_replace_all(df$Region, key, country_map[key])
+}
 # Aggregate data by Region (country), calculating the average of relevant columns
 df_avg_country <- df[, .(
     avg_Exposure = mean(Exposure, na.rm = TRUE),
@@ -57,12 +54,18 @@ df_avg_country <- df[, .(
     avg_RiskCategory = names(sort(table(`WRI Category`), decreasing = TRUE))[1]  # Mode calculation without a custom function
 ), by = Region]
 
+# Plotting -------
 
 ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, color = avg_RiskCategory)) +
+    
     geom_point(alpha = 0.7) +
+    
     scale_size(range = c(1, 10)) +
-    geom_text(aes(label = Region), hjust = 0.5, vjust = -0.5, size = 3, color = "black") +
+    
+    # geom_text(aes(label = Region), hjust = 0.5, vjust = -0.5, size = 3, color = "black") +
+    
     scale_color_brewer(palette = "YlOrRd") +
+    
     labs(
         title = "Average Risk Amplified by Lack of Coping Capacity by Country",
         subtitle = "Global average values across countries for 2011–2021",
@@ -71,7 +74,9 @@ ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, col
         size = "Average WRI",
         color = "Risk Category"
     ) +
-    theme_minimal(base_family = "Roboto") +
+    
+    theme_minimal(base_family = "Candara") +
+    
     theme(
         plot.title = element_text(size = 16, face = "bold"),
         legend.position = "bottom"
