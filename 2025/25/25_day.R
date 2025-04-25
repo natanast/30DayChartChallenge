@@ -108,7 +108,7 @@ p = df_avg_country |>
     
     labs(
         title = "Disaster Risk Across Countries: How Exposure and Coping Capacity Shape Vulnerability (2011-2021)",
-        subtitle = "Each point represents a country’s average disaster risk (WRI) based on its exposure to hazards and its ability to cope. <br> Larger circles indicate higher overall risk.</br>",
+        subtitle = "Exploring the relationship between countries' exposure to hazards and their coping capacity,<br> with insights into the World Risk Index (WRI).</br>",
         caption = "30DayChartChallenge 2025: <b> Day 25</b> 
                    | Source: <b> World Disaster Risk Dataset (Kaggle) </b> 
                    | Graphic: <b>Natasa Anastasiadou</b>",
@@ -133,7 +133,7 @@ p = df_avg_country |>
         
         axis.text = element_text(size = 10),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 2, b = 2)),
+        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.25, margin = margin(t = 2, b = 2)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5,  color = "grey30", margin = margin(t = 5, b = 20)),
         plot.caption  = element_markdown(margin = margin(t = 35), size = 8, hjust = 1.45),
         
