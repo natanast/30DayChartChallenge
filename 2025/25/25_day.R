@@ -21,6 +21,9 @@ df = "world_risk_index.csv" |> fread()
     
 # data cleaning -----------
 
+df = df[, .(Region, WRI, Exposure, `Lack of Coping Capabilities`, `WRI Category`)]
+
+
 # Country name mapping
 country_map <- c(
     "Albanien" = "Albania", "Griechenland" = "Greece", "Vereinigte Staaten" = "United States", 
@@ -46,25 +49,40 @@ country_map <- c(
 for (key in names(country_map)) {
     df$Region <- str_replace_all(df$Region, key, country_map[key])
 }
+
+
 # Aggregate data by Region (country), calculating the average of relevant columns
 df_avg_country <- df[, .(
     avg_Exposure = mean(Exposure, na.rm = TRUE),
     avg_Coping = mean(`Lack of Coping Capabilities`, na.rm = TRUE),
     avg_WRI = mean(WRI, na.rm = TRUE),
-    avg_RiskCategory = names(sort(table(`WRI Category`), decreasing = TRUE))[1]  # Mode calculation without a custom function
+    RiskCategory = names(sort(table(`WRI Category`), decreasing = TRUE))[1]  # Mode calculation without a custom function
 ), by = Region]
+
+
+df_avg_country = df_avg_country[RiskCategory != ""]
+
+
+# Set the factor levels for avg_RiskCategory to control the order of the colors in the plot
+df_avg_country$RiskCategory <- factor(df_avg_country$RiskCategory, levels = c("Very High", "High", "Medium", "Low", "Very Low"))
+
+
 
 # Plotting -------
 
-ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, color = avg_RiskCategory)) +
+col =  c('#2c5769', '#6F99AD', '#ffb39a', '#df7775', '#ab403f')
+
+
+
+p = ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, fill = RiskCategory)) +
     
-    geom_point(alpha = 0.7) +
+    geom_point(shape = 21, alpha = 0.85, stroke = 0.2, color = "white") +
     
-    scale_size(range = c(1, 10)) +
+    scale_size(range = c(1.5, 10)) +
     
     # geom_text(aes(label = Region), hjust = 0.5, vjust = -0.5, size = 3, color = "black") +
     
-    scale_color_brewer(palette = "YlOrRd") +
+    scale_fill_manual(values = rev(col)) +
     
     labs(
         title = "Average Risk Amplified by Lack of Coping Capacity by Country",
@@ -79,15 +97,22 @@ ggplot(df_avg_country, aes(x = avg_Exposure, y = avg_Coping, size = avg_WRI, col
     
     theme(
         plot.title = element_text(size = 16, face = "bold"),
-        legend.position = "bottom"
+        legend.position = "bottom",
+        
+        panel.grid.major = element_line(color = "grey65", linewidth = 0.25, linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_blank(),
+        
+        
+        plot.margin = margin(20, 20, 20, 20),
+        
+        plot.background = element_rect(fill = "grey93", color = NA),
     )
 
 
+p
+
 
 # plot -----------
-
-col = c('#5a8192', '#b24745','#a2a0cf', "#00429d" )
-
 
 p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
     
@@ -164,7 +189,7 @@ p = ggplot(df_plot, aes(x = Year, y = LE_birth_both_sexes, group = 1)) +
 p 
 
 ggsave(
-    plot = p, filename = "24_day.png",
+    plot = p, filename = "25_day.png",
     width = 10, height = 10, units = "in", dpi = 600
 )    
 

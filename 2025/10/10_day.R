@@ -50,6 +50,7 @@ df$sport <- factor(df$sport, levels = ordered_sports)
 
 # colors 
 col = c('#565781', '#6f6e9a', '#8887b4', '#a2a0cf', '#bcbaea', '#d8d7f5', '#f9d2c6', '#fdad94', '#f38b6f', '#e06c53', '#cd4b35', '#af3324')
+
 col_alpha <- adjustcolor(col, alpha.f = 0.9)
 
 
