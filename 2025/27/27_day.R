@@ -21,8 +21,6 @@ global_temps <- fread("GLB.Ts+dSST.csv")
     
 # data cleaning -----------
 
-
-
 df <- global_temps[1:145, 1:13]
 
 
@@ -31,14 +29,33 @@ df_long <- melt(df, id.vars = "Year", variable.name = "Month", value.name = "Ano
 # make sure Anomaly is numeric
 df_long[, Anomaly := as.numeric(Anomaly)]
 
+df_long[, Anomaly_Sign := ifelse(Anomaly < 0, "Below 0", "Above 0")]
+
 
 
 # plot -------
 
-ggplot(df_long, aes(x = Year, y = Anomaly)) +
-    geom_point(size = 1, alpha = 0.4) +
-    geom_smooth(color = "black")
-
+df_long |>
+    ggplot(aes(x = Year, y = Anomaly)) +
+    
+    geom_point(
+        aes(fill = Anomaly_Sign), 
+        shape = 21, 
+        size = 2, 
+        alpha = 0.7, 
+        color = "white", 
+        stroke = 0.1
+    ) +
+    
+    geom_smooth(
+        color = "black"
+    ) +
+    
+    scale_fill_manual(
+        alues = c("Below 0" = "#4575b4", "Above 0" = "#d73027")
+    ) + 
+    
+    theme_minimal()
 
 
 p = ggplot(map_fat) +
