@@ -35,75 +35,56 @@ df_long[, Anomaly_Sign := ifelse(Anomaly < 0, "Below 0", "Above 0")]
 
 # plot -------
 
-df_long |>
+p = df_long |>
     ggplot(aes(x = Year, y = Anomaly)) +
     
     geom_point(
         aes(fill = Anomaly_Sign), 
         shape = 21, 
         size = 2, 
-        alpha = 0.7, 
+        alpha = 0.6, 
         color = "white", 
         stroke = 0.1
     ) +
     
     geom_smooth(
-        color = "black"
+        method = "gam",
+        formula = y ~ s(x, bs = "cs"),
+        color = "#0d3d4d", 
+        fill = "#0d3d4d",
+        linewidth = 1.25, 
+        lineend = "round"
     ) +
     
     scale_fill_manual(
-        alues = c("Below 0" = "#4575b4", "Above 0" = "#d73027")
+        values = c("Below 0" = "#4575b4", "Above 0" = "#d73027")
     ) + 
     
-    theme_minimal()
-
-
-p = ggplot(map_fat) +
-    
-    geom_sf(data = map, fill = "grey95", linewidth = 0.05) +
-    
-    geom_sf(aes(fill = total_fat), color = "gray20", linewidth = 0.3)  +
-    
-
-    geom_shadowtext(
-        aes(x = centroid_x, y = centroid_y, label = state),
-        size = 3.5,
-        family = "Candara",
-        color = "gray10",
-        bg.color = "grey93",
-        bg.r = 0.06
-    ) +
-
-    scale_fill_stepsn(
-        colors = c("#e2e0ff","#a09fcf", "#62628e", "#35375f"),
-        breaks = c(100, 300, 500, 700),
-        labels = scales::comma,
-        guide = guide_colorsteps(
-            title = "Fatalities",
-            barheight = unit(0.5, "lines"),
-            barwidth = unit(10, "lines")
-            
-        )
+    scale_x_continuous(
+        breaks = c(1880, 1920, 1960, 2000, 2024)
     ) +
     
     labs(
-        title = "Uncertain Paths: Tornado-Related Fatalities in the U.S.",
-        subtitle = "Aggregated fatalities reported from tornado events between 2000 and 2022.",
-        caption = "30DayChartChallenge 2025: <b> Day 26</b>
-                       | Source: <b> Tornados (TidyTuesday) </b>
+        title = "Warming and Cooling Patterns Through Time",
+        subtitle = "Monthly deviations of the Global Surface Temperature (°C) from the 1951–1980 average, <br> with red for warmer and blue for cooler deviations.",
+        caption = "30DayChartChallenge 2025: <b> Day 27</b>
+                       | Source: <b> NASA </b>
                        | Graphic: <b>Natasa Anastasiadou</b>",
+        y = "Temperature Anomaly (°C)"
     ) +
-    
-    theme_void(base_family = "Candara") +
+
+    theme_minimal(base_family = "Candara") +
     
     theme(
+        legend.position = "none",
         
-        legend.position = "bottom",
-        legend.title.position = "top",
+        axis.title.x = element_blank(),
+        axis.title.y = element_text(size = 12),
         
-        legend.title = element_text(size = 10, face = "bold", color = "grey30", hjust = .5),
-        legend.text = element_text(size = 8, color = "grey30"),
+        axis.text = element_text(size = 11),
         
+        panel.grid.major = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
+        panel.grid.minor = element_blank(),
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 5, b = 15)),
@@ -114,10 +95,11 @@ p = ggplot(map_fat) +
         plot.background = element_rect(fill = "grey90", color = NA)
     )
 
+
 p 
 
 ggsave(
-    plot = p, filename = "26_day.png",
+    plot = p, filename = "27_day.png",
     width = 9, height = 9, units = "in", dpi = 600
 )    
 
