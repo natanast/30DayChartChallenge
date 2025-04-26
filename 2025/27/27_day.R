@@ -80,7 +80,7 @@ p = df_long |>
         legend.position = "none",
         
         axis.title.x = element_blank(),
-        axis.title.y = element_text(size = 12),
+        axis.title.y = element_text(size = 12, vjust = 3),
         
         axis.text = element_text(size = 11),
         
