@@ -66,7 +66,8 @@ p = df_long |>
     
     labs(
         title = "Warming and Cooling Patterns Through Time",
-        subtitle = "Monthly deviations of the Global Surface Temperature (°C) from the 1951–1980 average, <br> with red for warmer and blue for cooler deviations.",
+        subtitle = "Monthly deviations of the Global Surface Temperature (°C) from the 1951–1980 average, 
+                    <br> with <span style='color:#d73027;'><b>red</b></span> for <span style='color:#d73027;'><b>warmer</b></span> and <span style='color:#4575b4;'><b>blue</b></span> for <span style='color:#4575b4;'><b>cooler</b></span> deviations.",
         caption = "30DayChartChallenge 2025: <b> Day 27</b>
                        | Source: <b> NASA </b>
                        | Graphic: <b>Natasa Anastasiadou</b>",
