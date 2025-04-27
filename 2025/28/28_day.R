@@ -12,24 +12,59 @@ library(stringr)
 library(ggtext)
 library(extrafont)
 
+
 # load data --------
 
 friends <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-09-08/friends.csv')
 friends_emotions <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-09-08/friends_emotions.csv')
 friends_info <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-09-08/friends_info.csv')
 
+
 # data cleaning -----------
 
-df <- global_temps[1:145, 1:13]
+main_characters = c("Rachel Green", "Ross Geller", "Joey Tribbiani",
+                    "Monica Geller", "Chandler Bing", "Phoebe Buffay")
+
+friends_main = friends[speaker %in% main_characters]
 
 
-df_long <- melt(df, id.vars = "Year", variable.name = "Month", value.name = "Anomaly")
+# Count utterances per character per episode
+dialogue_counts = friends_main[, .N, by = .(season, episode, speaker)]
 
-# make sure Anomaly is numeric
-df_long[, Anomaly := as.numeric(Anomaly)]
 
-df_long[, Anomaly_Sign := ifelse(Anomaly < 0, "Below 0", "Above 0")]
+# Total utterances per episode
+dialogue_counts[, total := sum(N), by = .(season, episode)]
 
+# Percent of dialogue
+dialogue_counts[, percent := N / total]
+
+
+# Calculate standard deviation of percent per episode
+inclusion = dialogue_counts[, .(inclusion_sd = sd(percent)), by = .(season, episode)]
+
+
+final_data = merge(inclusion, friends_info, by = c("season", "episode"))
+
+final_data = final_data[, .(season, episode, inclusion_sd, us_views_millions, imdb_rating)]
+
+
+
+final_data|> 
+    
+    ggplot(aes(x = season, y = imdb_rating, color = inclusion_sd, fill = inclusion_sd)) +
+    
+    geom_jitter(shape = 21, size = 3, alpha = 0.7, width = 0.1) +
+
+
+    theme_minimal(base_family = "Candara") +
+
+    labs(
+        title = "Character Inclusion vs IMDb Rating by Season",
+        subtitle = "Each facet represents one season of Friends.",
+        x = "Season",
+        y = "IMDb Rating",
+        caption = "Data: Friends Script + IMDb | Graphic: Natasa Anastasiadou"
+    )
 
 
 # plot -------
