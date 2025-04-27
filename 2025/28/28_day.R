@@ -47,23 +47,52 @@ final_data = merge(inclusion, friends_info, by = c("season", "episode"))
 
 final_data = final_data[, .(season, episode, inclusion_sd, us_views_millions, imdb_rating)]
 
+final_data$season <- final_data$season |> as.character() |> factor(levels = 1:10)
+
+
+
+# plot --------
+
+col = c("#4575b4", "#FFB900", "#d73027")
 
 
 final_data|> 
     
-    ggplot(aes(x = season, y = imdb_rating, color = inclusion_sd, fill = inclusion_sd)) +
+    ggplot(aes(x = season, y = imdb_rating, fill = inclusion_sd)) +
     
-    geom_jitter(shape = 21, size = 3, alpha = 0.7, width = 0.1) +
-
-
+    geom_jitter(
+        shape = 21, 
+        size = 3.5, 
+        alpha = 0.9, 
+        width = 0.1,
+        stroke = 0.15,
+        color = "white"
+    ) +
+    
+    # scale_color_gradientn(colors = col) +
+    scale_fill_gradientn(
+        colors = col,
+        guide = guide_colorbar(
+            title = "Inclusion sd",
+            barheight = unit(6, "lines"),
+            barwidth = unit(.75, "lines")
+        )
+    ) +
+    
     theme_minimal(base_family = "Candara") +
 
     labs(
         title = "Character Inclusion vs IMDb Rating by Season",
-        subtitle = "Each facet represents one season of Friends.",
+        subtitle = "Each point is an episode; color shows how balanced the dialogue was.",
         x = "Season",
         y = "IMDb Rating",
         caption = "Data: Friends Script + IMDb | Graphic: Natasa Anastasiadou"
+    ) +
+    
+    theme(
+        
+        
+        plot.margin = margin(20, 20, 20, 20)
     )
 
 
