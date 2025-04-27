@@ -53,7 +53,9 @@ final_data$season <- final_data$season |> as.character() |> factor(levels = 1:10
 
 # plot --------
 
-col = c("#4575b4","#7876B1", "#FFB900", "#d73027")
+# col = c('#155F83', '#B07AA1', '#FFB900', '#d0615d', '#a33a3a')
+
+col = c('#155F83', '#9c95cd', '#FFB900', '#d0615d', '#a33a3a')
 
 
 p = final_data|> 
@@ -63,7 +65,7 @@ p = final_data|>
     geom_jitter(
         shape = 21, 
         size = 4.5, 
-        alpha = 0.9, 
+        alpha = 0.95, 
         width = 0.1,
         stroke = 0.15,
         color = "white"
