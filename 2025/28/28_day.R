@@ -67,7 +67,7 @@ p = final_data|>
         size = 4.5, 
         alpha = 0.95, 
         width = 0.1,
-        stroke = 0.15,
+        stroke = 0.1,
         color = "white"
     ) +
     
@@ -76,30 +76,37 @@ p = final_data|>
         guide = guide_colorbar(
             title = "Inclusion sd",
             barheight = unit(6, "lines"),
-            barwidth = unit(.75, "lines")
+            barwidth = unit(.55, "lines")
         )
     ) +
     
     theme_minimal(base_family = "Candara") +
 
     labs(
-        title = "Character Inclusion vs IMDb Rating by Season",
-        subtitle = "Each point is an episode; color shows how balanced the dialogue was.",
+        title = "The One with Character Inclusion: IMDb Rating vs. Dialogue Balance",
+        subtitle = "The chart shows how character's dialogue is distributed in each episode (Inclusion sd) and how this balance relates to IMDb ratings.",
         x = "Season",
         y = "IMDb Rating",
         caption = "30DayChartChallenge 2025: <b> Day 28</b>
-                   | Source: <b> FRIENDS </b>
+                   | Source: <b> F·R·I·E·N·D·S (TidyTuesday)</b>
                    | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
     theme(
+        axis.text = element_text(size = 10),
+        axis.title.y = element_text(size = 12, vjust = 5),
+        axis.title.x = element_text(size = 12, vjust = -2.5),
+        
+        legend.title.position = "left",
+        legend.title = element_text(size = 10, angle = 90, hjust = .5, face = "bold", color = "gray20"),
+        legend.text = element_text(size = 9, color = "gray20"),
         
         panel.grid.major = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 5, b = 15)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1.03),
+        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.35, color = "grey30", margin = margin(t = 5, b = 15)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1.3),
         
         plot.margin = margin(20, 20, 20, 20),
         
@@ -111,6 +118,6 @@ p
 
 ggsave(
     plot = p, filename = "28_day.png",
-    width = 9, height = 9, units = "in", dpi = 600
+    width = 10, height = 10, units = "in", dpi = 600
 )    
 
