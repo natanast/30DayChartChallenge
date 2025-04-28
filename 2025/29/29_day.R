@@ -53,6 +53,11 @@ ggplot(year_counts, aes(x = factor(year), y = N, color = decade)) +
     theme_minimal() +
     theme(axis.text.y = element_blank(),
           axis.ticks = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.grid.major.y = element_line(color = "grey80"),
+          plot.margin = margin(20, 20, 20, 20),
+          
+          plot.background = element_rect(fill = "grey90", color = NA)
           # panel.grid = element_blank(),
           # plot.background = element_rect(fill = "black", color = NA),
           # axis.text.x = element_text(color = "white", size = 6, angle = 90, vjust = 0.5)
