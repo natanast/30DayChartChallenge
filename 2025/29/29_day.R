@@ -16,55 +16,68 @@ library(extrafont)
 # load data --------
 
 ufo_sightings <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/ufo_sightings.csv')
-places <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/places.csv')
-day_parts_map <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/day_parts_map.csv')
+# places <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/places.csv')
+# day_parts_map <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/day_parts_map.csv')
 
 
 # data cleaning -----------
 
 df = ufo_sightings[, .(reported_date_time, country_code)]
 
-df$reported_date_time <- df$reported_date_time |> str_sub(1, 7)
+df$year <- df$reported_date_time |> str_sub(1, 4) 
 
-# Count utterances per character per episode
-df1 = df[, .N, by = .(reported_date_time, country_code)]
+df1 = df[, .N, by = .(country_code)]
 
 
-library(ggplot2)
-library(data.table)
-library(stringr)
-
-# Get counts by year
-df1[, year := str_sub(reported_date_time, 1, 4)]
-df1[, year := as.integer(year)]
-
-year_counts <- df1[, .N, by = year]
-
-year_counts = year_counts[year > 1960,]
-
-year_counts[, decade := paste0(floor(year / 10) * 10, "s")]
+df1 = df1[N > 80 & N < 7000]
 
 
 
-ggplot(year_counts, aes(x = factor(year), y = N, color = decade)) +
-    geom_segment(aes(xend = factor(year), yend = 0), linewidth = 0.5) +
-    geom_point(size = 2) +
-    coord_radial(start = 0, inner.radius = 0.15) +  # <-- circular!
-    theme_minimal() +
-    theme(axis.text.y = element_blank(),
-          axis.ticks = element_blank(),
-          panel.grid.major.x = element_blank(),
-          panel.grid.major.y = element_line(color = "grey80"),
-          plot.margin = margin(20, 20, 20, 20),
-          
-          plot.background = element_rect(fill = "grey90", color = NA)
-          # panel.grid = element_blank(),
-          # plot.background = element_rect(fill = "black", color = NA),
-          # axis.text.x = element_text(color = "white", size = 6, angle = 90, vjust = 0.5)
-          ) +
-    labs(title = "UFO Sightings per Year",
-         subtitle = "Each lollipop represents a year and number of sightings",
-         x = "", y = "")
+df1$N <- df1$N |> as.numeric()
+
+library(paletteer)
+
+col = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 10)
+
+# plot ------
+
+ggplot(df1, aes(x = N , y = reorder(country_code, N), fill = country_code)) +
+    
+    geom_bar(stat = "identity", width = 0.2) +
+    
+    coord_radial(start = -.32, inner.radius = 0.1) +
+    
+    scale_fill_manual(values = col) +
+    
+
+    labs(
+        title = "The One with Character Inclusion: IMDb Rating vs. Dialogue Balance",
+        subtitle = "The chart shows how character's dialogue is distributed in each episode (Inclusion sd) and how this balance relates to IMDb ratings.",
+        x = "",
+        y = "",
+        caption = "30DayChartChallenge 2025: <b> Day 28</b>
+                   | Source: <b> F·R·I·E·N·D·S (TidyTuesday)</b>
+                   | Graphic: <b>Natasa Anastasiadou</b>",
+    ) +
+    
+
+    theme_minimal(base_family = "Candara") +
+    
+    theme(
+        legend.position = "none",
+        
+        # axis.text.x = element_text(size = 15),
+        axis.text.y = element_blank(),
+        # axis.ticks = element_blank(),
+        
+        panel.grid.major.x = element_line(color = "grey70", linewidth = 0.25, linetype = "dashed", lineend = "round"),
+        panel.grid.major.y = element_line(color = "grey70", linewidth = 0.25),
+        
+        plot.margin = margin(20, 20, 20, 20),
+        
+        plot.background = element_rect(fill = "grey90", color = NA)
+    ) 
+
 
 
 
