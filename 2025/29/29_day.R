@@ -15,39 +15,54 @@ library(extrafont)
 
 # load data --------
 
-friends <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-09-08/friends.csv')
-friends_emotions <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-09-08/friends_emotions.csv')
-friends_info <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-09-08/friends_info.csv')
+ufo_sightings <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/ufo_sightings.csv')
+places <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/places.csv')
+day_parts_map <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/day_parts_map.csv')
 
 
 # data cleaning -----------
 
-main_characters = c("Rachel Green", "Ross Geller", "Joey Tribbiani",
-                    "Monica Geller", "Chandler Bing", "Phoebe Buffay")
+df = ufo_sightings[, .(reported_date_time, country_code)]
 
-friends_main = friends[speaker %in% main_characters]
-
+df$reported_date_time <- df$reported_date_time |> str_sub(1, 7)
 
 # Count utterances per character per episode
-dialogue_counts = friends_main[, .N, by = .(season, episode, speaker)]
+df1 = df[, .N, by = .(reported_date_time, country_code)]
 
 
-# Total utterances per episode
-dialogue_counts[, total := sum(N), by = .(season, episode)]
+library(ggplot2)
+library(data.table)
+library(stringr)
 
-# Percent of dialogue
-dialogue_counts[, percent := N / total]
+# Get counts by year
+df1[, year := str_sub(reported_date_time, 1, 4)]
+df1[, year := as.integer(year)]
+
+year_counts <- df1[, .N, by = year]
+
+year_counts = year_counts[year > 1960,]
+
+year_counts[, decade := paste0(floor(year / 10) * 10, "s")]
 
 
-# Calculate standard deviation of percent per episode
-inclusion = dialogue_counts[, .(inclusion_sd = sd(percent)), by = .(season, episode)]
+
+ggplot(year_counts, aes(x = factor(year), y = N, color = decade)) +
+    geom_segment(aes(xend = factor(year), yend = 0), linewidth = 0.5) +
+    geom_point(size = 2) +
+    coord_radial(start = 0, inner.radius = 0.15) +  # <-- circular!
+    theme_minimal() +
+    theme(axis.text.y = element_blank(),
+          axis.ticks = element_blank(),
+          # panel.grid = element_blank(),
+          # plot.background = element_rect(fill = "black", color = NA),
+          # axis.text.x = element_text(color = "white", size = 6, angle = 90, vjust = 0.5)
+          ) +
+    labs(title = "UFO Sightings per Year",
+         subtitle = "Each lollipop represents a year and number of sightings",
+         x = "", y = "")
 
 
-final_data = merge(inclusion, friends_info, by = c("season", "episode"))
 
-final_data = final_data[, .(season, episode, inclusion_sd, us_views_millions, imdb_rating)]
-
-final_data$season <- final_data$season |> as.character() |> factor(levels = 1:10)
 
 
 
