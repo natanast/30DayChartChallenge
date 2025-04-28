@@ -54,12 +54,12 @@ ggplot(df1, aes(x = N , y = country_code, fill = country_code)) +
     
 
     labs(
-        title = "The One with Character Inclusion: IMDb Rating vs. Dialogue Balance",
-        subtitle = "The chart shows how character's dialogue is distributed in each episode (Inclusion sd) and how this balance relates to IMDb ratings.",
+        title = "Global UFO Sightings: A Closer Look at the Frequency by Country",
+        subtitle = "This visualization highlights the number of UFO sightings across various countries, <br>with a focus on countries with notable sighting frequencies.",
         x = "",
         y = "",
-        caption = "30DayChartChallenge 2025: <b> Day 28</b>
-                   | Source: <b> F·R·I·E·N·D·S (TidyTuesday)</b>
+        caption = "30DayChartChallenge 2025: <b> Day 29</b>
+                   | Source: <b> UFO Sightings Redux (TidyTuesday)</b>
                    | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
@@ -74,9 +74,13 @@ ggplot(df1, aes(x = N , y = country_code, fill = country_code)) +
         
         axis.text.y = element_blank(),
 
-        
         panel.grid.major.x = element_line(color = "grey70", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.major.y = element_line(color = "grey70", linewidth = 0.25),
+        
+        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.25, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 5, b = 15)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1.45),
+        
         
         plot.margin = margin(20, 20, 20, 20),
         
