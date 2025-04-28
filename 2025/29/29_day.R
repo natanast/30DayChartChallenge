@@ -31,23 +31,26 @@ df1 = df[, .N, by = .(country_code)]
 
 df1 = df1[N > 80 & N < 7000]
 
+# Reorder the country codes based on N (descending)
+df1$country_code <- reorder(df1$country_code, df1$N)
 
-
-df1$N <- df1$N |> as.numeric()
 
 library(paletteer)
 
 col = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 10)
 
+# col = c('#155F83', '#9c95cd', '#FFB900', '#d0615d', '#a33a3a')
+
+
 # plot ------
 
-ggplot(df1, aes(x = N , y = reorder(country_code, N), fill = country_code)) +
+ggplot(df1, aes(x = N , y = country_code, fill = country_code)) +
     
-    geom_bar(stat = "identity", width = 0.2) +
+    geom_bar(stat = "identity", width = 0.5) +
     
-    coord_radial(start = -.32, inner.radius = 0.1) +
+    coord_radial(start = -.32, inner.radius = 0.2) +
     
-    scale_fill_manual(values = col) +
+    scale_fill_manual(values = rev(col)) +
     
 
     labs(
@@ -64,11 +67,13 @@ ggplot(df1, aes(x = N , y = reorder(country_code, N), fill = country_code)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        legend.position = "none",
+        # legend.position = "none",
         
-        # axis.text.x = element_text(size = 15),
+        legend.title = element_text(size = 9),
+        legend.text = element_text(size = 8),
+        
         axis.text.y = element_blank(),
-        # axis.ticks = element_blank(),
+
         
         panel.grid.major.x = element_line(color = "grey70", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.major.y = element_line(color = "grey70", linewidth = 0.25),
