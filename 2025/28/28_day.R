@@ -53,8 +53,6 @@ final_data$season <- final_data$season |> as.character() |> factor(levels = 1:10
 
 # plot --------
 
-# col = c('#155F83', '#B07AA1', '#FFB900', '#d0615d', '#a33a3a')
-
 col = c('#155F83', '#9c95cd', '#FFB900', '#d0615d', '#a33a3a')
 
 
@@ -87,9 +85,7 @@ p = final_data|>
         subtitle = "The chart shows how character's dialogue is distributed in each episode (Inclusion sd) and how this balance relates to IMDb ratings.",
         x = "Season",
         y = "IMDb Rating",
-        caption = "30DayChartChallenge 2025: <b> Day 28</b>
-                   | Source: <b> F·R·I·E·N·D·S (TidyTuesday)</b>
-                   | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2025: Day 28 | Source: F·R·I·E·N·D·S (TidyTuesday) | Graphic: Natasa Anastasiadou",
     ) +
     
     theme(
@@ -104,9 +100,9 @@ p = final_data|>
         panel.grid.major = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         
-        plot.title = element_markdown(size = 15, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.35, color = "grey30", margin = margin(t = 5, b = 15)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1.3),
+        plot.title = element_text(size = 15, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_text(size = 12, hjust = 0.35, color = "grey30", margin = margin(t = 5, b = 15)),
+        plot.caption = element_text(margin = margin(t = 35), size = 8, hjust = 1.2),
         
         plot.margin = margin(20, 20, 20, 20),
         
@@ -116,8 +112,26 @@ p = final_data|>
 
 p 
 
+
+# logo -------
+
+library(cowplot)
+library(grid)
+
+img <- png::readPNG("Friends-logo.png")
+logo <- grid::rasterGrob(img, interpolate = TRUE)
+
+# Combine your plot and the image
+final_plot_with_logo <- ggdraw(p) +
+    draw_grob(logo, x = .99, y = 1.05, width = 0.18, height = 0.18, hjust = 1, vjust = 1)
+
+
+final_plot_with_logo
+
+# save ------
+
 ggsave(
-    plot = p, filename = "28_day.png",
+    plot = final_plot_with_logo, filename = "28_day.png",
     width = 10, height = 10, units = "in", dpi = 600
 )    
 
