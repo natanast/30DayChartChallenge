@@ -16,9 +16,6 @@ library(extrafont)
 # load data --------
 
 ufo_sightings <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/ufo_sightings.csv')
-# places <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/places.csv')
-# day_parts_map <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/day_parts_map.csv')
-
 
 # data cleaning -----------
 
@@ -31,7 +28,7 @@ df1 = df[, .N, by = .(country_code)]
 
 df1 = df1[N > 80 & N < 7000]
 
-# Reorder the country codes based on N (descending)
+# Reorder the country codes based on N 
 df1$country_code <- reorder(df1$country_code, df1$N)
 
 
