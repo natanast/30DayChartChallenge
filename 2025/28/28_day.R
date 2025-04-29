@@ -82,7 +82,8 @@ p = final_data|>
 
     labs(
         title = "The One with Character Inclusion: IMDb Rating vs. Dialogue Balance",
-        subtitle = "The chart shows how character's dialogue is distributed in each episode (Inclusion sd) and how this balance relates to IMDb ratings.",
+        subtitle = "The chart shows how character dialogue is distributed (Inclusion SD) and how this balance relates to IMDb ratings.
+                                       Each point represents an episode.",
         x = "Season",
         y = "IMDb Rating",
         caption = "30DayChartChallenge 2025: Day 28 | Source: F·R·I·E·N·D·S (TidyTuesday) | Graphic: Natasa Anastasiadou",
@@ -100,8 +101,8 @@ p = final_data|>
         panel.grid.major = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         panel.grid.minor = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         
-        plot.title = element_text(size = 15, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_text(size = 12, hjust = 0.35, color = "grey30", margin = margin(t = 5, b = 15)),
+        plot.title = element_text(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_text(size = 13, hjust = 0.35, color = "grey30", margin = margin(t = 5, b = 15)),
         plot.caption = element_text(margin = margin(t = 35), size = 8, hjust = 1.2),
         
         plot.margin = margin(20, 20, 20, 20),
