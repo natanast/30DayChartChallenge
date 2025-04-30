@@ -15,26 +15,13 @@ library(extrafont)
 
 # load data --------
 
-ufo_sightings <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/ufo_sightings.csv')
+df <- fread('world-data-2023.csv')
 
 # data cleaning -----------
 
-df = ufo_sightings[, .(reported_date_time, country_code)]
-
-df$year <- df$reported_date_time |> str_sub(1, 4) 
-
-df1 = df[, .N, by = .(country_code)]
+df = df[, .(Country, `Co2-Emissions`, `Forested Area (%)`)]
 
 
-df1 = df1[N > 80 & N < 7000]
-
-# Reorder the country codes based on N 
-df1$country_code <- reorder(df1$country_code, df1$N)
-
-
-library(paletteer)
-
-col = paletteer_c("ggthemes::Sunset-Sunrise Diverging", 10)
 
 
 # plot ------
