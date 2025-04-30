@@ -53,7 +53,6 @@ df_long[, Country := factor(Country, levels = unique(df[order(`Co2-Emissions`)]$
 
 
 
-
 # plot ------
 
 
@@ -61,7 +60,7 @@ df_long[, Country := factor(Country, levels = unique(df[order(`Co2-Emissions`)]$
 p1 <- ggplot(top_emitters, aes(x = -`Co2-Emissions`, y = Country)) +
     geom_col(fill = "#F44336", width = 0.6) +
     scale_x_continuous(labels = abs) +
-    labs(x = "CO₂ Emissions (×100K)", y = NULL) +
+    # labs(x = "CO₂ Emissions (×100K)", y = NULL) +
     theme_minimal() +
     theme(axis.text.y = element_blank(),
           axis.title.y = element_blank(),
@@ -75,7 +74,7 @@ p_labels <- ggplot(top_emitters, aes(y = Country, x = 0, label = Country)) +
 # Right: Forested Area
 p2 <- ggplot(top_emitters, aes(x = `Forested Area (%)`, y = Country)) +
     geom_col(fill = "#4CAF50", width = 0.6) +
-    labs(x = "Forested Area (%)", y = NULL) +
+    # labs(x = "Forested Area (%)", y = NULL) +
     theme_minimal() +
     theme(axis.text.y = element_blank(),
           axis.title.y = element_blank(),
@@ -83,7 +82,7 @@ p2 <- ggplot(top_emitters, aes(x = `Forested Area (%)`, y = Country)) +
 
 # Combine plots with patchwork
 (p1 | p_labels | p2) +
-    plot_layout(widths = c(1, 0.5, 1)) +
+    plot_layout(widths = c(1, 0.25, 1)) +
     plot_annotation(
         title = "Butterfly Chart: CO₂ Emissions vs Forested Area",
         subtitle = "Top 15 CO₂ emitting countries and their forest coverage",
