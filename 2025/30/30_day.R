@@ -36,6 +36,10 @@ df$`Forested Area (%)` <- df$`Forested Area (%)` |> str_replace_all("%", "") |> 
 top_emitters <- df[order(-`Co2-Emissions`)][1:15]
 
 
+# Order factor levels for consistent plot order
+top_emitters[, Country := factor(Country, levels = top_emitters[order(`Co2-Emissions`)]$Country)]
+
+
 top_emitters[, `Co2-Emissions` := round(`Co2-Emissions` / 100000)]
 
 
@@ -60,20 +64,22 @@ df_long[, Country := factor(Country, levels = unique(df[order(`Co2-Emissions`)]$
 # Left: CO2 emissions (negative to go left)
 p1 <- ggplot(top_emitters, aes(x = -`Co2-Emissions`, y = Country)) +
     
-    geom_col(fill = "#B24745", width = 0.6, alpha = 0.9) +
+    geom_col(fill = "#B24745", width = 0.5, alpha = 0.9) +
     
     scale_x_continuous(labels = abs) +
     
-    labs(x = "Co2-Emissions (M)") +
+    labs(x = expression("CO"["2"]*" Emissions (×10"^5*")")) +
     
     theme_minimal(base_family = "Candara") +
     
     theme(
+        axis.title.x = element_text(size = 11, vjust = -1), 
+        axis.text.x = element_text(size = 10),
         
         axis.text.y = element_blank(),
         axis.title.y = element_blank(),
         
-        panel.grid.major = element_line(color = "grey80", linewidth = 0.15, linetype = "dashed", lineend = "round"),
+        panel.grid.major = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         
         panel.grid.minor = element_blank()
     )
@@ -84,7 +90,7 @@ p1
 
 # Middle: Country labels (as a separate text-only plot)
 p_labels <- ggplot(top_emitters, aes(y = Country, x = 0, label = Country)) +
-    geom_text(hjust = 0.5, size = 3.5, family = "Candara") +
+    geom_text(hjust = 0.5, size = 4, family = "Candara") +
     theme_void()
 
 
@@ -92,17 +98,26 @@ p_labels <- ggplot(top_emitters, aes(y = Country, x = 0, label = Country)) +
 # Right: Forested Area
 p2 <- ggplot(top_emitters, aes(x = `Forested Area (%)`, y = Country)) +
     
-    geom_col(fill = "#537462", width = 0.6, alpha = 0.9) +
+    geom_col(fill = "#537462", width = 0.5, alpha = 0.9) +
     
     labs(x = "Forested Area (%)", y = NULL) +
+    
+    scale_x_continuous(
+        limits = c(0, 100),
+        breaks = seq(0, 100, by = 20),
+        labels = seq(0, 100, by = 20)
+    ) +
     
     theme_minimal(base_family = "Candara") +
     
     theme(
+        axis.title.x = element_text(size = 11, vjust = -1),
+        axis.text.x = element_text(size = 10),
+        
         axis.text.y = element_blank(),
         axis.title.y = element_blank(),
         # panel.grid.major.y = element_blank(),
-        panel.grid.major = element_line(color = "grey80", linewidth = 0.15, linetype = "dashed", lineend = "round"),
+        panel.grid.major = element_line(color = "grey75", linewidth = 0.25, linetype = "dashed", lineend = "round"),
         
         panel.grid.minor = element_blank()
     )
@@ -112,31 +127,32 @@ p2 <- ggplot(top_emitters, aes(x = `Forested Area (%)`, y = Country)) +
 # Combine plots with patchwork
 p = (p1 | p_labels | p2) +
     
-    plot_layout(widths = c(1, 0.35, 1)) +
+    plot_layout(widths = c(1, 0.31, 1)) +
     
     plot_annotation(
-        title = "Global UFO Sightings: A Closer Look at the Frequency by Country",
-        subtitle = "",
+        title = "Emission Giants and Their Green Footprints",
+        subtitle = "Top 15 countries by <span style='color:#B24745;'><b>carbon dioxide emissions</b></span>
+                    and how much of their land remains <span style='color:#537462;'><b>forested</b></span> in 2023",
         caption = "30DayChartChallenge 2025: <b> Day 30</b>
                    | Source: <b> Global Country Information Dataset (Kaggle)</b>
                    | Graphic: <b>Natasa Anastasiadou</b>",
         
         theme = theme(
             
-            plot.title = element_markdown(size = 15, face = "bold", family = "Candara", hjust = 0.5, margin = margin(t = 15, b = 5)),
-            plot.subtitle = element_markdown(size = 10, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 10)),
-            plot.caption = element_markdown(margin = margin(t = 35), family = "Candara", size = 8, hjust = 1.05),
+            plot.title = element_markdown(size = 16, face = "bold", family = "Candara", hjust = 0.5, margin = margin(t = 15, b = 5)),
+            plot.subtitle = element_markdown(size = 14, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(t = 5, b = 10)),
+            plot.caption = element_markdown(margin = margin(t = 30), family = "Candara", size = 8, hjust = 1.05),
             
             plot.margin = margin(20, 20, 20, 20),
             
-            plot.background = element_rect(fill = "grey90", color = NA)
+            plot.background = element_rect(fill = "grey92", color = NA)
         )
     )
 
 p 
 
 ggsave(
-    plot = p, filename = "29_day.png",
-    width = 10, height = 10, units = "in", dpi = 600
+    plot = p, filename = "30_day.png",
+    width = 9, height = 9, units = "in", dpi = 600
 )    
 
