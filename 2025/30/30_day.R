@@ -13,18 +13,88 @@ library(ggtext)
 library(extrafont)
 
 
+
 # load data --------
 
 df <- fread('world-data-2023.csv')
+
+
 
 # data cleaning -----------
 
 df = df[, .(Country, `Co2-Emissions`, `Forested Area (%)`)]
 
+df = df[!is.na(`Co2-Emissions`) & !is.na(`Forested Area (%)`)]
+
+df$`Co2-Emissions` <- as.numeric(str_replace_all(df$`Co2-Emissions`, ",", ""))
+
+df$`Forested Area (%)` <- df$`Forested Area (%)` |> str_replace_all("%", "") |> as.numeric()
+
+
+# Keep only the top 15 countries by CO2 emissions
+top_emitters <- df[order(-`Co2-Emissions`)][1:15]
+
+
+top_emitters[, `Co2-Emissions` := round(`Co2-Emissions` / 100000)]
+
+
+df_long <- melt(top_emitters, id.vars = "Country", 
+                measure.vars = c("Forested Area (%)", "Co2-Emissions"),
+                variable.name = "Measurment",
+                value.name = "Value")
+
+
+df_long[, Value := ifelse(Measurment == "Co2-Emissions", -Value, Value)]
+
+
+# Reorder countries by total combined value for better visual structure (optional)
+df_long[, Country := factor(Country, levels = unique(df[order(`Co2-Emissions`)]$Country))]
+
+
 
 
 
 # plot ------
+
+
+# Left: CO2 emissions (negative to go left)
+p1 <- ggplot(top_emitters, aes(x = -`Co2-Emissions`, y = Country)) +
+    geom_col(fill = "#F44336", width = 0.6) +
+    scale_x_continuous(labels = abs) +
+    labs(x = "CO₂ Emissions (×100K)", y = NULL) +
+    theme_minimal() +
+    theme(axis.text.y = element_blank(),
+          axis.title.y = element_blank(),
+          panel.grid.major.y = element_blank())
+
+# Middle: Country labels (as a separate text-only plot)
+p_labels <- ggplot(top_emitters, aes(y = Country, x = 0, label = Country)) +
+    geom_text(hjust = 0.5, size = 4.2) +
+    theme_void()
+
+# Right: Forested Area
+p2 <- ggplot(top_emitters, aes(x = `Forested Area (%)`, y = Country)) +
+    geom_col(fill = "#4CAF50", width = 0.6) +
+    labs(x = "Forested Area (%)", y = NULL) +
+    theme_minimal() +
+    theme(axis.text.y = element_blank(),
+          axis.title.y = element_blank(),
+          panel.grid.major.y = element_blank())
+
+# Combine plots with patchwork
+(p1 | p_labels | p2) +
+    plot_layout(widths = c(1, 0.5, 1)) +
+    plot_annotation(
+        title = "Butterfly Chart: CO₂ Emissions vs Forested Area",
+        subtitle = "Top 15 CO₂ emitting countries and their forest coverage",
+        theme = theme(plot.title = element_text(size = 14, face = "bold"),
+                      plot.subtitle = element_text(size = 11))
+    )
+
+
+
+
+
 
 p = ggplot(df1, aes(x = N , y = country_code, fill = country_code)) +
     
@@ -37,127 +107,6 @@ p = ggplot(df1, aes(x = N , y = country_code, fill = country_code)) +
     scale_x_continuous(
         limits = c(0, 3900), 
         expand = c(0, 0)
-    ) +
-    
-    # Canada
-    annotate(
-        "text",
-        x = 3780, y = 10.3,
-        label = "Canada",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[1]
-    ) +
-    
-    
-    # United Kingdom
-    annotate(
-        "text",
-        x = 3650, y = 10,
-        label = "United Kingdom",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[2]
-    ) +
-    
-    # Australia
-    annotate(
-        "text",
-        x = 3740, y = 8.5,
-        label = "Australia",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[3]
-    ) +
-    
-    # India
-    annotate(
-        "text",
-        x = 3780, y = 7.25,
-        label = "India",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[4]
-    ) +
-    
-    # Mexico
-    annotate(
-        "text",
-        x = 3730, y = 6.35,
-        label = "Mexico",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[5]
-    ) +
-    
-    # New Zealand
-    annotate(
-        "text",
-        x = 3600, y = 5.9,
-        label = "New Zealand",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[6]
-    ) +
-    
-    # South Africa
-    annotate(
-        "text",
-        x = 3550, y = 4.9,
-        label = "South Africa",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[7]
-    ) +
-    
-    # Netherlands
-    annotate(
-        "text",
-        x = 3520, y = 4.2,
-        label = "Netherlands",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[8]
-    ) +
-    
-    # Germany
-    annotate(
-        "text",
-        x = 3530, y = 3,
-        label = "Germany",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[9]
-    ) +
-    
-    # Ireland
-    annotate(
-        "text",
-        x = 3530, y = 1.8,
-        label = "Ireland",
-        hjust = 0,
-        size = 3.5,
-        lineheight = .7,
-        fontface = "bold",
-        color = col[10]
     ) +
 
     labs(
