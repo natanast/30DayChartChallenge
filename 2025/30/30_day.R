@@ -59,22 +59,27 @@ df_long[, Country := factor(Country, levels = unique(df[order(`Co2-Emissions`)]$
 
 # Left: CO2 emissions (negative to go left)
 p1 <- ggplot(top_emitters, aes(x = -`Co2-Emissions`, y = Country)) +
+    
     geom_col(fill = "#B24745", width = 0.6, alpha = 0.9) +
+    
     scale_x_continuous(labels = abs) +
-    labs(x = "Co2-Emissions") +
-    # labs(x = "CO₂ Emissions (×100K)", y = NULL) +
+    
+    labs(x = "Co2-Emissions (M)") +
+    
     theme_minimal(base_family = "Candara") +
+    
     theme(
+        
         axis.text.y = element_blank(),
         axis.title.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        panel.grid.major = element_line(color = "grey78", linewidth = 0.25, linetype = "dashed", lineend = "round"),
-        # panel.grid.major.y = element_line(color = "grey78", linewidth = 0.25),
         
-        # panel.grid.minor = element_line(color = "grey78", linewidth = 0.25, linetype = "dashed", lineend = "round"),
+        panel.grid.major = element_line(color = "grey80", linewidth = 0.15, linetype = "dashed", lineend = "round"),
+        
         panel.grid.minor = element_blank()
     )
 
+
+p1
 
 
 # Middle: Country labels (as a separate text-only plot)
@@ -86,25 +91,34 @@ p_labels <- ggplot(top_emitters, aes(y = Country, x = 0, label = Country)) +
 
 # Right: Forested Area
 p2 <- ggplot(top_emitters, aes(x = `Forested Area (%)`, y = Country)) +
+    
     geom_col(fill = "#537462", width = 0.6, alpha = 0.9) +
-    # labs(x = "Forested Area (%)", y = NULL) +
+    
+    labs(x = "Forested Area (%)", y = NULL) +
+    
     theme_minimal(base_family = "Candara") +
-    theme(axis.text.y = element_blank(),
-          axis.title.y = element_blank(),
-          panel.grid.major.y = element_blank())
+    
+    theme(
+        axis.text.y = element_blank(),
+        axis.title.y = element_blank(),
+        # panel.grid.major.y = element_blank(),
+        panel.grid.major = element_line(color = "grey80", linewidth = 0.15, linetype = "dashed", lineend = "round"),
+        
+        panel.grid.minor = element_blank()
+    )
 
 
 
 # Combine plots with patchwork
-(p1 | p_labels | p2) +
+p = (p1 | p_labels | p2) +
     
     plot_layout(widths = c(1, 0.35, 1)) +
     
     plot_annotation(
         title = "Global UFO Sightings: A Closer Look at the Frequency by Country",
         subtitle = "",
-        caption = "30DayChartChallenge 2025: <b> Day 29</b>
-                   | Source: <b> UFO Sightings Redux (TidyTuesday)</b>
+        caption = "30DayChartChallenge 2025: <b> Day 30</b>
+                   | Source: <b> Global Country Information Dataset (Kaggle)</b>
                    | Graphic: <b>Natasa Anastasiadou</b>",
         
         theme = theme(
