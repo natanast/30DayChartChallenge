@@ -49,8 +49,15 @@ gr = ggplot(df_dots, aes(x, y)) +
     
     scale_fill_manual(values = col) +
     
+    scale_x_continuous(limits = c(0.5, 10.5)) +
+    scale_y_continuous(
+        limits = c(0.5, 10.5), 
+        breaks = c(0.5, 5.5, 10.5), 
+        labels = c("0%", "50%", "100%")
+    ) +
+    
     labs(
-        title = "Penguin Demographics Across the Palmer Penguins package",
+        title = "Penguin Demographics Across the Palmer Archipelago",
         subtitle = "<b>Each dot</b> represents <b>1%</b> of the total penguin population on that island.",
         caption = "30DayChartChallenge 2025: <b> Day 1</b>
                    | Source: <b> palmerpenguins (R package)</b>
@@ -78,7 +85,7 @@ gr = ggplot(df_dots, aes(x, y)) +
         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
-        plot.background = element_rect(fill = "grey93", color = NA),
+        plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
     )
 
