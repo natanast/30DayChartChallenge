@@ -10,6 +10,7 @@ library(data.table)
 library(palmerpenguins)
 library(ggplot2)
 library(ggtext)
+library(extrafont)
 
 
 # data cleaning ------
@@ -24,16 +25,16 @@ df1 <- df[, percent := round((n / sum(n)) * 100), by = island]
 # Expand the data so we have 1 row per percentage point (100 rows per island)
 df_dots <- df[rep(1:.N, percent)]
 
-# Assign 10x10 grid coordinates (x and y) for each dot, grouped by island
+# Assign 10x10 grid coordinates
 df_dots[, `:=`(
     x = rep(1:10, length.out = .N),
     y = rep(1:10, each = 10, length.out = .N)
 ), by = island]
 
 
-col <- c("Adelie" = "#5a8192", "Chinstrap" = "#7294D4", "Gentoo" = "#D78D50")
-# col = c('#5a8192', '#b24745','#a2a0cf', "#00429d", "#81A88D" )
+col <- c("Adelie" = "#678e9f", "Chinstrap" = "#81A88D", "Gentoo" = "#b24745")
 
+# col = c('#5a8192', '#b24745','#a2a0cf', "#00429d", "#81A88D" )
 
 # plot --------
 
@@ -59,7 +60,7 @@ gr = ggplot(df_dots, aes(x, y)) +
     labs(
         title = "Penguin Demographics Across the Palmer Archipelago",
         subtitle = "<b>Each dot</b> represents <b>1%</b> of the total penguin population on that island.",
-        caption = "30DayChartChallenge 2025: <b> Day 1</b>
+        caption = "30DayChartChallenge 2026: <b> Day 1</b>
                    | Source: <b> palmerpenguins (R package)</b>
                    | Graphic: <b>Natasa Anastasiadou</b>",
         
