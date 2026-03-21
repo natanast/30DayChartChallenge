@@ -12,28 +12,13 @@ library(ggtext)
 library(extrafont)
 
 
+
 # load data ------
 
-dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-11-19/episode_metrics.csv")
 
 
 # clean data -----
 
-df_counts <- dt[, .(total_words = sum(unique_words, na.rm = TRUE)), by = season]
-
-
-df_counts[, icons_needed := round(total_words / 2000)]
-
-
-# Create one row per burger 
-df_picto <- df_counts[rep(1:.N, icons_needed)]
-
-# Assign an "x" coordinate
-df_picto[, x := 1:.N, by = season]
-
-# Format the y-axis labels
-df_picto[, season_label := paste("Season", season)]
-df_picto[, season_label := factor(season_label, levels = paste("Season", 14:1))] 
 
 
 
@@ -83,6 +68,5 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 9, height = 9, units = "in", dpi = 600,
-    device = ragg::agg_png # Ensures beautiful full-color emojis
+    width = 9, height = 9, units = "in", dpi = 600
 )
