@@ -1,4 +1,4 @@
-
+# update plot, labs, x axis labels 
 
 rm(list = ls())
 gc()
@@ -22,13 +22,6 @@ dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/maste
 
 # Remove the "World" aggregate row so we don't double-count
 dt <- dt[Entity != "World"]
-
-
-
-
-
-
-
 
 
 # Create a "Decade" column (e.g., 1970s, 1980s)
