@@ -77,16 +77,15 @@ gr <- ggplot(dt, aes(x = dose, y = len, fill = supp)) +
         axis.title.y = element_text(size = 11, face = "bold", color = "grey30", margin = margin(r = 10)),
         axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 10)),
         
-        axis.text.x = element_text(size = 14, face = "bold", color = "black"),
-        axis.text.y = element_text(size = 11, color = "grey30"),
+        axis.text.x = element_text(size = 12, face = "bold", color = "black"),
+        axis.text.y = element_text(size = 12, color = "grey30"),
         
-        panel.grid.major.y = element_line(linewidth = 0.35, color = "grey85"),
-        panel.grid.major.x = element_blank(),
+        panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
+        plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         plot.margin = margin(20, 20, 20, 20)
@@ -123,9 +122,9 @@ gr
 #         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
 #         panel.grid.minor = element_blank(),
 #         
-#         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-#         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-#         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        # plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        # plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        # plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
 #         
 #         plot.background = element_rect(fill = "grey95", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
