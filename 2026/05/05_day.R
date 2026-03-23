@@ -29,35 +29,39 @@ dt[, supp := fcase(
 )]
 
 
-col <- c("Orange Juice" = "#D78D50", "Ascorbic Acid (Supplement)" = "#5a8192")
+col <- c("Orange Juice" = "#b24745", "Ascorbic Acid (Supplement)" = "#5a8192")
 
 
 # plot --------
 
-g <- ggplot(dt, aes(x = dose, y = len, fill = supp, color = supp)) +
-    
+gr <- ggplot(dt, aes(x = dose, y = len, fill = supp)) +
     
     geom_boxplot(
         width = 0.5, 
-        alpha = 0.3, 
-        outlier.shape = NA, # Hide standard outliers because we are plotting all raw points next!
-        position = position_dodge(width = 0.6) # Separates the OJ and VC boxes
+        alpha = 0.75, 
+        outlier.shape = NA, 
+        position = position_dodge(width = 0.6) ,
+        color = "gray30"
+        
     ) +
-    
     
     geom_point(
         position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.6),
-        size = 2,
-        alpha = 0.8
+        # size = 2,
+        # alpha = 0.8,
+        shape = 21, size = 3.5, stroke = .25, alpha = 1.5,
+        color = "grey20"
     ) +
     
+
+    
     scale_fill_manual(values = col) +
-    scale_color_manual(values = col) +
+    # scale_color_manual(values = col) +
     
     labs(
         title = "Natural vs. Artificial Vitamin C",
         subtitle = "In a <b>guinea pig model</b>, low doses of Orange Juice promote significantly more cellular<br>growth than artificial supplements. At a high dose (2.0 mg), the advantage vanishes.",
-        caption = "30DayChartChallenge 2026: <b> Day 5 (Experimental)</b> | Source: <b> Crampton (1947) J. Nutr.</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 5 </b> | Source: <b> Crampton (1947) J. Nutr.</b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "Odontoblast Length (Cellular Growth)",
         x = "Vitamin C Dosage (mg/day)"
     ) +
@@ -88,7 +92,7 @@ g <- ggplot(dt, aes(x = dose, y = len, fill = supp, color = supp)) +
         plot.margin = margin(20, 20, 20, 20)
     )
 
-g
+gr
 
 # 
 # gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
