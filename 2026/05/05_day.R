@@ -84,8 +84,9 @@ library(ggtext)
 library(ggdist) # The magic package for Raincloud plots!
 
 # 1. Load data -------
-# Kaggle's Drug Classification Dataset (Mirrored on GitHub for easy loading)
-url <- "https://raw.githubusercontent.com/pratikgarai/Dataset/master/drug200.csv"
+# 1. Load data -------
+# Updated, working mirror of Kaggle's Drug Classification Dataset
+url <- "https://raw.githubusercontent.com/Atharv-Chaudhari/Drug-Classification-Using-Pyscript/main/drug200.csv"
 dt <- fread(url)
 
 # 2. Clean data ------
