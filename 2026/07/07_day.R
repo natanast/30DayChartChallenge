@@ -10,18 +10,35 @@ library(data.table)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
+library(ggridges) 
+library(scales)   
 
 
 # load data ------
+dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-07-14/astronauts.csv")
+
 
 
 
 # clean data ------
+dt <- dt[!is.na(hours_mission) & hours_mission > 0]
 
+
+top_nations <- dt[, .N, by = nationality][order(-N)][1:4, nationality]
+
+dt_plot <- dt[nationality %in% top_nations]
+
+dt_plot[, nationality := factor(nationality, levels = c("France", "Japan", "U.S.", "U.S.S.R/Russia"))]
 
 
 # plot -----
 
+col <- c(
+    "France" = "#7f9faa",         # Slate Blue
+    "Japan" = "#db9044",          # Sun Orange
+    "U.S." = "#5a8192",           # Deep Steel Blue
+    "U.S.S.R/Russia" = "#b24745"  # Terracotta Red
+)
 
 
 
@@ -93,57 +110,11 @@ ggsave(
     width = 9, height = 9, units = "in", dpi = 600
 )
 
-rm(list = ls())
-gc()
-
 # load libraries -------
-library(data.table)
-library(ggplot2)
-library(ggtext)
-library(extrafont)
-library(ggridges) 
-library(scales)   
 
-# 1. Load data ------
-# TidyTuesday: NASA Meteorite Landings (June 2019)
-url <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2019/2019-06-11/meteorites.csv"
-dt <- fread(url)
-
-# 2. Clean and classify data ------
-# Remove missing masses and impossible 0g weights
-dt <- dt[!is.na(mass) & mass > 0]
-
-# Meteorites have hundreds of sub-classes. Let's group them into the 4 major astronomical categories!
-dt[, broad_class := fcase(
-    grepl("Iron", class, ignore.case = TRUE), "Iron (Core fragments)",
-    grepl("Pallasite|Mesosiderite", class, ignore.case = TRUE), "Stony-Iron (Mantle fragments)",
-    grepl("Eucrite|Diogenite|Howardite|Achondrite|Lunar|Martian", class, ignore.case = TRUE), "Achondrite (Crust fragments)",
-    default = "Chondrite (Primitive solar dust)"
-)]
-
-# PRO TIP: Stratified sampling! 
-# We take a random sample of 400 meteorites per category so the jittered dots look beautiful and don't turn into a solid block of ink.
-set.seed(2026)
-dt_plot <- dt[, .SD[sample(.N, min(.N, 400))], by = broad_class]
-
-# Order them logically by density
-dt_plot[, broad_class := factor(broad_class, levels = c(
-    "Chondrite (Primitive solar dust)", 
-    "Achondrite (Crust fragments)", 
-    "Stony-Iron (Mantle fragments)", 
-    "Iron (Core fragments)"
-))]
-
-# Your editorial palette
-col <- c(
-    "Chondrite (Primitive solar dust)" = "#7f9faa", # Slate
-    "Achondrite (Crust fragments)"     = "#6f6e9a", # Muted Purple
-    "Stony-Iron (Mantle fragments)"    = "#db9044", # Terracotta/Orange
-    "Iron (Core fragments)"            = "#b24745"  # Deep Red/Iron
-)
 
 # 3. Plot --------
-gr <- ggplot(dt_plot, aes(x = mass, y = broad_class, fill = broad_class)) +
+gr <- ggplot(dt_plot, aes(x = hours_mission, y = nationality, fill = nationality)) +
     
     geom_density_ridges(
         jittered_points = TRUE,
@@ -160,19 +131,18 @@ gr <- ggplot(dt_plot, aes(x = mass, y = broad_class, fill = broad_class)) +
     scale_fill_manual(values = col) +
     
     # THE MULTISCALE MAGIC:
-    # Converting raw grams into highly readable biological/physical scales
     scale_x_log10(
-        breaks = c(1, 10, 100, 1000, 10000, 100000, 1000000, 10000000),
-        labels = c("1g", "10g", "100g", "1 kg", "10 kg", "100 kg", "1 Tonne", "10 Tonnes"),
+        breaks = c(1, 10, 100, 1000, 10000),
+        labels = c("1 Hour", "10 Hrs", "100 Hrs", "1,000 Hrs\n(~40 Days)", "10,000 Hrs\n(~1 Year)"),
         expand = expansion(mult = c(0.05, 0.1))
     ) +
     
     labs(
-        title = "The Multiscale Mass of Meteorites",
-        subtitle = "A logarithmic distribution of meteorite masses fallen to Earth.<br>Notice how dense <b>Iron</b> meteorites survive atmospheric entry at significantly larger scales.",
-        caption = "30DayChartChallenge 2026: <b> Day 7 (Distributions)</b> | Source: <b> NASA / TidyTuesday </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        title = "The Multiscale Duration of Human Spaceflight",
+        subtitle = "A logarithmic distribution of space mission durations.<br>Notice how Russian missions heavily cluster around the 10,000-hour mark due to long-term space station deployments.",
+        caption = "30DayChartChallenge 2026: <b> Day 7 (Distributions)</b> | Source: <b> The Astronaut Database / TidyTuesday </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "", 
-        x = "Meteorite Mass (Logarithmic Scale)"
+        x = "Mission Duration (Logarithmic Scale)"
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -182,7 +152,7 @@ gr <- ggplot(dt_plot, aes(x = mass, y = broad_class, fill = broad_class)) +
         
         axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 15)),
         axis.text.y = element_text(size = 12, face = "bold", color = "black", vjust = 0),
-        axis.text.x = element_text(size = 11, face = "bold", color = "grey40"),
+        axis.text.x = element_text(size = 10, face = "bold", color = "grey40"),
         
         panel.grid.major.x = element_line(linewidth = 0.4, color = "grey85", linetype = "dashed"),
         panel.grid.minor.x = element_blank(),
@@ -200,7 +170,7 @@ gr
 
 # 4. Save ---------
 ggsave(
-    "Day7_Distributions_Meteorites.png", 
+    "Day7_Distributions_Astronauts.png", 
     plot = gr, 
     width = 9, 
     height = 7, 
