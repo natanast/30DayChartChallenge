@@ -84,6 +84,6 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 9, height = 8, units = "in", dpi = 600
+   width = 9, height = 9, units = "in", dpi = 600
 )
 
