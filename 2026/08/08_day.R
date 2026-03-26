@@ -1,4 +1,5 @@
 
+# change the size of the letters inside the cirle and the legend
 
 rm(list = ls())
 gc()
@@ -107,29 +108,32 @@ gr <- ggplot(data) +
     coord_polar() +
     
     labs(
-        title = "The Circular Distribution of Musical Keys",
-        subtitle = "Comparing Major vs. Minor keys across 30,000 Spotify tracks and 24 subgenres.<br>Notice how EDM heavily favors minor keys, while classic rock is dominated by major keys.",
-        caption = "30DayChartChallenge 2026: <b> Day 8 (Distributions: Circular)</b> | Source: <b> Spotify / TidyTuesday </b> | Graphic: <b>Natasa Anastasiadou</b>"
+        title = "The Distribution of Musical Keys",
+        subtitle = "Comparing Major vs. Minor keys across 30,000 Spotify tracks and 24 subgenres.",
+        caption = "30DayChartChallenge 2026: <b> Day 8 </b> | Source: <b> Spotify (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>"
     ) +
     
     theme_minimal(base_family = "Candara") +
     
     theme(
+        
         legend.position = "top",
+        
         legend.title = element_blank(),
         legend.text = element_text(size = 11, face = "bold", color = "grey30"),
-        legend.margin = margin(b = 20),
+        legend.margin = margin(b = -35),
         
         axis.text = element_blank(),
         axis.title = element_blank(),
         panel.grid = element_blank(),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 16, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 10, hjust = 1.25),
 
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         plot.margin = margin(20, 20, 20, 20)
+        
     )
 
 gr
@@ -179,6 +183,6 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 9, height = 9, units = "in", dpi = 600
+    width = 10, height = 10, units = "in", dpi = 600
 )
 
