@@ -1,4 +1,4 @@
-
+#fix labs
 
 rm(list = ls())
 gc()
@@ -14,20 +14,27 @@ library(extrafont)
 
 # load data ------
 
+
 dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-05-07/rolling_stone.csv")
 
-# 2. Clean and prep ------
-dt_clean <- dt[!is.na(spotify_popularity) & release_year >= 1960]
-dt_clean[, Decade := paste0(floor(release_year / 10) * 10, "s")]
-dt_clean[, Decade := factor(Decade, levels = c("1960s", "1970s", "1980s", "1990s", "2000s", "2010s"))]
+# clean data -----
 
-# Your beautiful custom palette
+dt_clean <- dt[!is.na(spotify_popularity) & release_year >= 1960]
+
+dt_clean[, Decade := paste0(floor(release_year / 10) * 10, "s")]
+
+dt_clean$Decade <- dt_clean$Decade |> factor(levels = c("1960s", "1970s", "1980s", "1990s", "2000s", "2010s"))
+
+
+#  plot -----
+
 decade_colors <- c(
     "1960s" = "#5a8192", "1970s" = "#7f9faa", "1980s" = "#a8b5b2",
     "1990s" = "#d4a373", "2000s" = "#db9044", "2010s" = "#b24745"
 )
 
-# 3. Plot --------
+
+
 gr <- ggplot(dt_clean, aes(x = Decade, y = spotify_popularity, fill = Decade)) +
     
     geom_violin(
@@ -40,15 +47,6 @@ gr <- ggplot(dt_clean, aes(x = Decade, y = spotify_popularity, fill = Decade)) +
         size = 2.5, width = 0.15, shape = 21, 
         stroke = 0.2, alpha = 0.9, color = "white"
     ) +
-    
-    # Distribution (The "Cloud"): Semi-transparent violin on top
-
-    
-    # Statistical Summary: A thin boxplot to anchor the visual
-    # geom_boxplot(
-    #     width = 0.1, fill = "white", color = "black", 
-    #     outlier.shape = NA, alpha = 0.8, linewidth = 0.4
-    # ) +
     
     # Applying your discrete scale instead of the continuous one
     scale_fill_manual(values = decade_colors) +
@@ -86,16 +84,6 @@ gr <- ggplot(dt_clean, aes(x = Decade, y = spotify_popularity, fill = Decade)) +
         plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
     )
-
-# 4. Save ---------
-
-
-gr
-
-# clean data -----
-
-
-#  plot -----
 
 
 gr
