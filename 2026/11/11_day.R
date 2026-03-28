@@ -87,10 +87,6 @@ gr <- ggplot(dt_phys, aes(x = type_clean, y = elevation_binned, color = type_cle
         plot.margin = margin(20, 20, 20, 20)
     )
 
-# 4. Save ---------
-
-
-gr
 
 # clean data -----
 
