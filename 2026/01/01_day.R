@@ -14,14 +14,16 @@ library(extrafont)
 library(colorspace)
 
 
-# data cleaning ------
+# load data ------
 
 df <- as.data.table(penguins)
+
+
+# clean data ------
 
 df <- df[!is.na(species) & !is.na(island), .(n = .N), by = .(island, species)]
 
 df1 <- df[, percent := round((n / sum(n)) * 100), by = island]
-
 
 # Expand the data so we have 1 row per percentage point (100 rows per island)
 df_dots <- df[rep(1:.N, percent)]
