@@ -33,12 +33,9 @@ df_dots[, `:=`(
 ), by = island]
 
 
-col <- c("Adelie" = "#678e9f", "Chinstrap" = "#81A88D", "Gentoo" = "#b24745")
-
-
-
 # plot --------
 
+col <- c("Adelie" = "#678e9f", "Chinstrap" = "#81A88D", "Gentoo" = "#b24745")
 
 
 gr = ggplot(df_dots, aes(x, y)) +
@@ -94,6 +91,7 @@ gr = ggplot(df_dots, aes(x, y)) +
 
 
 gr
+
 
 # save ---------
 
