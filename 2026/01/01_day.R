@@ -11,6 +11,7 @@ library(palmerpenguins)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
+library(colorspace)
 
 
 # data cleaning ------
@@ -34,7 +35,7 @@ df_dots[, `:=`(
 
 col <- c("Adelie" = "#678e9f", "Chinstrap" = "#81A88D", "Gentoo" = "#b24745")
 
-# col = c('#5a8192', '#b24745','#a2a0cf', "#00429d", "#81A88D" )
+
 
 # plot --------
 
@@ -42,13 +43,14 @@ col <- c("Adelie" = "#678e9f", "Chinstrap" = "#81A88D", "Gentoo" = "#b24745")
 
 gr = ggplot(df_dots, aes(x, y)) +
     
-    geom_point(aes(fill = species), size = 4.5, shape = 21, color = "white", stroke = .25) +
+    geom_point(aes(fill = species, color = species), size = 4.5, shape = 21, stroke = .35) +
     
     facet_wrap(~island, nrow = 1, strip.position = "bottom") +
     
     coord_equal() +
     
-    scale_fill_manual(values = col) +
+    scale_fill_manual(values = col |> lighten(.15) ) +
+    scale_color_manual(values = col |> darken(.75)) +
     
     scale_x_continuous(limits = c(0.5, 10.5)) +
     scale_y_continuous(
@@ -97,6 +99,6 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 9, height = 8, units = "in", dpi = 600
+   width = 8, height = 8, units = "in", dpi = 600
 )
 
