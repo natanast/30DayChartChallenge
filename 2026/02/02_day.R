@@ -21,9 +21,7 @@ dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/maste
 
 df_counts <- dt[, .(total_words = sum(unique_words, na.rm = TRUE)), by = season]
 
-
 df_counts[, icons_needed := round(total_words / 2000)]
-
 
 # Create one row per burger 
 df_picto <- df_counts[rep(1:.N, icons_needed)]
@@ -36,7 +34,6 @@ df_picto[, season_label := paste("Season", season)]
 df_picto[, season_label := factor(season_label, levels = paste("Season", 14:1))] 
 
 
-
 # plot --------
 
 gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
@@ -46,14 +43,14 @@ gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
     
     scale_x_continuous(limits = c(0, 13), breaks = seq(0, 12, by = 2)) +
     
-    # labs(
-    #     title = "Bob's Burgers: The Short & Long Seasons",
-    #     subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
-    #     caption = "30DayChartChallenge 2026: <b> Day 2</b>
-    #                | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
-    #                | Graphic: <b>Natasa Anastasiadou</b>",
-    #     
-    # ) +
+    labs(
+        title = "Bob's Burgers: The Short & Long Seasons",
+        subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 2</b>
+                   | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
+                   | Graphic: <b>Natasa Anastasiadou</b>",
+
+    ) +
     
     theme_minimal(base_family = "Candara") +
     
