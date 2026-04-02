@@ -10,7 +10,8 @@ library(data.table)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
-
+library(stringr)
+library(ggalluvial)
 
 # load data ------
 
