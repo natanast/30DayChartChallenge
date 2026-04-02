@@ -46,14 +46,14 @@ gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
     
     scale_x_continuous(limits = c(0, 13), breaks = seq(0, 12, by = 2)) +
     
-    labs(
-        title = "Bob's Burgers: The Short & Long Seasons",
-        subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
-        caption = "30DayChartChallenge 2026: <b> Day 2</b>
-                   | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
-                   | Graphic: <b>Natasa Anastasiadou</b>",
-        
-    ) +
+    # labs(
+    #     title = "Bob's Burgers: The Short & Long Seasons",
+    #     subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
+    #     caption = "30DayChartChallenge 2026: <b> Day 2</b>
+    #                | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
+    #                | Graphic: <b>Natasa Anastasiadou</b>",
+    #     
+    # ) +
     
     theme_minimal(base_family = "Candara") +
     
@@ -84,5 +84,5 @@ gr
 ggsave(
     plot = gr, filename = "Rplot.png",
     width = 9, height = 9, units = "in", dpi = 600,
-    device = ragg::agg_png # Ensures beautiful full-color emojis
+    device = ragg::agg_png 
 )
