@@ -10,18 +10,101 @@ library(data.table)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
-library(stringr)
-library(ggalluvial)
+library(ggrepel)
 
 # load data ------
+
+ 
+dt <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-04-09/eclipse_total_2024.csv" |>
+    fread()
 
 
 # clean data -----
 
+# 2. Calculate duration and filter ------
+dt[, duration_min := as.numeric(as.ITime(eclipse_4) - as.ITime(eclipse_3)) / 60]
+
+# Bring back all 6 states
+target_states <- c("TX", "AR", "IN", "OH", "NY", "ME")
+dt_plot <- dt[state %in% target_states & duration_min > 0]
+
+# Convert state to a factor so the legend stays in geographic order (South to North)
+dt_plot[, state := factor(state, levels = c("TX", "AR", "IN", "OH", "NY", "ME"))]
+
+# 3. Create the Palette -------
+cols <- c(
+    "TX" = "#b25c56",  # Dark Brick
+    "AR" = "#e8998f",  # Soft Coral
+    "IN" = "#fcd4be",  # Pale Peach
+    "OH" = "#85aebc",  # Soft Slate
+    "NY" = "#8aa39b",  # Dark Blue
+    "ME" = "#4a6b7c"   # Sage Green
+)
 
 
 # plot --------
 
+
+
+# 4. Plot --------
+gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
+    
+    geom_point(
+        aes(fill = state),
+        alpha = 0.8, 
+        size = 2, 
+        stroke = 0.15, 
+        color = "white",
+        shape = 21
+    ) +
+    
+    geom_smooth(
+        method = "lm", 
+        color = "#396375", 
+        fill = "#396375",
+        linewidth = 0.75, 
+        lineend = "round"
+    ) +
+
+    # scale_color_manual(values = cols, name = "State") +
+    scale_fill_manual(values = cols, name = "State") +
+    
+    labs(
+        title = "The geometry of totality",
+        subtitle = "Correlating a city's longitude with the duration of the 2024 total solar eclipse.<br>As the moon's shadow travels North-East, the duration of totality follows a distinct celestial curve.",
+        caption = "30DayChartChallenge 2026: <b> Day 15 (Correlation) </b> | Source: <b> NASA </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        x = "Longitude (Degrees West)",
+        y = "Duration of Totality (Minutes)"
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    
+    theme(
+        # The light grey background with dashed gridlines
+        panel.grid.major = element_line(color = "grey85", linetype = "dashed", linewidth = 0.4),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "#f2f2f2", color = NA),
+        panel.background = element_rect(fill = "#f2f2f2", color = NA),
+        
+        # Axis text styling
+        axis.text = element_text(size = 9, color = "grey40", face = "bold"),
+        axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 15)),
+        axis.title.y = element_text(size = 11, face = "bold", color = "grey30", margin = margin(r = 15)),
+        
+        # Legend styling
+        legend.position = "bottom",
+        legend.title = element_text(face = "bold", size = 10),
+        
+        
+        # Titles
+        plot.title = element_text(size = 20, face = "bold", color = "black", hjust = 0.5),
+        plot.subtitle = element_markdown(size = 11, color = "grey40", hjust = 0.5, lineheight = 1.3, margin = margin(b = 20)),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 8, color = "grey50", hjust = 1),
+        
+        plot.margin = margin(30, 30, 30, 30)
+    )
+
+gr
 
 
 # gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
@@ -69,96 +152,6 @@ library(ggalluvial)
 ggsave(
     plot = gr, filename = "Rplot.png",
     width = 10, height = 10, units = "in", dpi = 600
-)
-
-
-rm(list = ls())
-gc()
-
-# load libraries -------
-library(data.table)
-library(ggplot2)
-library(ggtext)
-library(extrafont)
-
-# 1. Load data ------
-url <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2026/2026-03-03/tortoise_body_condition_cleaned.csv"
-dt <- fread(url)
-
-# 2. Clean and Filter ------
-# Remove rows with missing correlation variables or unknown sex
-dt_clean <- dt[!is.na(body_mass_grams) & !is.na(straight_carapace_length_mm) & sex %in% c("f", "m")]
-
-# Create a clean grouping label for the legend
-dt_clean[, group_label := fcase(
-    locality == "Konjsko", "Mainland (Healthy Environment)",
-    locality %in% c("Beach", "Plateau"), "Island (High Harassment)"
-)]
-
-# 3. Create the Palette -------
-# Using your quiet, muted Mediterranean tones
-cols <- c(
-    "Mainland (Healthy Environment)" = "#8aa39b",  # Sage Green
-    "Island (High Harassment)"       = "#b25c56"   # Muted Brick
-)
-
-# 4. Plot --------
-gr <- ggplot(dt_clean, aes(x = straight_carapace_length_mm, y = body_mass_grams, color = group_label)) +
-    
-    # Draw the points with slight transparency
-    geom_point(alpha = 0.6, size = 2.5, stroke = 0) +
-    
-    # Add a quiet regression line to show the correlation trend for both groups
-    geom_smooth(method = "lm", aes(fill = group_label), alpha = 0.15, linetype = "dashed", linewidth = 0.5) +
-    
-    # Map the exact colors for points and regression ribbons
-    scale_color_manual(values = cols, name = "Population") +
-    scale_fill_manual(values = cols, guide = "none") +
-    
-    labs(
-        title = "The physical cost of survival",
-        subtitle = "Correlating carapace length with body mass in Hermann's tortoises.<br>Notice how the island population (brick) trends physically lighter for their size compared to the mainland.",
-        caption = "30DayChartChallenge 2026: <b> Day 15 (Correlation) </b> | Source: <b> Golem Grad Tortoise Study </b> | Graphic: <b>Natasa Anastasiadou</b>",
-        x = "Straight Carapace Length (mm)",
-        y = "Body Mass (grams)"
-    ) +
-    
-    theme_minimal(base_family = "Candara") +
-    theme(
-        # The reference dashed gridlines on a light grey background
-        panel.grid.major = element_line(color = "grey80", linetype = "dashed", linewidth = 0.4),
-        panel.grid.minor = element_blank(),
-        plot.background = element_rect(fill = "#f2f2f2", color = NA),
-        panel.background = element_rect(fill = "#f2f2f2", color = NA),
-        
-        # Axis styling
-        axis.text = element_text(size = 9, color = "grey40", face = "bold"),
-        axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 15)),
-        axis.title.y = element_text(size = 11, face = "bold", color = "grey30", margin = margin(r = 15)),
-        
-        # Legend styling
-        legend.position = "top",
-        legend.title = element_blank(),
-        legend.text = element_text(size = 10, face = "bold", color = "grey30"),
-        legend.background = element_rect(fill = "#f2f2f2", color = NA),
-        legend.key = element_rect(fill = "#f2f2f2", color = NA),
-        legend.guides = guide_legend(override.aes = list(size = 4, alpha = 1)), 
-        
-        # Titles
-        plot.title = element_text(size = 22, face = "bold", color = "black", hjust = 0, margin = margin(b = 8)),
-        plot.subtitle = element_markdown(size = 11, color = "grey40", hjust = 0, lineheight = 1.3, margin = margin(b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 20), size = 8, color = "grey50", hjust = 1),
-        
-        plot.margin = margin(30, 30, 30, 30)
-    )
-
-gr
-
-# 5. Save ---------
-ggsave(
-    "Day15_Correlation_Tortoises.png", 
-    plot = gr, 
-    width = 10, height = 8, dpi = 600
 )
 
 
