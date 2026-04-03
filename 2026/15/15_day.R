@@ -41,12 +41,18 @@ cols <- c(
     "ME" = "#4a6b7c"   # Sage Green
 )
 
+# dt_extremes <- rbind(
+#     dt_plot[order(-duration_min)][1], # Sorts descending, grabs the 1st row (Longest)
+#     dt_plot[order(duration_min)][1]   # Sorts ascending, grabs the 1st row (Lowest)
+# )
 
+
+dt_extremes <- rbind(
+    dt_plot[order(-duration_min)][1], # Sorts descending, grabs the 1st row (Longest)
+    dt_plot[order(duration_min)][1]   # Sorts ascending, grabs the 1st row (Lowest)
+)
 # plot --------
 
-
-
-# 4. Plot --------
 gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
     
     geom_point(
@@ -59,19 +65,21 @@ gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
     ) +
     
     geom_smooth(
-        method = "lm", 
+        method = "loess", 
         color = "#396375", 
         fill = "#396375",
         linewidth = 0.75, 
         lineend = "round"
     ) +
-
-    # scale_color_manual(values = cols, name = "State") +
+    
+     # scale_color_manual(values = cols, name = "State") +
     scale_fill_manual(values = cols, name = "State") +
     
+    guides(fill = guide_legend(nrow = 1)) +
+    
     labs(
-        title = "The geometry of totality",
-        subtitle = "Correlating a city's longitude with the duration of the 2024 total solar eclipse.<br>As the moon's shadow travels North-East, the duration of totality follows a distinct celestial curve.",
+        title = "Fading to black: The 2024 eclipse",
+        subtitle = "Visualizing the duration of totality across the United States.<br>As the moon's shadow swept from Texas to Maine, the window of total darkness steadily decreased.",
         caption = "30DayChartChallenge 2026: <b> Day 15 (Correlation) </b> | Source: <b> NASA </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Longitude (Degrees West)",
         y = "Duration of Totality (Minutes)"
