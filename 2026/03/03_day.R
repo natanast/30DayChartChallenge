@@ -12,7 +12,6 @@ library(ggtext)
 library(extrafont)
 
 
-
 # load data ------
 
 dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-04-23/outer_space_objects.csv")
@@ -20,11 +19,16 @@ dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/maste
 
 # clean data -----
 
+
+# clean data -----
+
 # Remove the "World" aggregate row so we don't double-count
 dt <- dt[Entity != "World"]
 
+# Remove the 1950s completely to start the chart cleanly at the 1960s Space Race
+dt <- dt[Year >= 1960]
 
-# Create a "Decade" column (e.g., 1970s, 1980s)
+# Create a "Decade" column (e.g., 1960s, 1970s)
 dt[, Decade := paste0(floor(Year / 10) * 10, "s")]
 
 # Group entities into the Top 3 + "Other" to keep the colors clean
@@ -34,6 +38,23 @@ dt[, country := fcase(
     Entity == "China", "China",
     default = "Other"
 )]
+
+# # Convert to factor so the colors always stack in this exact order
+# dt[, country := factor(country, levels = c("USA", "Russia/USSR", "China", "Other"))]
+# # Remove the "World" aggregate row so we don't double-count
+# dt <- dt[Entity != "World"]
+# 
+# 
+# # Create a "Decade" column (e.g., 1970s, 1980s)
+# dt[, Decade := paste0(floor(Year / 10) * 10, "s")]
+# 
+# # Group entities into the Top 3 + "Other" to keep the colors clean
+# dt[, country := fcase(
+#     Entity == "United States", "USA",
+#     Entity %in% c("Russia", "Soviet Union"), "Russia/USSR",
+#     Entity == "China", "China",
+#     default = "Other"
+# )]
 
 # Convert to factor so the colors always stack in this exact order
 dt[, country := factor(country, levels = c("USA", "Russia/USSR", "China", "Other"))]
@@ -77,14 +98,10 @@ col <- c("USA" = "#5a8192",
 
 # plot --------
 
-
-
-# 2. Plot --------
-
 gr <- ggplot(df_counts) +
     
     geom_rect(aes(xmin = xmin, xmax = xmax, ymin = ymin, ymax = ymax, fill = country),
-              color = "white", linewidth = 0.6) + 
+              color = "white", linewidth = 0.4) + 
     
     scale_x_continuous(breaks = unique(df_counts$x_mid), labels = unique(df_counts$Decade)) +
     scale_y_continuous(labels = scales::percent_format()) +
@@ -94,7 +111,7 @@ gr <- ggplot(df_counts) +
     labs(
         title = "The Privatization of Space",
         subtitle = "Space launches have skyrocketed in the 2020s, heavily dominated by the United States.<br><b>Box width</b> = total objects launched. <b>Box height</b> = country of origin.",
-        caption = "30DayChartChallenge 2026: <b> Day 3 (Mosaic)</b><br>Source: <b> UNOOSA (TidyTuesday Apr 2024)</b><br>Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 3 </b>Source: <b> UNOOSA (TidyTuesday) </b>Graphic: <b>Natasa Anastasiadou</b>",
         fill = ""
     ) +
     
@@ -104,16 +121,18 @@ gr <- ggplot(df_counts) +
         legend.position = "top",
         
         axis.title = element_blank(),
-        axis.text.x = element_text(size = 11, face = "bold", color = "black", margin = margin(t = 5)),
-        axis.text.y = element_text(size = 11, color = "grey30"),
+        axis.text.x = element_text(size = 9, face = "bold", color = "black", 
+                                   angle = 45, hjust = 1, margin = margin(t = 5)),
+        # axis.text.x = element_text(size = 9, face = "bold", color = "black", margin = margin(t = 5)),
+        axis.text.y = element_text(size = 9, color = "grey30"),
         
         panel.grid.major.x = element_blank(), 
         panel.grid.major.y = element_line(linewidth = 0.35, color = "grey85"),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
@@ -148,9 +167,9 @@ gr <- ggplot(df_counts) +
 #         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
 #         panel.grid.minor = element_blank(),
 #         
-#         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-#         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-#         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        # plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        # plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        # plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
 #         
 #         plot.background = element_rect(fill = "grey95", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
