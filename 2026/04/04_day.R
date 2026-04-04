@@ -60,8 +60,7 @@ gr <- ggplot(dt_long, aes(x = Year, y = Spending, group = Gift)) +
     
     geom_line(aes(color = Gift), linewidth = 1) +
     
-    # geom_point(aes(color = Gift), size = 4) +
-    
+
     geom_point(
         aes(color = Gift),
         shape = 21, 
