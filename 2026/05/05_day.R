@@ -59,7 +59,7 @@ gr <- ggplot(dt, aes(x = dose, y = len, fill = supp)) +
     labs(
         title = "Natural vs. Artificial Vitamin C",
         subtitle = "In a <b>guinea pig model</b>, low doses of Orange Juice promote significantly more cellular<br>growth than artificial supplements. At a high dose (2.0 mg), the advantage vanishes.",
-        caption = "30DayChartChallenge 2026: <b> Day 5 </b> | Source: <b> Crampton (1947) J. Nutr.</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 5 </b> | Source: <b> ToothGrowth (R Dataset)</b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "Odontoblast Length (Cellular Growth)",
         x = "Vitamin C Dosage (mg/day)"
     ) +
