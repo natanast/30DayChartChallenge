@@ -9,6 +9,7 @@ gc()
 library(data.table)
 library(ggplot2)
 library(ggtext)
+library(colorspace)
 library(extrafont)
 
 
@@ -28,7 +29,6 @@ dt <- data.table(
 dt[, change := score_2025 - score_2020]
 dt[, status := fifelse(change > 0, "Improved", "Declined")]
 
-# Order by the actual change
 dt[, country := factor(country, levels = dt[order(change)]$country)]
 
 col <- c("Declined" = "#b24745", "Improved" = "#5a8192")
@@ -38,11 +38,11 @@ col <- c("Declined" = "#b24745", "Improved" = "#5a8192")
 
 gr <- ggplot(dt) +
     
-    geom_segment(aes(x = score_2020, xend = score_2025, y = country, yend = country), color = "grey75", linewidth = 2) +
+    geom_segment(aes(x = score_2020, xend = score_2025, y = country, yend = country), color = "grey30", linewidth = 1) +
     
-    geom_point(aes(x = score_2020, y = country), color = "grey60", size = 3) +
+    geom_point(aes(x = score_2020, y = country), shape = 21, fill = "grey60", color = "grey50", size = 3) +
     
-    geom_point(aes(x = score_2025, y = country, fill = status), shape = 21, size = 4, stroke = 0.5) +
+    geom_point(aes(x = score_2025, y = country, fill = status, color = status), shape = 21, size = 4, stroke = 0.5) +
     
     geom_text(
         aes(x = score_2025, y = country, label = round(score_2025, 1), color = status),
@@ -51,9 +51,8 @@ gr <- ggplot(dt) +
     ) +
     
     scale_fill_manual(values = col) +
-    scale_color_manual(values = col) +
+    scale_color_manual(values = col |> darken(.35)) +
     
-    # Expanded the X-axis to comfortably fit the severe drops of Russia and Belarus
     scale_x_continuous(limits = c(15, 90), breaks = seq(20, 100, 20)) +
     
     labs(
@@ -72,15 +71,14 @@ gr <- ggplot(dt) +
         axis.text.y = element_text(size = 12, face = "bold", color = "black"),
         axis.text.x = element_text(size = 11, color = "grey30"),
         
-        panel.grid.major.x = element_line(linewidth = 0.35, color = "grey85", linetype = "dashed"),
-        panel.grid.major.y = element_blank(),
+        panel.grid.major = element_line(linewidth = 0.35, color = "grey85", linetype = "dashed"),
         panel.grid.minor = element_blank(),
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
-        plot.background = element_rect(fill = "#e4e4e3", color = NA),
+        plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
     )
 
@@ -90,7 +88,7 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 9, height = 9, units = "in", dpi = 600
+    width = 8, height = 8, units = "in", dpi = 600
 )
 
 
