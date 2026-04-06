@@ -38,27 +38,27 @@ col <- c("Declined" = "#b24745", "Improved" = "#5a8192")
 
 gr <- ggplot(dt) +
     
-    geom_segment(aes(x = score_2020, xend = score_2025, y = country, yend = country), color = "grey30", linewidth = 1) +
+    geom_segment(aes(x = score_2020, xend = score_2025, y = country, yend = country), color = "grey45", linewidth = 1) +
     
-    geom_point(aes(x = score_2020, y = country), shape = 21, fill = "grey60", color = "grey50", size = 3) +
+    geom_point(aes(x = score_2020, y = country), shape = 21, fill = "grey60", color = "grey50", size = 3.5) +
     
-    geom_point(aes(x = score_2025, y = country, fill = status, color = status), shape = 21, size = 4, stroke = 0.5) +
+    geom_point(aes(x = score_2025, y = country, fill = status, color = status), shape = 21, size = 4.5, stroke = 0.5) +
     
     geom_text(
         aes(x = score_2025, y = country, label = round(score_2025, 1), color = status),
-        fontface = "bold", size = 3.5, 
+        fontface = "bold", size = 4, 
         nudge_x = fifelse(dt$change > 0, 3.5, -3.5)
     ) +
     
-    scale_fill_manual(values = col) +
+    scale_fill_manual(values = col |> lighten(.05)) +
     scale_color_manual(values = col |> darken(.35)) +
     
-    scale_x_continuous(limits = c(15, 90), breaks = seq(20, 100, 20)) +
+    # scale_x_continuous(limits = c(15, 90), breaks = seq(20, 100, 20)) +
     
     labs(
         title = "Press Freedom in Europe",
         subtitle = "Comparing the 5 largest improvements and declines in RSF scores: <span style='color:grey50;'><b>2020</b></span> vs <span style='color:black;'><b>2025</b></span>.",
-        caption = "30DayChartChallenge 2026: <b> Day 6 (Data Day: RSF)</b> | Source: <b> Reporters Without Borders </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 6 </b> | Source: <b> Reporters Without Borders </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "", x = "RSF Press Freedom Score (100 = Perfect Freedom)"
     ) +
     
@@ -74,9 +74,9 @@ gr <- ggplot(dt) +
         panel.grid.major = element_line(linewidth = 0.35, color = "grey85", linetype = "dashed"),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 13, hjust = .1, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
