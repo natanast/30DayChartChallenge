@@ -44,7 +44,6 @@ gr <- ggplot(dt) +
     
     geom_point(aes(x = score_2025, y = country, fill = status), shape = 21, size = 4, stroke = 0.5) +
     
-    # Text labels showing the precise 2025 score (rounded to 1 decimal for cleanliness)
     geom_text(
         aes(x = score_2025, y = country, label = round(score_2025, 1), color = status),
         fontface = "bold", size = 3.5, 
@@ -58,7 +57,7 @@ gr <- ggplot(dt) +
     scale_x_continuous(limits = c(15, 90), breaks = seq(20, 100, 20)) +
     
     labs(
-        title = "A Divided Continent: Press Freedom in Europe",
+        title = "Press Freedom in Europe",
         subtitle = "Comparing the 5 largest improvements and declines in RSF scores: <span style='color:grey50;'><b>2020</b></span> vs <span style='color:black;'><b>2025</b></span>.",
         caption = "30DayChartChallenge 2026: <b> Day 6 (Data Day: RSF)</b> | Source: <b> Reporters Without Borders </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "", x = "RSF Press Freedom Score (100 = Perfect Freedom)"
@@ -82,26 +81,6 @@ gr <- ggplot(dt) +
     )
 
 gr
-
-
-# plot --------
-# 
-# gr <- ggplot(dt, aes(x = dose, y = len, fill = supp)) +
-#     
-#     geom_boxplot(
-#         width = 0.5, 
-#         alpha = 0.75, 
-#         outlier.shape = NA, 
-#         position = position_dodge(width = 0.6) ,
-#         color = "gray30"
-#         
-#     ) +
-#     
-#     geom_point(
-#         position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.6),
-#         # size = 2,
-#         # alpha = 0.8,
-
 
 # save ---------
 
