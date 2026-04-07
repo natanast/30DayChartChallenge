@@ -15,8 +15,8 @@ library(scales)
 
 
 # load data ------
-dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-07-14/astronauts.csv")
 
+dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2020/2020-07-14/astronauts.csv")
 
 
 # clean data ------
@@ -46,17 +46,16 @@ gr <- ggplot(dt_plot, aes(x = hours_mission, y = nationality, fill = nationality
         jittered_points = TRUE,
         position = position_points_jitter(width = 0.05, height = 0),
         point_shape = 21,
-        point_size = 2,
+        point_size = 1.5,
         point_color = "white",
-        point_fill = "grey20", 
+        point_fill = "grey30",
         alpha = 0.8,
         color = "white",
-        scale = 1.2
+        scale = 1
     ) +
     
     scale_fill_manual(values = col) +
     
-    # THE MULTISCALE MAGIC:
     scale_x_log10(
         breaks = c(1, 10, 100, 1000, 10000),
         labels = c("1 Hour", "10 Hrs", "100 Hrs", "1,000 Hrs\n(~40 Days)", "10,000 Hrs\n(~1 Year)"),
@@ -65,8 +64,8 @@ gr <- ggplot(dt_plot, aes(x = hours_mission, y = nationality, fill = nationality
     
     labs(
         title = "The Multiscale Duration of Human Spaceflight",
-        subtitle = "A logarithmic distribution of space mission durations.<br>Notice how Russian missions heavily cluster around the 10,000-hour mark due to long-term space station deployments.",
-        caption = "30DayChartChallenge 2026: <b> Day 7 (Distributions)</b> | Source: <b> The Astronaut Database / TidyTuesday </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        subtitle = "A logarithmic distribution of space mission durations.",
+        caption = "30DayChartChallenge 2026: <b> Day 7 </b> | Source: <b> The Astronaut Database (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "", 
         x = "Mission Duration (Logarithmic Scale)"
     ) +
@@ -84,74 +83,16 @@ gr <- ggplot(dt_plot, aes(x = hours_mission, y = nationality, fill = nationality
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_blank(), 
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         plot.margin = margin(20, 20, 20, 20)
     )
 
+
 gr
-
-
-# 
-# gr <- ggplot(dt, aes(x = dose, y = len, fill = supp)) +
-#     
-#     geom_boxplot(
-#         width = 0.5, 
-#         alpha = 0.75, 
-#         outlier.shape = NA, 
-#         position = position_dodge(width = 0.6) ,
-#         color = "gray30"
-#         
-#     ) +
-#     
-#     geom_point(
-#         position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.6),
-#         # size = 2,
-#         # alpha = 0.8,
-#         shape = 21, size = 3.5, stroke = .25, alpha = 1.5,
-#         color = "grey20"
-#     ) +
-#     
-#     
-#     
-#     scale_fill_manual(values = col) +
-#     # scale_color_manual(values = col) +
-#     
-#     labs(
-#         title = "Natural vs. Artificial Vitamin C",
-#         subtitle = "In a <b>guinea pig model</b>, low doses of Orange Juice promote significantly more cellular<br>growth than artificial supplements. At a high dose (2.0 mg), the advantage vanishes.",
-#         caption = "30DayChartChallenge 2026: <b> Day 5 </b> | Source: <b> Crampton (1947) J. Nutr.</b> | Graphic: <b>Natasa Anastasiadou</b>",
-#         y = "Odontoblast Length (Cellular Growth)",
-#         x = "Vitamin C Dosage (mg/day)"
-#     ) +
-#     
-#     theme_minimal(base_family = "Candara") +
-#     
-#     theme(
-#         
-#         legend.position = "top",
-#         legend.title = element_blank(),
-#         legend.text = element_text(size = 11, face = "bold", color = "grey30"),
-#         
-#         axis.title.y = element_text(size = 11, face = "bold", color = "grey30", margin = margin(r = 10)),
-#         axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 10)),
-#         
-#         axis.text.x = element_text(size = 12, face = "bold", color = "black"),
-#         axis.text.y = element_text(size = 12, color = "grey30"),
-#         
-#         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-#         panel.grid.minor = element_blank(),
-#         
-#         plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-#         plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-#         plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
-#         
-#         plot.background = element_rect(fill = "#e4e4e3", color = NA),
-#         plot.margin = margin(20, 20, 20, 20)
-#     )
 
 
 
