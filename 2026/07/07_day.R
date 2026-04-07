@@ -33,10 +33,10 @@ dt_plot[, nationality := factor(nationality, levels = c("France", "Japan", "U.S.
 # plot -----
 
 col <- c(
-    "France" = "#5a8192",         # Slate Blue
-    "Japan" = "#e9c46a",          # Sun Orange
-    "U.S." = "#db9044",           # Deep Steel Blue
-    "U.S.S.R/Russia" = "#b24745"  # Terracotta Red
+    "France" = "#5a8192",         
+    "Japan" = "#e9c46a",          
+    "U.S." = "#db9044",           
+    "U.S.S.R/Russia" = "#b24745"  
 )
 
 
@@ -64,10 +64,10 @@ gr <- ggplot(dt_plot, aes(x = hours_mission, y = nationality, fill = nationality
     
     labs(
         title = "The Multiscale Duration of Human Spaceflight",
-        subtitle = "A logarithmic distribution of space mission durations.",
+        subtitle = "A comparison of spaceflight strategies to visualize both week-long missions and long-term orbital stays.",
         caption = "30DayChartChallenge 2026: <b> Day 7 </b> | Source: <b> The Astronaut Database (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         y = "", 
-        x = "Mission Duration (Logarithmic Scale)"
+        x = "Mission Duration"
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -83,8 +83,8 @@ gr <- ggplot(dt_plot, aes(x = hours_mission, y = nationality, fill = nationality
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_blank(), 
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = .40, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12.5, hjust = 1, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
