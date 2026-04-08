@@ -91,7 +91,12 @@ gr <- ggplot(data) +
     
     scale_fill_manual(values = col) +
     
-    geom_segment(data = base_data, aes(x = start, y = -100, xend = end, yend = -100), colour = "grey50", alpha = 0.8, linewidth = 0.8) +
+    geom_segment(
+        data = base_data, 
+        aes(x = start, y = -100, xend = end, yend = -100), 
+        colour = "grey30", 
+        linewidth = 0.8
+    ) +
 
     geom_text(
         data = base_data, aes(x = title, y = -400, label = group), 
@@ -100,7 +105,7 @@ gr <- ggplot(data) +
     
     geom_text(
         data = label_data, aes(x = id, y = tot + 100, label = name, hjust = hjust), 
-        color = "grey20", fontface = "bold", alpha = 0.8, size = 3, angle = label_data$angle, inherit.aes = FALSE
+        color = "grey20", fontface = "bold", alpha = 0.8, size = 4, angle = label_data$angle, inherit.aes = FALSE
     ) +
     
     ylim(-1500, max(label_data$tot, na.rm = TRUE) + 800) +
@@ -118,7 +123,6 @@ gr <- ggplot(data) +
     theme(
         
         legend.position = "top",
-        
         legend.title = element_blank(),
         legend.text = element_text(size = 11, face = "bold", color = "grey30"),
         legend.margin = margin(b = -35),
@@ -138,23 +142,7 @@ gr <- ggplot(data) +
 
 gr
 
-# 
-# gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
-#     
-#     
-#     geom_text(label = "🍔", size = 8, family = "Segoe UI Emoji") +
-#     
-#     scale_x_continuous(limits = c(0, 13), breaks = seq(0, 12, by = 2)) +
-#     
-#     labs(
-#         title = "Bob's Burgers: The Short & Long Seasons",
-#         subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
-#         caption = "30DayChartChallenge 2026: <b> Day 2</b>
-#                    | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
-#                    | Graphic: <b>Natasa Anastasiadou</b>",
-#         
-#     ) +
-#     
+ 
 #     theme_minimal(base_family = "Candara") +
 #     
 #     theme(
