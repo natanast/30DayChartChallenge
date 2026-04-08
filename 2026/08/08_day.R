@@ -143,13 +143,6 @@ gr <- ggplot(data) +
 gr
 
 
-#         
-#         axis.text.x = element_text(size = 10, color = "grey30"),
-#         axis.text.y = element_text(size = 12, face = "bold", color = "black", margin = margin(r = 10)),
-#         
-#         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-#         panel.grid.minor = element_blank(),
-#         
 #         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
 #         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
 #         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
