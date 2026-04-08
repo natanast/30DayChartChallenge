@@ -1,5 +1,5 @@
 
-# change the size of the letters inside the cirle and the legend
+
 
 rm(list = ls())
 gc()
@@ -73,14 +73,15 @@ base_data[, title := (start + end) / 2]
 data[, is_spacer := NULL]
 
 
+
+# plot --------
+
+
 col <- c(
     "Major Key" = "#5a8192", 
     "Minor Key" = "#db9044"  
 )
 
-
-
-# plot --------
 
 gr <- ggplot(data) +      
     
@@ -105,7 +106,12 @@ gr <- ggplot(data) +
     
     geom_text(
         data = label_data, aes(x = id, y = tot + 100, label = name, hjust = hjust), 
-        color = "grey20", fontface = "bold", alpha = 0.8, size = 4, angle = label_data$angle, inherit.aes = FALSE
+        color = "grey20", 
+        fontface = "bold", 
+        alpha = 0.8, 
+        size = 4, 
+        angle = label_data$angle, 
+        inherit.aes = FALSE
     ) +
     
     ylim(-1500, max(label_data$tot, na.rm = TRUE) + 800) +
@@ -141,17 +147,6 @@ gr <- ggplot(data) +
     )
 
 gr
-
-
-#         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-#         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-#         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
-#         
-#         plot.background = element_rect(fill = "grey95", color = NA),
-#         plot.margin = margin(20, 20, 20, 20)
-#     )
-# 
-# gr
 
 
 
