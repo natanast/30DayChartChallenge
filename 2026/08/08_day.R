@@ -142,12 +142,7 @@ gr <- ggplot(data) +
 
 gr
 
- 
-#     theme_minimal(base_family = "Candara") +
-#     
-#     theme(
-#         
-#         axis.title = element_blank(),
+
 #         
 #         axis.text.x = element_text(size = 10, color = "grey30"),
 #         axis.text.y = element_text(size = 12, face = "bold", color = "black", margin = margin(r = 10)),
