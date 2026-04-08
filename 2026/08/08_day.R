@@ -23,7 +23,6 @@ dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/
 
 data <- dt[!is.na(mode)]
 
-# Format columns
 data[, condition := fifelse(mode == 1, "Major Key", "Minor Key")]
 data[, group := str_to_title(playlist_genre)]
 data[, name := str_to_title(playlist_subgenre)]
@@ -145,9 +144,6 @@ gr <- ggplot(data) +
         plot.margin = margin(20, 20, 20, 20)
         
     )
-
-gr
-
 
 
 # save ---------
