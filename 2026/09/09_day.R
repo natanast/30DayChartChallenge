@@ -11,11 +11,13 @@ library(palmerpenguins)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
+library(colorspace)
 
 
 # load data ------
  
 dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2025/2025-08-05/income_inequality_processed.csv")
+
 
 # clean data -----
 
@@ -24,7 +26,6 @@ dt_clean <- dt[!is.na(gini_mi_eq) & !is.na(gini_dhi_eq)]
 
 dt_recent <- dt_clean[, .SD[which.max(Year)], by = Entity]
 
-# DATA.TABLE MAGIC: Melt the data from wide to long so we can plot both curves
 dt_melt <- melt(
     dt_recent, 
     id.vars = c("Entity", "Code", "Year"),
@@ -51,13 +52,12 @@ col <- c(
 
 gr <- ggplot(dt_melt, aes(x = gini_index, fill = income_type, color = income_type)) +
     
-    # Overlapping density plots to show the statistical shift
-    geom_density(alpha = 0.75, linewidth = 0.8) +
+    geom_density(alpha = 0.75, linewidth = 0.6) +
     
-    scale_fill_manual(values = col) +
-    scale_color_manual(values = col) +
+    scale_fill_manual(values = col |> lighten(.15)) +
+    scale_color_manual(values = col |> darken(.15)) +
     
-    # The Gini index goes from 0 to 1, but we will focus on the actual data range (0.2 to 0.7)
+    
     scale_x_continuous(
         limits = c(0.15, 0.75),
         breaks = seq(0.2, 0.7, by = 0.1),
@@ -83,16 +83,16 @@ gr <- ggplot(dt_melt, aes(x = gini_index, fill = income_type, color = income_typ
         axis.title.y = element_text(size = 12, face = "bold", color = "grey30", margin = margin(r = 15)),
         
         axis.text.x = element_text(size = 11, face = "bold", color = "black"),
-        axis.text.y = element_blank(), # We don't need exact density math, just the shape
+        axis.text.y = element_blank(), 
         
         panel.grid.major.x = element_line(linewidth = 0.4, color = "grey80", linetype = "dashed"),
         panel.grid.minor.x = element_blank(),
         panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0, color = "grey30", margin = margin(t = 2.5, b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 30), size = 8, hjust = 1, lineheight = 1.2),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         plot.margin = margin(20, 20, 20, 20)
@@ -146,9 +146,9 @@ gr
 #         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
 #         panel.grid.minor = element_blank(),
 #         
-#         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-#         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-#         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        # plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        # plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        # plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
 #         
 #         plot.background = element_rect(fill = "grey95", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
