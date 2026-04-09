@@ -23,7 +23,6 @@ dt <- fread("https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/
 
 dt_clean <- dt[!is.na(gini_mi_eq) & !is.na(gini_dhi_eq)]
 
-
 dt_recent <- dt_clean[, .SD[which.max(Year)], by = Entity]
 
 dt_melt <- melt(
@@ -65,18 +64,20 @@ gr <- ggplot(dt_melt, aes(x = gini_index, fill = income_type, color = income_typ
     ) +
     
     labs(
-        title = "The Global Shift in Wealth Distribution",
-        subtitle = "Density of the Gini coefficient across 124 countries before and after taxation.<br>Notice how government intervention dramatically shifts the global distribution toward equality.",
-        caption = "30DayChartChallenge 2026: <b> Day 9 (Distributions: Wealth)</b> | Source: <b> Our World in Data </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        title = "The Impact of Taxation on Global Wealth",
+        subtitle = "The Gini coefficient measures inequality (0 = perfect equality, 1 = maximum inequality).<br>Notice how taxation shifts the distribution across 124 countries toward equality.",
+        caption = "30DayChartChallenge 2026: <b> Day 9 </b> | Source: <b> Our World in Data (TidyTuesday)</b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Gini Coefficient", 
         y = "Density of Countries"
     ) +
     
     theme_minimal(base_family = "Candara") +
+    
     theme(
         legend.position = "top",
         legend.title = element_blank(),
-        legend.text = element_text(size = 11, face = "bold", color = "grey30"),
+        legend.text = element_text(size = 9, face = "bold", color = "grey30"),
+        legend.key.size = unit(0.5, "cm"),
         legend.margin = margin(b = 10),
         
         axis.title.x = element_text(size = 12, face = "bold", color = "grey30", margin = margin(t = 15)),
@@ -90,9 +91,9 @@ gr <- ggplot(dt_melt, aes(x = gini_index, fill = income_type, color = income_typ
         panel.grid.major.y = element_blank(),
         panel.grid.minor.y = element_blank(),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 10, hjust = 1),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
         plot.margin = margin(20, 20, 20, 20)
@@ -100,67 +101,10 @@ gr <- ggplot(dt_melt, aes(x = gini_index, fill = income_type, color = income_typ
 
 gr
 
-# plot --------
-
-# 
-# 
-# gr = ggplot(df_dots, aes(x, y)) +
-#     
-#     geom_point(aes(fill = species), size = 4.5, shape = 21, color = "white", stroke = .25) +
-#     
-#     facet_wrap(~island, nrow = 1, strip.position = "bottom") +
-#     
-#     coord_equal() +
-#     
-#     scale_fill_manual(values = col) +
-#     
-#     scale_x_continuous(limits = c(0.5, 10.5)) +
-#     scale_y_continuous(
-#         limits = c(0.5, 10.5), 
-#         breaks = c(0.5, 5.5, 10.5), 
-#         labels = c("0%", "50%", "100%")
-#     ) +
-#     
-#     labs(
-#         title = "Penguin Demographics Across the Palmer Archipelago",
-#         subtitle = "<b>Each dot</b> represents <b>1%</b> of the total penguin population on that island.",
-#         caption = "30DayChartChallenge 2026: <b> Day 1</b>
-#                    | Source: <b> palmerpenguins (R package)</b>
-#                    | Graphic: <b>Natasa Anastasiadou</b>",
-#         
-#     ) +
-#     
-#     theme_minimal(base_family = "Candara") +
-#     
-#     theme(
-#         legend.position = "bottom",
-#         
-#         axis.title = element_blank(),
-#         # axis.text = element_blank(),
-#         
-#         axis.text.x = element_blank(),
-#         axis.text.y = element_text(size = 9.5),
-#         
-#         strip.text = element_text(size = 9.5),
-#         
-#         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-#         panel.grid.minor = element_blank(),
-#         
-        # plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        # plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        # plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
-#         
-#         plot.background = element_rect(fill = "grey95", color = NA),
-#         plot.margin = margin(20, 20, 20, 20)
-#     )
-# 
-# 
-# gr
-
 # save ---------
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 9, height = 8, units = "in", dpi = 600
+   width = 10, height = 10, units = "in", dpi = 600
 )
 
