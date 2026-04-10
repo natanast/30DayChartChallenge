@@ -59,11 +59,11 @@ gr <- ggplot(dt_clean, aes(x = Decade, y = spotify_popularity, fill = Decade)) +
     ) +
     
     labs(
-        title = "THE SURVIVAL OF THE CLASSICS",
-        subtitle = "Distribution of modern **Spotify Popularity** for the Rolling Stone Top 500 Albums.<br>Each dot represents an album; the 'clouds' show where most albums in that decade sit.",
+        title = "Spotify Popularity of the Greatest Albums",
+        subtitle = "How the Rolling Stone Top 500 albums perform on modern streaming platforms, <br> grouped by the decade they were originally released.",
         caption = "30DayChartChallenge 2026: <b> Day 10 </b> | Source: <b> Rolling Stone (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "", 
-        y = "POPULARITY SCORE"
+        y = "Spotify popularity"
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -71,16 +71,16 @@ gr <- ggplot(dt_clean, aes(x = Decade, y = spotify_popularity, fill = Decade)) +
         legend.position = "none",
         
         axis.text.x = element_text(size = 12, face = "bold", color = "black"),
-        axis.text.y = element_text(size = 10, color = "grey40"),
-        axis.title.y = element_text(size = 10, face = "bold", color = "grey30", margin = margin(r = 10)),
+        axis.text.y = element_text(size = 12, color = "grey40"),
+        axis.title.y = element_text(size = 13, face = "bold", color = "grey30", margin = margin(r = 10)),
         
         panel.grid.major.x = element_blank(),
         panel.grid.major.y = element_line(linewidth = 0.3, color = "grey85"),
         panel.grid.minor = element_blank(),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 15, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 10, hjust = 1),
         
         plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
