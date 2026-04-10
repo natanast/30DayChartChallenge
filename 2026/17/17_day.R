@@ -12,107 +12,15 @@ library(ggtext)
 library(extrafont)
 library(ggrepel)
 
+
 # load data ------
 
- 
-dt <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-04-09/eclipse_total_2024.csv" |>
-    fread()
 
 
 # clean data -----
 
-# 2. Calculate duration and filter ------
-dt[, duration_min := as.numeric(as.ITime(eclipse_4) - as.ITime(eclipse_3)) / 60]
 
-# Bring back all 6 states
-target_states <- c("TX", "AR", "IN", "OH", "NY", "ME")
-dt_plot <- dt[state %in% target_states & duration_min > 0]
-
-# Convert state to a factor so the legend stays in geographic order (South to North)
-dt_plot[, state := factor(state, levels = c("TX", "AR", "IN", "OH", "NY", "ME"))]
-
-# 3. Create the Palette -------
-cols <- c(
-    "TX" = "#b25c56",  # Dark Brick
-    "AR" = "#e8998f",  # Soft Coral
-    "IN" = "#fcd4be",  # Pale Peach
-    "OH" = "#85aebc",  # Soft Slate
-    "NY" = "#8aa39b",  # Dark Blue
-    "ME" = "#4a6b7c"   # Sage Green
-)
-
-# dt_extremes <- rbind(
-#     dt_plot[order(-duration_min)][1], # Sorts descending, grabs the 1st row (Longest)
-#     dt_plot[order(duration_min)][1]   # Sorts ascending, grabs the 1st row (Lowest)
-# )
-
-
-dt_extremes <- rbind(
-    dt_plot[order(-duration_min)][1], # Sorts descending, grabs the 1st row (Longest)
-    dt_plot[order(duration_min)][1]   # Sorts ascending, grabs the 1st row (Lowest)
-)
 # plot --------
-
-gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
-    
-    geom_point(
-        aes(fill = state),
-        alpha = 0.8, 
-        size = 2, 
-        stroke = 0.15, 
-        color = "white",
-        shape = 21
-    ) +
-    
-    geom_smooth(
-        method = "loess", 
-        color = "#396375", 
-        fill = "#396375",
-        linewidth = 0.75, 
-        lineend = "round"
-    ) +
-    
-     # scale_color_manual(values = cols, name = "State") +
-    scale_fill_manual(values = cols, name = "State") +
-    
-    guides(fill = guide_legend(nrow = 1)) +
-    
-    labs(
-        title = "Fading to black: The 2024 eclipse",
-        subtitle = "Visualizing the duration of totality across the United States.<br>As the moon's shadow swept from Texas to Maine, the window of total darkness steadily decreased.",
-        caption = "30DayChartChallenge 2026: <b> Day 15 (Correlation) </b> | Source: <b> NASA </b> | Graphic: <b>Natasa Anastasiadou</b>",
-        x = "Longitude (Degrees West)",
-        y = "Duration of Totality (Minutes)"
-    ) +
-    
-    theme_minimal(base_family = "Candara") +
-    
-    theme(
-        # The light grey background with dashed gridlines
-        panel.grid.major = element_line(color = "grey85", linetype = "dashed", linewidth = 0.4),
-        panel.grid.minor = element_blank(),
-        plot.background = element_rect(fill = "#f2f2f2", color = NA),
-        panel.background = element_rect(fill = "#f2f2f2", color = NA),
-        
-        # Axis text styling
-        axis.text = element_text(size = 9, color = "grey40", face = "bold"),
-        axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 15)),
-        axis.title.y = element_text(size = 11, face = "bold", color = "grey30", margin = margin(r = 15)),
-        
-        # Legend styling
-        legend.position = "bottom",
-        legend.title = element_text(face = "bold", size = 10),
-        
-        
-        # Titles
-        plot.title = element_text(size = 20, face = "bold", color = "black", hjust = 0.5),
-        plot.subtitle = element_markdown(size = 11, color = "grey40", hjust = 0.5, lineheight = 1.3, margin = margin(b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 20), size = 8, color = "grey50", hjust = 1),
-        
-        plot.margin = margin(30, 30, 30, 30)
-    )
-
-gr
 
 
 # gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
@@ -150,9 +58,7 @@ gr
 #         plot.background = element_rect(fill = "grey95", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
 #     )
-# 
-# gr
-# 
+
 
 
 # save ---------
