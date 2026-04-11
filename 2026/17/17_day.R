@@ -70,7 +70,53 @@ ggsave(
 
 
 
-# The curated data for Plate 21
+library(tidyverse)
+
+# 1. Load and clean the curated data
 url <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate21/data.csv"
-plate21_data <- read_csv(url)
+plate21_data <- read_csv(url) %>%
+    rename(Value = `Property Valuation`) # Renaming fixes the 'Value not found' error
+
+# 2. Define the annotations (the "Comments" from the original)
+# These are placed roughly according to the years they affected the trend
+annotations <- tibble(
+    Year = c(1872, 1877, 1888, 1892, 1893, 1897),
+    Value = c(1000000, 4500000, 7500000, 3000000, 1500000, 4500000),
+    label = c("KU-KLUXISM", 
+              "POLITICAL UNREST", 
+              "RISE OF THE\nNEW INDUSTRIALISM", 
+              "LYNCHING", 
+              "FINANCIAL\nPANIC", 
+              "DISFRANCHISEMENT\nAND PROSCRIPTIVE\nLAWS.")
+)
+
+# 3. Create the Plot
+ggplot(plate21_data, aes(x = Year, y = Value)) +
+    # The signature thick black line
+    geom_line(linewidth = 2, color = "black") +
+    
+    # Adding the historical comments (annotations)
+    geom_text(data = annotations, aes(label = label), 
+              family = "sans", size = 2.5, lineheight = 0.8, fontface = "bold") +
+    
+    # Styling the axes to match the original vertical "poster" feel
+    scale_y_continuous(
+        limits = c(0, 10000000), 
+        breaks = seq(0, 10000000, 1000000),
+        labels = scales::comma
+    ) +
+    scale_x_continuous(breaks = seq(1870, 1900, 5)) +
+    
+    # The "Du Bois" Theme
+    theme_minimal() +
+    theme(
+        plot.background = element_rect(fill = "#e3d4ba", color = NA), # Aged paper tan
+        panel.grid.major = element_line(color = "#d9cbb4", linewidth = 0.5), # Grid paper look
+        panel.grid.minor = element_blank(),
+        axis.title = element_blank(),
+        axis.text = element_text(family = "mono", face = "bold"),
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 14, margin = margin(b=20)),
+        plot.margin = margin(30, 30, 30, 30)
+    ) +
+    labs(title = "VALUATION OF TOWN AND CITY PROPERTY OWNED\nBY GEORGIA NEGROES.")
 
