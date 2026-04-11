@@ -43,13 +43,13 @@ gr <- ggplot(dt_clean, aes(x = Decade, y = spotify_popularity, fill = Decade)) +
         color = "black", linewidth = 0.3
     ) +
     
-    # Raw Data Points (The "Rain"): Placed behind the violin
+
     geom_jitter(
         size = 2.5, width = 0.15, shape = 21, 
         stroke = 0.2, alpha = 0.9, color = "white"
     ) +
     
-    # Applying your discrete scale instead of the continuous one
+    
     scale_fill_manual(values = decade_colors) +
     
     scale_y_continuous(

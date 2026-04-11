@@ -11,6 +11,7 @@ library(ggplot2)
 library(ggtext)
 library(extrafont)
 library(stringr)
+library(colorspace)
 
 
 # load data ------
@@ -46,7 +47,7 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
         aes(size = N), 
         alpha = 0.85,
         shape = 21,
-        stroke = 0.5
+        stroke = 0.65
     ) +
     
 
@@ -67,8 +68,15 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
         )
     ) +
     
-    scale_color_manual(values = col, guide = "none") +
-    scale_fill_manual(values = col, guide = "none") +
+    scale_color_manual(
+        values = col |> darken(.15), 
+        guide = "none"
+    ) +
+    
+    scale_fill_manual(
+        values = col , 
+        guide = "none"
+    ) +
     
     labs(
         title = "The Physical Heights of Volcanoes",
