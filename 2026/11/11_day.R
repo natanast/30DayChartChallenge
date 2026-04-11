@@ -107,34 +107,7 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
 gr
 
 
-# 
-# 
-# gr = ggplot(df_dots, aes(x, y)) +
-#     
-#     geom_point(aes(fill = species), size = 4.5, shape = 21, color = "white", stroke = .25) +
-#     
-#     facet_wrap(~island, nrow = 1, strip.position = "bottom") +
-#     
-#     coord_equal() +
-#     
-#     scale_fill_manual(values = col) +
-#     
-#     scale_x_continuous(limits = c(0.5, 10.5)) +
-#     scale_y_continuous(
-#         limits = c(0.5, 10.5), 
-#         breaks = c(0.5, 5.5, 10.5), 
-#         labels = c("0%", "50%", "100%")
-#     ) +
-#     
-#     labs(
-#         title = "Penguin Demographics Across the Palmer Archipelago",
-#         subtitle = "<b>Each dot</b> represents <b>1%</b> of the total penguin population on that island.",
-#         caption = "30DayChartChallenge 2026: <b> Day 1</b>
-#                    | Source: <b> palmerpenguins (R package)</b>
-#                    | Graphic: <b>Natasa Anastasiadou</b>",
-#         
-#     ) +
-#     
+     
 #     theme_minimal(base_family = "Candara") +
 #     
 #     theme(
