@@ -4,7 +4,7 @@ rm(list = ls())
 gc()
 
 
-# load libraries -------
+# load libraries -----
 
 library(data.table)
 library(ggplot2)
@@ -19,8 +19,8 @@ dt <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2
     fread()
 
 
-# clean data -----
 
+# clean data -----
 
 dt$type_clean <- dt$primary_volcano_type |> str_replace_all("\\(es\\)|\\(s\\)", "")
     
@@ -71,8 +71,8 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
     scale_fill_manual(values = col, guide = "none") +
     
     labs(
-        title = "THE PHYSICAL STATURE OF VOLCANOES",
-        subtitle = "Distribution of global volcanoes by their physical structure and elevation.<br>Elevations are grouped into 500-meter intervals. **Larger bubbles indicate a higher concentration.**",
+        title = "The Physical Heights of Volcanoes",
+        subtitle = "Comparing the elevation distributions of five common volcanic structures.<br>Bubbles represent 500-meter intervals, with larger sizes indicating more volcanoes.",
         caption = "30DayChartChallenge 2026: <b> Day 11 </b> | Source: <b> Smithsonian Institution </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "", 
         y = "Elevation (Meters above sea level)"
@@ -100,8 +100,6 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
         
         plot.background = element_rect(fill = "grey95", color = NA),
         plot.margin = margin(20, 20, 20, 20)
-        
-
     )
 
 gr
