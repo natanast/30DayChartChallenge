@@ -73,7 +73,7 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
     labs(
         title = "The Physical Heights of Volcanoes",
         subtitle = "Comparing the elevation distributions of five common volcanic structures.<br>Bubbles represent 500-meter intervals, with larger sizes indicating more volcanoes.",
-        caption = "30DayChartChallenge 2026: <b> Day 11 </b> | Source: <b> Smithsonian Institution </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 11 </b> | Source: <b> Volcano Eruptions (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "", 
         y = "Elevation (Meters above sea level)"
     ) +
