@@ -69,3 +69,8 @@ ggsave(
 )
 
 
+
+# The curated data for Plate 21
+url <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate21/data.csv"
+plate21_data <- read_csv(url)
+

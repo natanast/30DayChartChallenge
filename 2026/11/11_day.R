@@ -79,7 +79,7 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
     ) +
     
     labs(
-        title = "The Physical Heights of Volcanoes",
+        title = "How Tall Are Different Types of Volcanoes",
         subtitle = "Comparing the elevation distributions of five common volcanic structures.<br>Bubbles represent 500-meter intervals, with larger sizes indicating more volcanoes.",
         caption = "30DayChartChallenge 2026: <b> Day 11 </b> | Source: <b> Volcano Eruptions (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "", 
@@ -103,7 +103,7 @@ gr <- ggplot(dt_counts, aes(x = type_clean, y = elevation_binned, color = type_c
         panel.grid.minor = element_blank(),
         
         plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         plot.background = element_rect(fill = "grey95", color = NA),
