@@ -1,4 +1,3 @@
-#fix labs and size of the x axis letter
 
 rm(list = ls())
 gc()
@@ -13,6 +12,7 @@ library(extrafont)
 library(stringr)
 
 # load data ------
+
 dt <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-09-12/all_countries.csv" |> 
     fread()
 
@@ -71,7 +71,7 @@ gr <- ggplot(dt_plot, aes(x = hoursPerDayCombined, y = Subcategory, fill = Categ
     labs(
         title = "The Mediterranean distribution of time",
         subtitle = "How six Southern European nations allocate their average daily hours across all major subcategories.",
-        caption = "30DayChartChallenge 2026: <b> Day 12 (FlowingData Theme)</b> | Source: <b> Global Human Day </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 12 </b> | Source: <b> Global Human Day </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Average Hours per Day", 
         y = ""
     ) +
@@ -79,7 +79,7 @@ gr <- ggplot(dt_plot, aes(x = hoursPerDayCombined, y = Subcategory, fill = Categ
     theme_minimal(base_family = "Candara") +
     
     theme(
-        # Put the legend at the top, spread out horizontally
+        
         legend.position = "bottom",
         legend.title = element_text(size = 10, face = "bold", color = "grey40"),
         legend.text = element_text(size = 9, color = "grey30"),
@@ -87,21 +87,19 @@ gr <- ggplot(dt_plot, aes(x = hoursPerDayCombined, y = Subcategory, fill = Categ
         
         strip.text = element_text(size = 14, face = "bold", color = "black", hjust = 0, margin = margin(b = 10)),
         
-        # Clean, minimal FlowingData axis styling
         axis.text.y = element_text(size = 9, face = "bold", color = "grey20"), # Slightly smaller Y text
         axis.text.x = element_blank(), 
         axis.title.x = element_text(size = 11, face = "bold", color = "grey50", margin = margin(t = 15)),
         
-        # Extremely minimal gridlines
         panel.grid.major = element_blank(),
         panel.grid.minor = element_blank(),
         
         panel.spacing.x = unit(1.5, "cm"), 
         panel.spacing.y = unit(1, "cm"),   
         
-        plot.title = element_text(size = 20, face = "bold", hjust = 0, color = "black", margin = margin(b = 8)),
-        plot.subtitle = element_markdown(size = 11, hjust = 0, color = "grey40", lineheight = 1.3, margin = margin(b = 15)),
-        plot.caption = element_markdown(margin = margin(t = 30), size = 8, hjust = 1, color = "grey50"),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         plot.background = element_rect(fill = "#fcfbf9", color = NA), 
         plot.margin = margin(30, 30, 30, 30)
