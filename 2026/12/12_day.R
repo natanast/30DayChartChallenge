@@ -38,6 +38,7 @@ dt_plot[, Country_Name := fcase(
 order_dt <- dt_plot[, .(avg_hours = mean(hoursPerDayCombined)), by = Subcategory][order(avg_hours)]
 dt_plot[, Subcategory := factor(Subcategory, levels = order_dt$Subcategory)]
 
+
 # plot -----
 
 cols <- c(
@@ -57,14 +58,14 @@ gr <- ggplot(dt_plot, aes(x = hoursPerDayCombined, y = Subcategory, fill = Categ
     
     facet_wrap(~Country_Name, ncol = 3) +
     
-    # Reduced text size slightly to fit all the new categories!
+    
     geom_text(aes(label = round(hoursPerDayCombined, 1)), 
               hjust = -0.2, family = "Candara", size = 3, color = "grey30", fontface = "bold") +
     
-    # We move the legend to the top so people know what the colors mean
+    
     scale_fill_manual(values = cols, name = "Broad Category:") +
     
-    # Give the X-axis extra room for the text labels to fit
+    
     scale_x_continuous(expand = expansion(mult = c(0, 0.2))) +
     
     labs(
