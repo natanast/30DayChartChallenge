@@ -21,10 +21,10 @@ dt <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2
 med_iso3 <- c("GRC", "ITA", "ESP", "FRA", "PRT", "CYP")
 dt_plot <- dt[country_iso3 %in% med_iso3]
 
-# Remove categories that round to 0 to clean up the visual space
+
 dt_plot <- dt_plot[!Subcategory %in% c("Infrastructure", "Energy", "Materials", "Waste management")]
 
-# 3. Translate ISO3 codes to actual Country Names
+
 dt_plot[, Country_Name := fcase(
     country_iso3 == "GRC", "Greece",
     country_iso3 == "ITA", "Italy",
@@ -34,21 +34,21 @@ dt_plot[, Country_Name := fcase(
     country_iso3 == "CYP", "Cyprus"
 )]
 
-# 4. DATA.TABLE MAGIC: Order the Subcategories from largest to smallest!
-# We find the global average for each subcategory, sort them, and apply that order as factor levels.
+
 order_dt <- dt_plot[, .(avg_hours = mean(hoursPerDayCombined)), by = Subcategory][order(avg_hours)]
 dt_plot[, Subcategory := factor(Subcategory, levels = order_dt$Subcategory)]
 
 # plot -----
+
 cols <- c(
-    "Food provision" = "#6d8e9c",                  # Slate blue
-    "Nonfood provision" = "#d4a373",               # Mustard/Sand
-    "Technosphere modification" = "#b25c56",       # Faded brick red
-    "Maintenance of surroundings" = "#8aa39b",     # Sage green
-    "Somatic maintenance" = "#c28d75",             # Warm clay
-    "Deliberate neural restructuring" = "#aba296", # Warm grey
-    "Organization" = "#9b8b99",                    # Muted Mauve (NEW)
-    "Experience oriented" = "#b3b9a1"              # Soft Olive (NEW)
+    "Food provision" = "#6d8e9c",                  
+    "Nonfood provision" = "#d4a373",              
+    "Technosphere modification" = "#b25c56",      
+    "Maintenance of surroundings" = "#8aa39b",    
+    "Somatic maintenance" = "#c28d75",             
+    "Deliberate neural restructuring" = "#aba296", 
+    "Organization" = "#9b8b99",                    
+    "Experience oriented" = "#b3b9a1"              
 )
 
 gr <- ggplot(dt_plot, aes(x = hoursPerDayCombined, y = Subcategory, fill = Category)) +
