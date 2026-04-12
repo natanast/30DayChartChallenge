@@ -97,9 +97,9 @@ gr <- ggplot(dt_plot, aes(x = hoursPerDayCombined, y = Subcategory, fill = Categ
         panel.spacing.x = unit(1.5, "cm"), 
         panel.spacing.y = unit(1, "cm"),   
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.85, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 10, hjust = 1),
         
         plot.background = element_rect(fill = "#fcfbf9", color = NA), 
         plot.margin = margin(30, 30, 30, 30)
@@ -112,5 +112,6 @@ gr
 
 ggsave(
    plot = gr, filename = "Rplot.png",
-   width = 9, height = 9, units = "in", dpi = 600
+   width = 10, height = 9, units = "in", dpi = 600
 )
+
