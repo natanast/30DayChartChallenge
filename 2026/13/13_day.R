@@ -23,14 +23,13 @@ birds <- "Birdsoftheworld.csv" |> fread(header = TRUE)
 
 # clean data -----
 
-# Get Top 10 Species
 top10_species <- birds[, .N, by = .(species)][order(-N)][1:10]
 
-# Filter and clean locations
-df2 <- birds[species %in% top10_species$species]
-df2 <- df2[location != "United States"] # Remove the "squisher"
 
-# Count by species and location
+df2 <- birds[species %in% top10_species$species]
+df2 <- df2[location != "United States"] 
+
+
 df2 <- df2[, .(N = .N), by = .(species, location)]
 
 # Get Top 10 Locations
@@ -39,6 +38,8 @@ df_plot <- df2[location %in% top10_locs$location]
 
 
 df_plot$species <- df_plot$species |> str_wrap(width = 20)
+
+
 
 # plot --------
 
@@ -59,23 +60,18 @@ cols <- c(
 
 gr <- ggplot(df_plot, aes(axis1 = species, axis2 = location, y = N)) +
     
-    # 1. The Rivers (The "Chords")
-    # I lowered alpha to 0.4 so they are more transparent than the blocks
+    
     geom_alluvium(aes(fill = species), alpha = 0.75, width = 1/5, color = "white", linewidth = 0.3) +
     
-    # 2. THE COLORED BLOCKS (Strata)
-    # Mapping fill to after_stat(stratum) makes the blocks use your bird colors
+    
     geom_stratum(aes(fill = after_stat(stratum)), alpha = 0.75, width = 1/5, color = "grey20", linewidth = 0.5) +
     
-    # 3. THE TEXT LABELS
-    # I changed the color to "white" so it's readable inside the colored blocks
+    
     geom_text(stat = "stratum", 
               aes(label = after_stat(stratum)), 
               color = "black", family = "Candara", fontface = "bold", size = 2.5) +
     
-    # 4. Color Mapping
-    # scale_fill_manual will apply bird colors to both the rivers and the blocks
-    # Locations will automatically turn the 'na.value' color
+    
     scale_fill_manual(values = cols, na.value = "grey70", guide = "none") +
     
     scale_x_discrete(limits = c("Bird Species", "Location Spotted"), expand = c(0.2, 0.2)) +
@@ -106,28 +102,6 @@ gr <- ggplot(df_plot, aes(axis1 = species, axis2 = location, y = N)) +
 gr
 
      
-#     theme_minimal(base_family = "Candara") +
-#     
-#     theme(
-#         
-#         axis.title = element_blank(),
-#         
-#         axis.text.x = element_text(size = 10, color = "grey30"),
-#         axis.text.y = element_text(size = 12, face = "bold", color = "black", margin = margin(r = 10)),
-#         
-#         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-#         panel.grid.minor = element_blank(),
-#         
-        # plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        # plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        # plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
-#         
-#         plot.background = element_rect(fill = "grey95", color = NA),
-#         plot.margin = margin(20, 20, 20, 20)
-#     )
-
-
-
 # save ---------
 
 ggsave(
