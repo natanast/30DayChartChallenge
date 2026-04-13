@@ -77,23 +77,24 @@ gr <- ggplot(df_plot, aes(axis1 = species, axis2 = location, y = N)) +
     scale_x_discrete(limits = c("Bird Species", "Location Spotted"), expand = c(0.2, 0.2)) +
     
     labs(
-        title = "Bird connections around the world",
-        subtitle = "A Sankey flow diagram exploring how the top 10 most frequently observed bird species map to their top global locations.",
+        title = "Where the Birds Are",
+        subtitle = "How sightings of the top 10 most common bird species are distributed across major urban locations.",
         caption = "30DayChartChallenge 2026: <b> Day 13 </b> | Source: <b> Birds of the World (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "", y = ""
     ) +
     
     theme_minimal(base_family = "Candara") +
+    
     theme(
         axis.text.y = element_blank(),
         axis.ticks.y = element_blank(),
         panel.grid = element_blank(),
         
-        axis.text.x = element_text(size = 14, face = "bold", color = "black", margin = margin(b = 15)),
+        axis.text.x = element_text(size = 10, face = "bold", color = "black", margin = margin(b = 15)),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         plot.background = element_rect(fill = "#fcfbf9", color = NA), 
         plot.margin = margin(30, 40, 30, 40)
@@ -106,7 +107,7 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 10, height = 10, units = "in", dpi = 600
+    width = 9, height = 9, units = "in", dpi = 600
 )
 
 
