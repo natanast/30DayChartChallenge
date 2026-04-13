@@ -10,6 +10,8 @@ library(data.table)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
+library(stringr) 
+library(ggalluvial)
 
 
 # load data ------
@@ -138,9 +140,7 @@ gr
 #         plot.background = element_rect(fill = "grey95", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
 #     )
-# 
-# gr
-# 
+
 
 
 # save ---------
