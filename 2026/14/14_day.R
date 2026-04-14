@@ -22,23 +22,23 @@ library(scales)
 erasmus_raw <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2022/2022-03-08/erasmus.csv')
 
 # clean data ------
-# Summing participants by country pair
+
 df_heatmap <- erasmus_raw[, .(N = sum(participants, na.rm = TRUE)), 
                           by = .(sending_country_code, receiving_country_code)]
 
-# Focus on Top 15 countries 
+
 top_list <- df_heatmap[, .(total = sum(N)), by = sending_country_code][order(-total)][1:15, sending_country_code]
 df_heatmap <- df_heatmap[sending_country_code %in% top_list & receiving_country_code %in% top_list]
 
-# Fills missing pairs with 0 and ensure factors are sorted by volume
+
 df_heatmap <- df_heatmap |>
     complete(sending_country_code, receiving_country_code, fill = list(N = 0)) |>
     as.data.table()
 
-# Set internal 'trade' to NA so the grid stays closed but is ignored
+
 df_heatmap[sending_country_code == receiving_country_code, N := NA]
 
-# Sorting for better visual flow (Added na.rm = TRUE because of the NAs we just introduced)
+
 df_heatmap[, sending_country_code := fct_reorder(sending_country_code, N, function(x) sum(x, na.rm = TRUE))]
 df_heatmap[, receiving_country_code := fct_reorder(receiving_country_code, N, function(x) sum(x, na.rm = TRUE))]
 
@@ -83,11 +83,15 @@ gr = ggplot(df_heatmap, aes(x = sending_country_code, y = receiving_country_code
     #     )
     # ) +
     
-    theme_minimal() +
+    theme_minimal(base_family =  = "Candara") +
     
     labs(title = "The **Trade** of Cultural Capital: Erasmus Mobility",
          subtitle = "This heatmap illustrates the **relationships** and student exchange volumes between the top 15 participating countries.",
-         caption = "30DayChartChallenge 2026 | Day 14: Relationships (Trade) <br> Source: <b>TidyTuesday Erasmus Data</b> | Graphic: <b>Natasa Anastasiadou</b>",
+         # caption = "30DayChartChallenge 2026 | Day 14 | Source: <b> Erasmus Data (TidyTuesday)</b> | Graphic: <b>Natasa Anastasiadou</b>",
+
+         caption = "30DayChartChallenge 2026: <b> Day 2</b>
+                   | Source: <b> Erasmus Data (TidyTuesday)</b>
+                   | Graphic: <b>Natasa Anastasiadou</b>",
          x = "Sending Country",
          y = "Receiving Country"
     ) +
@@ -107,9 +111,9 @@ gr = ggplot(df_heatmap, aes(x = sending_country_code, y = receiving_country_code
         
         panel.grid = element_blank(),
         
-        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, family = "Candara", margin = margin(b = 5, t = 10)),
-        plot.subtitle = element_markdown(size = 11, hjust = 0.5, family = "Candara", color = "grey30", margin = margin(b = 20)),
-        plot.caption = element_markdown(margin = margin(t = 25), size = 8, family = "Candara", hjust = 1, color = "grey40"),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         plot.margin = margin(20, 20, 20, 20),
         plot.background = element_rect(fill = "grey93", color = NA)
@@ -130,9 +134,9 @@ gr
 #     labs(
 #         title = "Bob's Burgers: The Short & Long Seasons",
 #         subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
-#         caption = "30DayChartChallenge 2026: <b> Day 2</b>
-#                    | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
-#                    | Graphic: <b>Natasa Anastasiadou</b>",
+        # caption = "30DayChartChallenge 2026: <b> Day 2</b>
+        #            | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
+        #            | Graphic: <b>Natasa Anastasiadou</b>",
 #         
 #     ) +
 #     
@@ -148,9 +152,9 @@ gr
 #         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
 #         panel.grid.minor = element_blank(),
 #         
-        # plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        # plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        # plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
+        plot.title = element_markdown(size = 16, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
 #         
 #         plot.background = element_rect(fill = "grey95", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
