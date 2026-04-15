@@ -33,23 +33,18 @@ dt_plot[, state := factor(state, levels = c("TX", "AR", "IN", "OH", "NY", "ME"))
 
 # 3. Create the Palette -------
 cols <- c(
-    "TX" = "#b25c56",  # Dark Brick
-    "AR" = "#e8998f",  # Soft Coral
-    "IN" = "#fcd4be",  # Pale Peach
-    "OH" = "#85aebc",  # Soft Slate
-    "NY" = "#8aa39b",  # Dark Blue
-    "ME" = "#4a6b7c"   # Sage Green
+    "TX" = "#b25c56",  
+    "AR" = "#e8998f",  
+    "IN" = "#fcd4be",  
+    "OH" = "#85aebc",  
+    "NY" = "#8aa39b",  
+    "ME" = "#4a6b7c"   
 )
-
-# dt_extremes <- rbind(
-#     dt_plot[order(-duration_min)][1], # Sorts descending, grabs the 1st row (Longest)
-#     dt_plot[order(duration_min)][1]   # Sorts ascending, grabs the 1st row (Lowest)
-# )
 
 
 dt_extremes <- rbind(
-    dt_plot[order(-duration_min)][1], # Sorts descending, grabs the 1st row (Longest)
-    dt_plot[order(duration_min)][1]   # Sorts ascending, grabs the 1st row (Lowest)
+    dt_plot[order(-duration_min)][1], 
+    dt_plot[order(duration_min)][1]   
 )
 # plot --------
 
@@ -72,8 +67,7 @@ gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
         lineend = "round"
     ) +
     
-     # scale_color_manual(values = cols, name = "State") +
-    scale_fill_manual(values = cols, name = "State") +
+   scale_fill_manual(values = cols, name = "State") +
     
     guides(fill = guide_legend(nrow = 1)) +
     
@@ -88,23 +82,19 @@ gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        # The light grey background with dashed gridlines
+        
         panel.grid.major = element_line(color = "grey85", linetype = "dashed", linewidth = 0.4),
         panel.grid.minor = element_blank(),
         plot.background = element_rect(fill = "#f2f2f2", color = NA),
         panel.background = element_rect(fill = "#f2f2f2", color = NA),
         
-        # Axis text styling
         axis.text = element_text(size = 9, color = "grey40", face = "bold"),
         axis.title.x = element_text(size = 11, face = "bold", color = "grey30", margin = margin(t = 15)),
         axis.title.y = element_text(size = 11, face = "bold", color = "grey30", margin = margin(r = 15)),
         
-        # Legend styling
         legend.position = "bottom",
         legend.title = element_text(face = "bold", size = 10),
         
-        
-        # Titles
         plot.title = element_text(size = 20, face = "bold", color = "black", hjust = 0.5),
         plot.subtitle = element_markdown(size = 11, color = "grey40", hjust = 0.5, lineheight = 1.3, margin = margin(b = 20)),
         plot.caption = element_markdown(margin = margin(t = 20), size = 8, color = "grey50", hjust = 1),
