@@ -78,7 +78,7 @@ gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
     
     labs(
         title = "Chasing the Shadow: The 2024 Solar Eclipse",
-        subtitle = "As the moon's shadow swept from Texas to Maine, the window of total darkness steadily decreased. <br>Each point represents a city or town in the path of totality.",
+        subtitle = "As the moon's shadow swept from Texas to Maine, the window of total darkness decreased. <br>Each point represents a city or town in the path of totality.",
         caption = "30DayChartChallenge 2026: <b> Day 15 </b> | Source: <b> NASA (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Longitude (Degrees West)",
         y = "Duration of Totality (Minutes)"
