@@ -64,9 +64,9 @@ plot = (
     theme_minimal(base_family = 'Candara') +
     
     labs(
-        title = "The Warming Effect: Carbon Emissions and Global Temperatures",
-        subtitle = "As major corporate carbon emissions increase, global surface temperature anomalies rise.",
-        caption = "Data: NASA GISS & TidyTuesday (2024) | Graphic: Natasa Anastasiadou",
+        title = "Cause and Effect: Global Warming",
+        subtitle = "Mapping the direct causation between rising carbon emissions and temperature anomalies.",
+        caption = "30DayChartChallenge 2026: Day 16 | Source: NASA GISS & Carbon Majors (TidyTuesday) | Graphic: Natasa Anastasiadou",
         x = "Total Emissions (MtCO2e)",
         y = "Temperature Anomaly (°C)",
         fill = "Time Period"
@@ -74,25 +74,25 @@ plot = (
     
     theme(
         legend_position = 'right',
-        legend_title = element_text(size = 9, weight = 'bold'),
-        legend_text = element_text(size = 8),
+        legend_title = element_text(size = 8, weight = 'bold'),
+        legend_text = element_text(size = 7),
         legend_background = element_rect(fill = 'none', color = 'none'), 
         
         panel_grid_major = element_line(size = 0.45, color = "#d3d3d3"),
         panel_grid_minor = element_blank(),
         
-        plot_title = element_text(size = 14, weight = 'bold', hjust = 0),
-        plot_subtitle = element_text(size = 10, hjust = 0),
-        plot_caption = element_text(size = 7, hjust = 1, color = "#666666"),
-        
+        plot_title = element_text(size = 15, weight = 'bold',  hjust = 0.5, margin = {'t': 15, 'b': 5}),
+        plot_subtitle = element_text(size = 12, hjust = 0.5, color='#4d4d4d', margin = {'t': 5, 'b': 25}),
+        plot_caption = element_text(size = 8, hjust = 1, margin = {'t': 35}),
+                
         plot_background = element_rect(fill = '#EDEDED', color = 'none'),
         panel_background = element_rect(fill = '#EDEDED', color = 'none'),
         
-        figure_size = (9, 6)
+        figure_size = (8, 6)
     )
 )
 
-plot
 
-# 6. Save --------
-plot.save("plot.png", width=9, height=6, dpi=300)
+# save --------
+
+plot.save("plot.png", width = 8, height = 6, dpi = 300)
