@@ -100,7 +100,6 @@ gr <- ggplot(dt_plot, aes(x = lon, y = duration_min)) +
         legend.position = "bottom",
         legend.title = element_text(face = "bold", size = 11),
         legend.text = element_text(size = 10),
-        # legend.key.size = unit(0.8, "cm"),
         
         plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 15, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),

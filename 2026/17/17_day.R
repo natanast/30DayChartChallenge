@@ -70,53 +70,103 @@ ggsave(
 
 
 
-library(tidyverse)
+rm(list = ls())
+gc()
 
-# 1. Load and clean the curated data
-url <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate21/data.csv"
-plate21_data <- read_csv(url) %>%
-    rename(Value = `Property Valuation`) # Renaming fixes the 'Value not found' error
+# load libraries -------
+library(data.table)
+library(ggplot2)
+library(ggtext)
 
-# 2. Define the annotations (the "Comments" from the original)
-# These are placed roughly according to the years they affected the trend
-annotations <- tibble(
-    Year = c(1872, 1877, 1888, 1892, 1893, 1897),
-    Value = c(1000000, 4500000, 7500000, 3000000, 1500000, 4500000),
-    label = c("KU-KLUXISM", 
-              "POLITICAL UNREST", 
-              "RISE OF THE\nNEW INDUSTRIALISM", 
-              "LYNCHING", 
-              "FINANCIAL\nPANIC", 
-              "DISFRANCHISEMENT\nAND PROSCRIPTIVE\nLAWS.")
+# load data ------
+url <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate31/data.csv"
+dt <- fread(url)
+
+# Add grouping column based on your output
+dt[, grouping := c("POOR", "FAIR", "FAIR", "COMFORTABLE", "COMFORTABLE", "COMFORTABLE", "WELL-TO-DO")]
+
+# clean data -----
+
+# We only want to melt the spending categories
+# Based on your output, these are: Rent, Food, Clothes, Tax, Other
+spending_cols <- c("Rent", "Food", "Clothes", "Tax", "Other")
+
+dt_plot <- melt(dt, 
+                id.vars = c("Class", "grouping"), 
+                measure.vars = spending_cols,
+                variable.name = "category", 
+                value.name = "pct")
+
+# Match the stacking order: Other (left) -> Tax -> Clothes -> Food -> Rent (right)
+dt_plot[, Class := factor(Class, levels = rev(unique(dt$Class)))]
+dt_plot[, category := factor(category, levels = c("Other", "Tax", "Clothes", "Food", "Rent"))]
+
+# plot --------
+
+# Du Bois Colors
+cols <- c(
+    "Rent"    = "#000000", # Black
+    "Food"    = "#7876B1", # Red
+    "Clothes" = "#F39B7F", # Pink
+    "Tax"     = "#7AA6DC", # Blue
+    "Other"   = "#ADB6B6"  # Gold
 )
 
-# 3. Create the Plot
-ggplot(plate21_data, aes(x = Year, y = Value)) +
-    # The signature thick black line
-    geom_line(linewidth = 2, color = "black") +
+gr <- ggplot(dt_plot) +
+    # 1. THE BARS 
+    # color="white" creates the thin separation lines between segments
+    geom_col(aes(x = pct, y = Class, fill = category), 
+             width = 0.7, color = "white", linewidth = 0.1) +
     
-    # Adding the historical comments (annotations)
-    geom_text(data = annotations, aes(label = label), 
-              family = "sans", size = 2.5, lineheight = 0.8, fontface = "bold") +
+    # 2. THE TABLE ON THE RIGHT
+    # # Vertical labels for the income brackets
+    # annotate("text", x = seq(110, 170, 10), y = 7.8, 
+    #          label = c("$100-200", "$200-300", "$300-400", "$400-500", "$500-750", "$750-1000", "FOR SAVINGS"), 
+    #          size = 2.5, fontface = "bold", angle = 90, family = "mono") +
+    # 
+    # Vertical lines for the table grid
+    # annotate("segment", x = seq(105, 175, 10), xend = seq(105, 175, 10), 
+    #          y = 0.5, yend = 7.5, color = "black", linewidth = 0.2) +
     
-    # Styling the axes to match the original vertical "poster" feel
-    scale_y_continuous(
-        limits = c(0, 10000000), 
-        breaks = seq(0, 10000000, 1000000),
-        labels = scales::comma
+    # 3. LEFT SIDE LABELS (POOR, FAIR, etc.)
+    # annotate("text", x = -5, y = 1:7, label = rev(dt$grouping), 
+    #          hjust = 1, size = 3, fontface = "bold.italic", family = "serif") +
+    
+    # 4. SCALE & COORDINATES
+    scale_fill_manual(values = cols, guide = guide_legend(nrow = 1, reverse = TRUE)) +
+    # expand = c(0,0) removes the padding so bars touch the axes
+    # scale_x_continuous(limits = c(-30, 180), breaks = seq(0, 100, 10), expand = c(0,0)) +
+    
+    labs(
+        title = "Income and expenditure of 150 negro families in Atlanta, GA., U.S.A.",
+        subtitle = "The relationshop between income and expenditure.",
+        x = "Percent",
+        y = NULL
     ) +
-    scale_x_continuous(breaks = seq(1870, 1900, 5)) +
     
-    # The "Du Bois" Theme
-    theme_minimal() +
+    theme_minimal(base_family = "Candara") +
+    
     theme(
-        plot.background = element_rect(fill = "#e3d4ba", color = NA), # Aged paper tan
-        panel.grid.major = element_line(color = "#d9cbb4", linewidth = 0.5), # Grid paper look
-        panel.grid.minor = element_blank(),
-        axis.title = element_blank(),
-        axis.text = element_text(family = "mono", face = "bold"),
-        plot.title = element_text(hjust = 0.5, face = "bold", size = 14, margin = margin(b=20)),
-        plot.margin = margin(30, 30, 30, 30)
-    ) +
-    labs(title = "VALUATION OF TOWN AND CITY PROPERTY OWNED\nBY GEORGIA NEGROES.")
+        plot.background = element_rect(fill = "#e1d8c9", color = NA),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        
+        # Bottom legend
+        legend.position = "top",
+        legend.title = element_blank(),
+        legend.text = element_text(family = "mono", size = 9, face = "bold"),
+        
+        # Axes
+        axis.text.y = element_text(face = "bold", size = 8, color = "black"),
+        axis.text.x = element_text(family = "mono", size = 9),
+        axis.line.x = element_line(color = "black"),
+        
+        # Title
+        plot.title = element_text(face = "bold", size = 14, hjust = 0.5, family = "serif"),
+        plot.subtitle = element_text(size = 11, hjust = 0.5, family = "mono", margin = margin(b=30)),
+        
+        plot.margin = margin(20, 50, 20, 50)
+    ) 
+    
 
+gr
