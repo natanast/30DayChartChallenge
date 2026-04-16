@@ -13,22 +13,22 @@ df_co2 = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytues
 # Clean Data --------
 
 # Rename temperature columns
-df_temp = df_temp[['Year', 'J-D']].rename(columns={'Year': 'year', 'J-D': 'temp_anomaly'})
+df_temp = df_temp[['Year', 'J-D']].rename(columns = {'Year': 'year', 'J-D': 'temp_anomaly'})
 
 # Drop the incomplete 2026 year and force the column back to numbers (floats)
 df_temp = df_temp[df_temp['year'] != 2026]
 df_temp['temp_anomaly'] = df_temp['temp_anomaly'].astype(float)
 
 # Group CO2 emissions by year to get global totals
-df_co2_yearly = df_co2.groupby('year', as_index=False)['total_emissions_MtCO2e'].sum()
+df_co2_yearly = df_co2.groupby('year', as_index = False)['total_emissions_MtCO2e'].sum()
 
-df = pd.merge(df_co2_yearly, df_temp, on='year')
+df = pd.merge(df_co2_yearly, df_temp, on = 'year')
 df = df.dropna()
 
 # Create custom historical eras using pd.cut()
 bins = [1800, 1940, 1960, 2000, 2030]
 era_labels = ['1880-1939', '1940-1959', '1960-1999', '2000-2022']
-df['era'] = pd.cut(df['year'], bins=bins, labels=era_labels, right=False)
+df['era'] = pd.cut(df['year'], bins = bins, labels = era_labels, right = False)
 
 
 # plot --------
