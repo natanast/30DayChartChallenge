@@ -16,6 +16,107 @@ library(ggrepel)
 # load data ------
 
 
+# load data ------
+dt <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate31/data.csv" |>
+    fread()
+
+# Add grouping column based on your output
+dt[, grouping := c("POOR", "FAIR", "FAIR", "COMFORTABLE", "COMFORTABLE", "COMFORTABLE", "WELL-TO-DO")]
+
+# clean data -----
+
+# We only want to melt the spending categories
+# Based on your output, these are: Rent, Food, Clothes, Tax, Other
+spending_cols <- c("Rent", "Food", "Clothes", "Tax", "Other")
+
+dt_plot <- melt(dt, 
+                id.vars = c("Class", "grouping"), 
+                measure.vars = spending_cols,
+                variable.name = "category", 
+                value.name = "pct")
+
+# Match the stacking order: Other (left) -> Tax -> Clothes -> Food -> Rent (right)
+dt_plot[, Class := factor(Class, levels = rev(unique(dt$Class)))]
+dt_plot[, category := factor(category, levels = c("Other", "Tax", "Clothes", "Food", "Rent"))]
+
+# plot --------
+
+# Du Bois Colors
+cols <- c(
+    "Rent"    = "#000000", # Black
+    "Food"    = "#7876B1", # Red
+    "Clothes" = "#F39B7F", # Pink
+    "Tax"     = "#7AA6DC", # Blue
+    "Other"   = "#ADB6B6"  # Gold
+)
+
+
+gr <- ggplot(dt_plot, aes(x = pct, y = Class, fill = category)) +
+    
+    geom_col(width = 0.7, color = "white", linewidth = 0.1) +
+    
+    
+    geom_text(aes(label = ifelse(pct > 0, paste0(pct, "%"), ""),
+                  color = category), 
+              position = position_stack(vjust = 0.5),
+              size = 3, 
+              fontface = "bold", 
+              family = "mono") +
+    
+    
+    geom_text(data = unique(dt_plot[, .(Class, grouping)]), 
+              aes(x = 102, y = Class, label = grouping, fill = NULL), 
+              hjust = 0, 
+              size = 3.5, 
+              fontface = "bold", 
+              family = "mono",
+              color = "grey20") +
+    
+    
+    scale_fill_manual(values = cols, guide = guide_legend(nrow = 1, reverse = TRUE)) +
+    
+    
+    scale_color_manual(values = c(
+        "Rent"    = "white", 
+        "Food"    = "white", 
+        "Clothes" = "black", 
+        "Tax"     = "white", 
+        "Other"   = "black"
+    ), guide = "none") +
+    
+    scale_x_continuous(limits = c(0, 125), breaks = seq(0, 100, 10), expand = c(0,0)) +
+    
+    labs(
+        title = "Income and expenditure of 150 negro families in Atlanta, GA., U.S.A.",
+        subtitle = "The relationship between income and expenditure categories.",
+        x = "Percent",
+        y = NULL
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    theme(
+        plot.background = element_rect(fill = "#e1d8c9", color = NA),
+        panel.background = element_blank(),
+        panel.grid = element_blank(),
+        
+        legend.position = "top",
+        legend.title = element_blank(),
+        legend.text = element_text(family = "mono", size = 9, face = "bold"),
+        
+        axis.text.y = element_text(face = "bold", size = 9, color = "black"),
+        axis.text.x = element_text(family = "mono", size = 9),
+        axis.line.x = element_line(color = "black"),
+        
+        plot.title = element_text(face = "bold", size = 14, hjust = 0.5, family = "serif"),
+        plot.subtitle = element_text(size = 11, hjust = 0.5, family = "mono", margin = margin(b=30)),
+        
+        plot.margin = margin(20, 20, 20, 20)
+    ) +
+    coord_cartesian(clip = "off")
+
+gr
+
+
 
 # clean data -----
 
@@ -69,104 +170,3 @@ ggsave(
 )
 
 
-
-rm(list = ls())
-gc()
-
-# load libraries -------
-library(data.table)
-library(ggplot2)
-library(ggtext)
-
-# load data ------
-url <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate31/data.csv"
-dt <- fread(url)
-
-# Add grouping column based on your output
-dt[, grouping := c("POOR", "FAIR", "FAIR", "COMFORTABLE", "COMFORTABLE", "COMFORTABLE", "WELL-TO-DO")]
-
-# clean data -----
-
-# We only want to melt the spending categories
-# Based on your output, these are: Rent, Food, Clothes, Tax, Other
-spending_cols <- c("Rent", "Food", "Clothes", "Tax", "Other")
-
-dt_plot <- melt(dt, 
-                id.vars = c("Class", "grouping"), 
-                measure.vars = spending_cols,
-                variable.name = "category", 
-                value.name = "pct")
-
-# Match the stacking order: Other (left) -> Tax -> Clothes -> Food -> Rent (right)
-dt_plot[, Class := factor(Class, levels = rev(unique(dt$Class)))]
-dt_plot[, category := factor(category, levels = c("Other", "Tax", "Clothes", "Food", "Rent"))]
-
-# plot --------
-
-# Du Bois Colors
-cols <- c(
-    "Rent"    = "#000000", # Black
-    "Food"    = "#7876B1", # Red
-    "Clothes" = "#F39B7F", # Pink
-    "Tax"     = "#7AA6DC", # Blue
-    "Other"   = "#ADB6B6"  # Gold
-)
-
-gr <- ggplot(dt_plot) +
-    # 1. THE BARS 
-    # color="white" creates the thin separation lines between segments
-    geom_col(aes(x = pct, y = Class, fill = category), 
-             width = 0.7, color = "white", linewidth = 0.1) +
-    
-    # 2. THE TABLE ON THE RIGHT
-    # # Vertical labels for the income brackets
-    # annotate("text", x = seq(110, 170, 10), y = 7.8, 
-    #          label = c("$100-200", "$200-300", "$300-400", "$400-500", "$500-750", "$750-1000", "FOR SAVINGS"), 
-    #          size = 2.5, fontface = "bold", angle = 90, family = "mono") +
-    # 
-    # Vertical lines for the table grid
-    # annotate("segment", x = seq(105, 175, 10), xend = seq(105, 175, 10), 
-    #          y = 0.5, yend = 7.5, color = "black", linewidth = 0.2) +
-    
-    # 3. LEFT SIDE LABELS (POOR, FAIR, etc.)
-    # annotate("text", x = -5, y = 1:7, label = rev(dt$grouping), 
-    #          hjust = 1, size = 3, fontface = "bold.italic", family = "serif") +
-    
-    # 4. SCALE & COORDINATES
-    scale_fill_manual(values = cols, guide = guide_legend(nrow = 1, reverse = TRUE)) +
-    # expand = c(0,0) removes the padding so bars touch the axes
-    # scale_x_continuous(limits = c(-30, 180), breaks = seq(0, 100, 10), expand = c(0,0)) +
-    
-    labs(
-        title = "Income and expenditure of 150 negro families in Atlanta, GA., U.S.A.",
-        subtitle = "The relationshop between income and expenditure.",
-        x = "Percent",
-        y = NULL
-    ) +
-    
-    theme_minimal(base_family = "Candara") +
-    
-    theme(
-        plot.background = element_rect(fill = "#e1d8c9", color = NA),
-        panel.background = element_blank(),
-        panel.grid = element_blank(),
-        
-        # Bottom legend
-        legend.position = "top",
-        legend.title = element_blank(),
-        legend.text = element_text(family = "mono", size = 9, face = "bold"),
-        
-        # Axes
-        axis.text.y = element_text(face = "bold", size = 8, color = "black"),
-        axis.text.x = element_text(family = "mono", size = 9),
-        axis.line.x = element_line(color = "black"),
-        
-        # Title
-        plot.title = element_text(face = "bold", size = 14, hjust = 0.5, family = "serif"),
-        plot.subtitle = element_text(size = 11, hjust = 0.5, family = "mono", margin = margin(b=30)),
-        
-        plot.margin = margin(20, 50, 20, 50)
-    ) 
-    
-
-gr
