@@ -3,13 +3,15 @@
 import pandas as pd
 from plotnine import *
 
+
 # Load Data --------
 df_temp = pd.read_csv("GLB.Ts+dSST.csv")
 
-url_co2 = 'https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-05-21/emissions.csv'
-df_co2 = pd.read_csv(url_co2)
+df_co2 = pd.read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-05-21/emissions.csv')
 
-# 2. Clean Data --------
+
+# Clean Data --------
+
 # Rename temperature columns
 df_temp = df_temp[['Year', 'J-D']].rename(columns={'Year': 'year', 'J-D': 'temp_anomaly'})
 
@@ -20,8 +22,6 @@ df_temp['temp_anomaly'] = df_temp['temp_anomaly'].astype(float)
 # Group CO2 emissions by year to get global totals
 df_co2_yearly = df_co2.groupby('year', as_index=False)['total_emissions_MtCO2e'].sum()
 
-# 3. Merge & Group Eras --------
-# Combine datasets and drop missing values
 df = pd.merge(df_co2_yearly, df_temp, on='year')
 df = df.dropna()
 
@@ -30,59 +30,65 @@ bins = [1800, 1940, 1960, 2000, 2030]
 era_labels = ['1880-1939', '1940-1959', '1960-1999', '2000-2022']
 df['era'] = pd.cut(df['year'], bins=bins, labels=era_labels, right=False)
 
-# 4. Define Palette --------
+
+# plot --------
+
 col = [
-    '#2c5769',  # 1880-1939 (Deep muted blue)
-    '#6F99AD',  # 1940-1959 (Light muted blue)
-    '#ffb39a',  # 1960-1999 (Soft warm peach)
-    '#ab403f'   # 2000-2022 (Deep muted red)
+    '#2c5769',  
+    '#6F99AD',  
+    '#ffb39a',  
+    '#ab403f'   
 ]
 
-# 5. Plot --------
 plot = (
-    ggplot(df, aes(x='total_emissions_MtCO2e', y='temp_anomaly')) +
+    ggplot(df, aes(x = 'total_emissions_MtCO2e', y = 'temp_anomaly')) +
     
-    # Data points mapped to the new eras
-    geom_point(aes(fill='era'), size=3.5, shape='o', stroke=0.25, color='white') +
+    geom_point(
+        aes(fill = 'era'), 
+        size = 3.5, 
+        shape = 'o', 
+        stroke = 0.25, 
+        color = 'white'
+    ) +
 
-    # Causal trendline
-    geom_smooth(method='lm', color='#C03028', linetype='dashed', se=True, size=1) +
+    geom_smooth(
+        method = 'lm', 
+        color = '#C03028', 
+        linetype = 'dashed', 
+        se = True, 
+        size = 1
+    ) +
     
-    # Apply custom palette
-    scale_fill_manual(values=col) +
+    scale_fill_manual(values = col) +
     
-    theme_minimal(base_family='Candara') +
+    theme_minimal(base_family = 'Candara') +
     
     labs(
-        title="The Warming Effect: Carbon Emissions and Global Temperatures",
-        subtitle="As major corporate carbon emissions increase, global surface temperature anomalies rise.",
-        caption="Data: NASA GISS & TidyTuesday (2024) | Graphic: Natasa Anastasiadou",
-        x="Total Emissions (MtCO2e)",
-        y="Temperature Anomaly (°C)",
-        fill="Time Period"
+        title = "The Warming Effect: Carbon Emissions and Global Temperatures",
+        subtitle = "As major corporate carbon emissions increase, global surface temperature anomalies rise.",
+        caption = "Data: NASA GISS & TidyTuesday (2024) | Graphic: Natasa Anastasiadou",
+        x = "Total Emissions (MtCO2e)",
+        y = "Temperature Anomaly (°C)",
+        fill = "Time Period"
     ) +
     
     theme(
-        # Legend styling
-        legend_position='right',
-        legend_title=element_text(size=9, weight='bold'),
-        legend_text=element_text(size=8),
-        legend_background=element_rect(fill='none', color='none'), 
+        legend_position = 'right',
+        legend_title = element_text(size = 9, weight = 'bold'),
+        legend_text = element_text(size = 8),
+        legend_background = element_rect(fill = 'none', color = 'none'), 
         
-        # Gridlines (slightly darker grey to contrast with the background)
-        panel_grid_major=element_line(size=0.45, color="#d3d3d3"),
-        panel_grid_minor=element_blank(),
+        panel_grid_major = element_line(size = 0.45, color = "#d3d3d3"),
+        panel_grid_minor = element_blank(),
         
-        # Text alignment
-        plot_title=element_text(size=14, weight='bold', hjust=0),
-        plot_subtitle=element_text(size=10, hjust=0),
-        plot_caption=element_text(size=7, hjust=1, color="#666666"),
+        plot_title = element_text(size = 14, weight = 'bold', hjust = 0),
+        plot_subtitle = element_text(size = 10, hjust = 0),
+        plot_caption = element_text(size = 7, hjust = 1, color = "#666666"),
         
-        # Soft grey background
-        plot_background=element_rect(fill='#EDEDED', color='none'),
-        panel_background=element_rect(fill='#EDEDED', color='none'),
+        plot_background = element_rect(fill = '#EDEDED', color = 'none'),
+        panel_background = element_rect(fill = '#EDEDED', color = 'none'),
         
-        figure_size=(9, 6)
+        figure_size = (9, 6)
     )
 )
 
