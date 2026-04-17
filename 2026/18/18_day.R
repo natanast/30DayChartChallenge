@@ -97,7 +97,6 @@ ggsave(
 
 
 
-
 rm(list = ls())
 gc()
 
@@ -106,67 +105,75 @@ library(ggplot2)
 library(ggtext)
 library(ggrepel)
 
-# 1. Load 
-dt <- fread("Malaria_and_Diarrhoea_Dataset.csv")
+# 1. Load data ------------------------------------------------------------
+dt <- fread("Child-Dataset-unicef-November-2024.csv")
 
-# 2. Prep: Get 'Prevention' and 'Treatment' columns
-# Filter for National level and latest year
-dt_wide <- dcast(dt[Level == "National" & Indicator %in% c("ITNOWN", "ORS")], 
-                 `Countries and areas` + `UNICEF Reporting Region` ~ Indicator, 
+# 2. Filter & Pivot -------------------------------------------------------
+# Focusing on the two major African regions
+africa_regions <- c("West and Central Africa", "Eastern and Southern Africa")
+
+dt_plot <- dcast(dt[Level == "National" & 
+                        Indicator %in% c("DIARCARE", "ORSZINC") & 
+                        `UNICEF Reporting Region` %in% africa_regions], 
+                 `Countries and areas` + `World Bank Income Group (2024)` ~ Indicator, 
                  value.var = "Value", 
-                 fun.aggregate = mean) # Handling potential duplicates
+                 fun.aggregate = max)
 
-# Clean NAs
-dt_plot <- dt_wide[!is.na(ITNOWN) & !is.na(ORS)]
-
-# Calculate global medians for the quadrant lines
-med_itn <- median(dt_plot$ITNOWN)
-med_ors <- median(dt_plot$ORS)
+# Remove NAs to keep the plot clean
+dt_plot <- dt_plot[!is.na(DIARCARE) & !is.na(ORSZINC)]
 
 # 3. Plot -----------------------------------------------------------------
-gr <- ggplot(dt_plot, aes(x = ITNOWN, y = ORS)) +
+gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     
-    # 4 Quadrants
-    annotate("rect", xmin = med_itn, xmax = 100, ymin = med_ors, ymax = 100, fill = "#678e9f", alpha = 0.1) + # Top Right (Success)
-    annotate("rect", xmin = 0, xmax = med_itn, ymin = 0, ymax = med_ors, fill = "#b24745", alpha = 0.1) + # Bottom Left (Burden)
+    # THE "ZONE OF CONCERN"
+    # Shading the area where care-seeking is high but treatment is low
+    # annotate("rect", xmin = 50, xmax = 100, ymin = 0, ymax = 20, 
+    #          fill = "#b24745", alpha = 0.08) +
     
-    # Quadrant Dividers
-    geom_vline(xintercept = med_itn, linetype = "dashed", color = "grey60") +
-    geom_hline(yintercept = med_ors, linetype = "dashed", color = "grey60") +
+    # # Simple Relationship line
+    # geom_smooth(method = "lm", color = "grey40", linetype = "dashed", 
+    #             linewidth = 0.5, se = FALSE) +
     
-    # Points
-    geom_point(aes(color = `UNICEF Reporting Region`), size = 3, alpha = 0.7) +
+    # Points colored by Income
+    geom_point(aes(fill = `World Bank Income Group (2024)`), 
+               shape = 21, color = "white", size = 4.5, stroke = 0.6, alpha = 0.9) +
     
-    # Strategic Labels
-    annotate("text", x = 95, y = 95, label = "HEALTH LEADERS", fontface = "bold", family = "Candara", color = "#466370", hjust = 1) +
-    annotate("text", x = 5, y = 5, label = "HIGH BURDEN", fontface = "bold", family = "Candara", color = "#b24745", hjust = 0) +
-    
-    # Label Outliers
+    # Annotate the Supply Gap
+    # annotate("text", x = 95, y = 12, label = "THE SUPPLY GAP:\nCare sought, but medicine unavailable", 
+    #          family = "Candara", fontface = "bold", color = "#b24745", hjust = 1, size = 3.5) +
+    # 
+    # Label notable outliers
     geom_text_repel(
-        data = dt_plot[ITNOWN > 80 | ORS > 80 | (ITNOWN < 10 & ORS < 10)],
+        data = dt_plot[DIARCARE > 70 | ORSZINC > 30 | (DIARCARE < 30 & ORSZINC < 5)],
         aes(label = `Countries and areas`),
-        family = "Candara", size = 3.5, fontface = "bold"
+        family = "Candara", size = 3.2, fontface = "bold", box.padding = 0.5
     ) +
     
-    scale_color_brewer(palette = "Set2") + # Using a varied palette for regions
+    # Colors matching your aesthetic
+    scale_fill_manual(values = c("Low income" = "#b24745", 
+                                 "Lower middle income" = "#d18d8d", 
+                                 "Upper middle income" = "#678e9f")) +
+    
+    scale_x_continuous(limits = c(0, 100), labels = function(x) paste0(x, "%")) +
+    scale_y_continuous(limits = c(0, 100), labels = function(x) paste0(x, "%")) +
     
     labs(
-        title = "Prevention vs. Treatment: A Strategic View",
-        subtitle = "Relationship between **Bednet Ownership** (Prevention) and **ORS Use** (Treatment).",
-        x = "% Households with Bednets (ITNOWN)",
-        y = "% Children Receiving ORS",
+        title = "Africa: The Efficiency of the Care Relationship",
+        subtitle = "Comparing the relationship between **Seeking Care** (DIARCARE) and receiving the<br>**combined ORS + Zinc treatment**. Poverty creates a 'Supply Gap' even when parents take action.",
+        x = "% Children Seeking Care for Diarrhoea",
+        y = "% Children Receiving ORS + Zinc",
         caption = "30DayChartChallenge 2026: <b> Day 17 (Relationships)</b> | Source: <b>UNICEF</b>"
     ) +
     
     theme_minimal(base_family = "Candara") +
     theme(
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
+        panel.grid.major = element_line(linewidth = 0.3, color = "grey85"),
+        panel.grid.minor = element_blank(),
         legend.position = "bottom",
-        plot.title = element_markdown(size = 20, face = "bold"),
-        plot.subtitle = element_markdown(size = 12, color = "grey30")
+        plot.title = element_markdown(size = 22, face = "bold"),
+        plot.subtitle = element_markdown(size = 13, color = "grey30", lineheight = 1.2, margin = margin(b = 20)),
+        plot.margin = margin(20, 20, 20, 20)
     )
 
 gr
-
-# 4. Save
-ggsave("Day17_Quadrant_Strategy.png", gr, width = 10, height = 9, units = "in", dpi = 600)
