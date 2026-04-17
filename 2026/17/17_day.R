@@ -50,7 +50,7 @@ cols <- c(
 
 gr <- ggplot(dt_plot, aes(x = pct, y = Class, fill = category)) +
     
-    geom_col(width = 0.7, color = "white", linewidth = 0.1) +
+    geom_col(width = 0.6, color = "white", linewidth = 0.1) +
     
     
     geom_text(aes(label = ifelse(pct > 0, paste0(pct, "%"), ""),
@@ -85,9 +85,9 @@ gr <- ggplot(dt_plot, aes(x = pct, y = Class, fill = category)) +
     
     labs(
         title = "Income and expenditure of 150 negro families in Atlanta, GA., U.S.A.",
-        subtitle = "The relationship between income and expenditure categories.",
+        subtitle = "A remake of W.E.B. Du Bois’s 1900 study exploring the relationship between social class and household necessity.",
         caption = "30DayChartChallenge 2026: <b> Day 17</b>
-                   | Source: <b> </b>
+                   | Source: <b> W.E.B. Du Bois (Plate 31) </b>
                    | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Percent",
         y = NULL
@@ -109,8 +109,8 @@ gr <- ggplot(dt_plot, aes(x = pct, y = Class, fill = category)) +
         axis.text.x = element_text(family = "mono", size = 9),
         axis.line.x = element_line(color = "black"),
         
-        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 15, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 13, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         plot.margin = margin(20, 20, 20, 20)
@@ -123,7 +123,7 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 9, height = 8, units = "in", dpi = 600
+    width = 10, height = 9, units = "in", dpi = 600
 )
 
 
