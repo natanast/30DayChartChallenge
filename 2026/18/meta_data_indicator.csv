@@ -1,0 +1,26 @@
+﻿Subdomain,Indicator ID,Indicator description,Data source*,Primary Database Provider
+Diarrhoea,DIARCARE,Care seeking for diarrhoea - Percentage of children under age five who had diarrhoea in the two weeks preceding the survey for whom advice or treatment was sought from a health facility or provider,"Household surveys including MICS, DHS and other national surveys",UNICEF
+Diarrhoea,ORS,"Diarrhoea treatment with ORS -Percentage of children under 
+age five who had diarrhoea in the two weeks preceding the survey and were given oral rehydration salts (ORS packets or pre-packaged ORS fluids)","Household surveys including MICS, DHS and other national surveys",UNICEF
+Diarrhoea,ORTCF,"Diarrhoea treatment - Percentage of children under age 5 
+who had diarrhoea and  received oral rehydration therapy (oral rehydration salts OR recommended homemade fluids OR increased fluids) AND continued feeding.","Household surveys including MICS, DHS and other national surveys",UNICEF
+Diarrhoea,ORSZINC,"Diarrhoea treatment with ORS and Zinc - Percentage of 
+children under age five who had diarrhoea in the two weeks preceding the survey and were given ORS and Zinc","Household surveys including MICS, DHS and other national surveys",UNICEF
+Diarrhoea,ZINC,Diarrhoea treatment with zinc - Percentage of children under age 5  with diarrhoea who received zinc supplements,"Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,IPTP,"IPTP for pregnant women - Percentage of women (aged 15–49) 
+who received three or more doses of intermittent preventive treatment during antenatal care visits during their last pregnancy","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,ITN,"ITN use by children - Percentage of children under age 5 who 
+slept under an insecticide-treated mosquito net the night prior to the survey.","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,ITN2,"Household with ITN and/or IRS - Percentage of households 
+with at least one ITN for every two persons and /or IRS in the past 12 months","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,ITNOWN,"Percentage of households with at least one insecticide 
+treated mosquito net (ITN)","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,ITNPREG,"Pregnant women sleeping under ITN - Percentage of 
+pregnant women (age 15-49) who slept under an insecticide-treated net the previous night","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,MLRACT,"Malaria, 1st line treatment- Percentage of febrile children 
+under age 5 receiving ACT (first-line antimalarial drug), among those receiving any antimalarial drugs.","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,MLRCARE,"Careseeking for febrile children - Percentage of children 
+under age 5 with fever for whom advice or treatment was sought","Household surveys including MICS, DHS and other national surveys",UNICEF
+Malaria,MLRDIAG,"Malaria diagnostics - Percentage of febrile children under 
+age 5  who had a finger or heel stick for malaria testing.","Household surveys including MICS, DHS and other national surveys",UNICEF
+Pneumonia,PNEUCARE,Careseeking for ARI - Percentage of children under age 5 with acute respiratory infection symptoms whom advice or treatment was sought from a health facility or provider,"Household surveys including MICS, DHS and other national surveys",UNICEF
