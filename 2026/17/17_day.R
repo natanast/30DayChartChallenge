@@ -15,18 +15,15 @@ library(ggrepel)
 
 # load data ------
 
-
-# load data ------
 dt <- "https://raw.githubusercontent.com/ajstarks/dubois-data-portraits/master/plate31/data.csv" |>
     fread()
 
-# Add grouping column based on your output
-dt[, grouping := c("POOR", "FAIR", "FAIR", "COMFORTABLE", "COMFORTABLE", "COMFORTABLE", "WELL-TO-DO")]
 
 # clean data -----
 
-# We only want to melt the spending categories
-# Based on your output, these are: Rent, Food, Clothes, Tax, Other
+dt[, grouping := c("POOR", "FAIR", "FAIR", "COMFORTABLE", "COMFORTABLE", "COMFORTABLE", "WELL-TO-DO")]
+
+
 spending_cols <- c("Rent", "Food", "Clothes", "Tax", "Other")
 
 dt_plot <- melt(dt, 
@@ -35,13 +32,12 @@ dt_plot <- melt(dt,
                 variable.name = "category", 
                 value.name = "pct")
 
-# Match the stacking order: Other (left) -> Tax -> Clothes -> Food -> Rent (right)
+
 dt_plot[, Class := factor(Class, levels = rev(unique(dt$Class)))]
 dt_plot[, category := factor(category, levels = c("Other", "Tax", "Clothes", "Food", "Rent"))]
 
 # plot --------
 
-# Du Bois Colors
 cols <- c(
     "Rent"    = "#000000", # Black
     "Food"    = "#7876B1", # Red
@@ -89,11 +85,16 @@ gr <- ggplot(dt_plot, aes(x = pct, y = Class, fill = category)) +
     labs(
         title = "Income and expenditure of 150 negro families in Atlanta, GA., U.S.A.",
         subtitle = "The relationship between income and expenditure categories.",
+        caption = "30DayChartChallenge 2026: <b> Day 17</b>
+                   | Source: <b> </b>
+                   | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Percent",
         y = NULL
+        
     ) +
     
     theme_minimal(base_family = "Candara") +
+    
     theme(
         plot.background = element_rect(fill = "#e1d8c9", color = NA),
         panel.background = element_blank(),
@@ -111,17 +112,10 @@ gr <- ggplot(dt_plot, aes(x = pct, y = Class, fill = category)) +
         plot.subtitle = element_text(size = 11, hjust = 0.5, family = "mono", margin = margin(b=30)),
         
         plot.margin = margin(20, 20, 20, 20)
-    ) +
-    coord_cartesian(clip = "off")
+    ) 
 
 gr
 
-
-
-# clean data -----
-
-
-# plot --------
 
 
 # gr <- ggplot(df_picto, aes(x = x, y = season_label)) +
@@ -131,14 +125,14 @@ gr
 #     
 #     scale_x_continuous(limits = c(0, 13), breaks = seq(0, 12, by = 2)) +
 #     
-#     labs(
-#         title = "Bob's Burgers: The Short & Long Seasons",
-#         subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
-#         caption = "30DayChartChallenge 2026: <b> Day 2</b>
-#                    | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
-#                    | Graphic: <b>Natasa Anastasiadou</b>",
-#         
-#     ) +
+    # labs(
+    #     title = "Bob's Burgers: The Short & Long Seasons",
+    #     subtitle = "Total unique words spoken per season. Season 2 was cut to just 9 episodes. <br><b>Each 🍔 represents 2,000 words.</b>",
+    #     caption = "30DayChartChallenge 2026: <b> Day 2</b>
+    #                | Source: <b> bobsburgers (TidyTuesday | Nov 2024)</b>
+    #                | Graphic: <b>Natasa Anastasiadou</b>",
+    # 
+    # ) +
 #     
 #     theme_minimal(base_family = "Candara") +
 #     
