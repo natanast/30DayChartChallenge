@@ -122,6 +122,13 @@ dt_plot <- dcast(dt[Level == "National" &
 # Remove NAs to keep the plot clean
 dt_plot <- dt_plot[!is.na(DIARCARE) & !is.na(ORSZINC)]
 
+
+
+
+
+
+
+
 # 3. Plot -----------------------------------------------------------------
 gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     
@@ -177,3 +184,97 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     )
 
 gr
+
+
+
+
+
+
+
+
+
+
+
+rm(list = ls())
+gc()
+
+# 1. Load Libraries -------------------------------------------------------
+library(data.table)
+library(ggplot2)
+library(ggtext)
+library(ggrepel)
+
+# 2. Load and Prep Data ---------------------------------------------------
+dt <- fread("Child-Dataset-unicef-November-2024.csv")
+
+# Filter for Africa, National level, and the two related indicators
+africa_regions <- c("West and Central Africa", "Eastern and Southern Africa")
+
+dt_plot <- dcast(dt[Level == "National" & 
+                        Indicator %in% c("DIARCARE", "ORSZINC") & 
+                        `UNICEF Reporting Region` %in% africa_regions], 
+                 `Countries and areas` + `World Bank Income Group (2024)` ~ Indicator, 
+                 value.var = "Value", 
+                 fun.aggregate = max)
+
+# Clean NAs
+dt_plot <- dt_plot[!is.na(DIARCARE) & !is.na(ORSZINC)]
+
+# Calculate the "Supply Gap" (How many seek care vs. how many get medicine)
+dt_plot[, gap := DIARCARE - ORSZINC]
+
+# 3. Plotting -------------------------------------------------------------
+gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
+    
+    # The 1:1 Equality Line (What a perfect system would look like)
+    geom_abline(intercept = 0, slope = 1, linetype = "dotted", color = "grey70") +
+    
+    # Relationship Trend Line
+    # geom_smooth(method = "lm", color = "grey40", linetype = "dashed", 
+    #             linewidth = 0.5, se = FALSE) +
+    # 
+    # Points: Colored by Income, Size by the severity of the 'Gap'
+    geom_point(aes(fill = `World Bank Income Group (2024)`), size = 3, 
+               shape = 21, color = "white", stroke = 0.6, alpha = 0.8) +
+    
+    # Label the Top 10 countries with the LARGEST Gap (Most critical failure)
+    geom_text_repel(
+        data = dt_plot[order(-gap)][1:10],
+        aes(label = `Countries and areas`),
+        family = "Candara", size = 3.5, fontface = "bold", 
+        box.padding = 0.5, point.padding = 0.3
+    ) +
+    
+    # Aesthetic Scaling
+    scale_fill_manual(values = c("Low income" = "#b24745", 
+                                 "Lower middle income" = "#d18d8d", 
+                                 "Upper middle income" = "#678e9f")) +
+    # scale_size_continuous(range = c(3, 10)) +
+    
+    scale_x_continuous(limits = c(0, 100), labels = function(x) paste0(x, "%")) +
+    scale_y_continuous(limits = c(0, 100), labels = function(x) paste0(x, "%")) +
+    
+    labs(
+        title = "The Supply Gap: Seeking Care vs. Getting Cured",
+        subtitle = "Relationship in **Africa**. Countries further right have high awareness (Seeking Care),<br>but those staying low on the Y-axis face a **Supply Failure** for ORS + Zinc.",
+        x = "% Children Seeking Care (DIARCARE)",
+        y = "% Children Receiving ORS + Zinc",
+        # size = "Severity of the Gap",
+        caption = "30DayChartChallenge 2026: <b> Day 17 (Relationships)</b> | Source: <b>UNICEF</b>"
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    theme(
+        plot.background = element_rect(fill = "#e4e4e3", color = NA),
+        panel.grid.major = element_line(linewidth = 0.3, color = "grey85"),
+        panel.grid.minor = element_blank(),
+        legend.position = "bottom",
+        plot.title = element_markdown(size = 22, face = "bold"),
+        plot.subtitle = element_markdown(size = 13, color = "grey30", lineheight = 1.2),
+        plot.margin = margin(20, 20, 20, 20)
+    )
+
+gr
+
+# 4. Save -----------------------------------------------------------------
+ggsave("Day17_Africa_Health_Gap.png", gr, width = 10, height = 10, units = "in", dpi = 600)
