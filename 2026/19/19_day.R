@@ -57,20 +57,28 @@ col <- c("Alphabet" = "#1c499e",
          "Microsoft" = "#cf8f3a", 
          "NVIDIA" = "#6ca1c9")
 
+
 gr <- ggplot(df, aes(x = as.numeric(year), y = avg_price, color = company_name)) +
     
-    # Swapped geom_smooth for the precise geom_line
+    
     geom_line(linewidth = 1) +
     
-    # The endpoint dots
-    geom_point(data = df_2024, aes(x = as.numeric(year), y = avg_price, fill = company_name), 
-               size = 4, shape = 21, stroke = 0.5, color = "white") +  
+   
+    geom_point(
+        data = df_2024, aes(x = as.numeric(year), y = avg_price, fill = company_name), 
+        size = 5, 
+        shape = 21, 
+        stroke = 0.5, 
+        color = "white"
+    ) +  
     
-    # The background ecosystem highlights
-    gghighlight(use_direct_label = FALSE,
-                unhighlighted_params = list(colour = alpha("grey83", 1), linewidth = 0.6)) +
     
-    # The price labels
+    gghighlight(
+        use_direct_label = FALSE,
+        unhighlighted_params = list(colour = alpha("grey83", 1), linewidth = 0.6)
+    ) +
+    
+    
     geom_text(
         data = df_2024,
         aes(
