@@ -5,17 +5,6 @@ gc()
 
 # load libraries -----
 
-library(data.table)
-library(ggplot2)
-library(ggtext)
-library(extrafont)
-library(stringr)
-library(colorspace)
-
-rm(list = ls())
-gc()
-
-# libraries ---------
 library(ggplot2)
 library(dplyr)
 library(stringr)
@@ -24,48 +13,49 @@ library(gghighlight)
 library(ggtext)
 library(extrafont)
 
+
 # Load data -------
-# Assuming "Stock_data.csv" is in your working directory
+
+# dataset: 15Y Stock Data: NVDA, AAPL, MSFT, GOOGL & AMZN
 dt <- fread("Stock_data.csv")
 
+
 # Clean data ------
-# 1. Reshape the wide dataset to long format using High prices
+
 dt_price <- melt(dt, 
                  id.vars = "Date", 
                  measure.vars = patterns("^High_"), 
                  variable.name = "Company", 
                  value.name = "High_Price")
 
-# 2. Clean up the ticker names and dates
+
 dt_price[, Company := gsub("High_", "", Company)]
 dt_price$date <- as.Date(dt_price$Date)
 
-# 3. Extract year
+
 dt_price$year <- format(dt_price$date, "%Y")
 
-# Filter up to 2024 to match the polished image exactly
-dt_price <- dt_price[year <= "2024"]
 
-# 4. Calculate yearly average high price
 yearly_avg <- dt_price[, .(avg_price = mean(High_Price, na.rm = TRUE)), by = .(Company, year)]
 
 
 company_map <- data.table(
     Company = c("AAPL", "AMZN", "GOOGL", "MSFT", "NVDA"),
-    company_name = c("Apple", "Amazon.com", "Alphabet", "Microsoft Corporation", "NVIDIA Corporation")
+    company_name = c("Apple", "Amazon", "Alphabet", "Microsoft", "NVIDIA")
 )
 
 df <- merge(yearly_avg, company_map, by = "Company")
 
 df_2024 <- df[year == "2024", ]
 
+
 # plot -------
 
 col <- c("Alphabet" = "#1c499e", 
-         "Amazon.com" = "#964b22", 
+         "Amazon" = "#964b22", 
          "Apple" = "#b03030", 
-         "Microsoft Corporation" = "#cf8f3a", 
-         "NVIDIA Corporation" = "#6ca1c9")
+         "Microsoft" = "#cf8f3a", 
+         "NVIDIA" = "#6ca1c9")
 
 gr <- ggplot(df, aes(x = as.numeric(year), y = avg_price, color = company_name)) +
     
@@ -96,7 +86,6 @@ gr <- ggplot(df, aes(x = as.numeric(year), y = avg_price, color = company_name))
         fontface = "bold"
     ) +
     
-    # Facet wrap set to 2 columns to match your layout
     facet_wrap('~company_name', ncol = 2) +
     
     scale_x_continuous(breaks = c(2010, 2015, 2020, 2024)) +
@@ -106,7 +95,7 @@ gr <- ggplot(df, aes(x = as.numeric(year), y = avg_price, color = company_name))
     labs(
         title = "Stock Trends of Big Tech Companies Over the Years",
         subtitle = "Tracking the Annual Average High Prices of Leading Tech Giants from 2010 to 2024",
-        caption = "30DayChartChallenge 2024: <b>Day 19 (Evolution)</b> | Source: <b>Kaggle</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 19 </b> | Source: Stock Data <b> (Kaggle) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "",
         y = "Avg High Price (USD)"
     ) +
@@ -125,7 +114,6 @@ gr <- ggplot(df, aes(x = as.numeric(year), y = avg_price, color = company_name))
         
         axis.title.y = element_text(size = 10, vjust = 5, face = "bold", color = "grey30"),
         
-        # 45-degree angle for the X axis to match the image aesthetic
         axis.text.x = element_text(size = 8, angle = 45, hjust = 1, color = "grey40"), 
         axis.text.y = element_text(size = 8, color = "grey40"),
         
