@@ -45,8 +45,6 @@ gr <- ggplot(dt, aes(x = dose, y = len, fill = supp)) +
     
     geom_point(
         position = position_jitterdodge(jitter.width = 0.1, dodge.width = 0.6),
-        # size = 2,
-        # alpha = 0.8,
         shape = 21, size = 3.5, stroke = .25, alpha = 1.5,
         color = "grey20"
     ) +
