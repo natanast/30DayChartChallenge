@@ -86,27 +86,29 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     
     
     annotate("text", x = 98, y = 98, label = "High Seeking,\nHigh Medicine", 
-             hjust = 1, vjust = 1, size = 3.5, fontface = "bold", 
-             family = "Candara", color = "#466370") +
+             hjust = 1, vjust = 1, size = 3.5, fontface = "bold", color = "#466370") +
     
     annotate("text", x = 2, y = 98, label = "Low Seeking,\nHigh Medicine", 
-             hjust = 0, vjust = 1, size = 3.5, fontface = "bold", 
-             family = "Candara", color = "#7b868e") +
+             hjust = 0, vjust = 1, size = 3.5, fontface = "bold", color = "#7b868e") +
     
     annotate("text", x = 98, y = 2, label = "High Seeking,\nLow Medicine", 
-             hjust = 1, vjust = 0, size = 3.5, fontface = "bold", 
-             family = "Candara", color = "#a66b6b") +
+             hjust = 1, vjust = 0, size = 3.5, fontface = "bold", color = "#a66b6b") +
     
     annotate("text", x = 2, y = 2, label = "Low Seeking,\nLow Medicine", 
-             hjust = 0, vjust = 0, size = 3.5, fontface = "bold", 
-             family = "Candara", color = "#b24745") +
+             hjust = 0, vjust = 0, size = 3.5, fontface = "bold", color = "#b24745") +
     
     # Dividers
-    geom_vline(xintercept = 50, linetype = "dashed", color = "grey60", linewidth = 0.4) +
-    geom_hline(yintercept = 15, linetype = "dashed", color = "grey60", linewidth = 0.4) +
+    geom_vline(xintercept = 50, linetype = "dashed", color = "grey50", linewidth = 0.4) +
+    geom_hline(yintercept = 15, linetype = "dashed", color = "grey50", linewidth = 0.4) +
     
     
-    geom_point(aes(fill = zone), size = 4.5, shape = 21, color = "white", stroke = 0.7) +
+    geom_point(
+        aes(fill = zone), 
+        size = 4, 
+        shape = 21, 
+        color = "white", 
+        stroke = 0.45
+    ) +
     
     
     geom_text_repel(
@@ -128,10 +130,10 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     
     labs(
         title = "The Strategic Geography of Child Health",
-        subtitle = "A systemic relationship: Comparing care-seeking rates (Awareness) to the actual delivery of ORS + Zinc (Action).",
-        x = "% Children Seeking Care (DIARCARE)",
+        subtitle = "A systemic relationship: Comparing care-seeking rates to the actual delivery of ORS + Zinc (Action).",
+        x = "% Children Seeking Care",
         y = "% Children Receiving ORS + Zinc",
-        caption = "30DayChartChallenge 2026 | Day 17: UNICEF | Graphic: Natasa Anastasiadou"
+        caption = "30DayChartChallenge 2026: <b> Day 18 </b> | Source: <b> Kaggle (UNICEF) </b> | Graphic: <b>Natasa Anastasiadou</b>",
     ) +
     
     theme_minimal(base_family = "Candara") +
@@ -142,13 +144,14 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
 
         plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1.2),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
-        
+        panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
         panel.grid.minor = element_blank(),
         
         plot.margin = margin(20, 20, 20, 20),
-        plot.background = element_rect(fill = "e4e4e3", color = NA)
+        
+        plot.background = element_rect(fill = "#e4e4e3", color = NA)
     )
 
 gr
@@ -158,6 +161,6 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 9, height = 8, units = "in", dpi = 600
+    width = 10, height = 9, units = "in", dpi = 600
 )
 
