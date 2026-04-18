@@ -134,7 +134,7 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     
     labs(
         title = "Mapping the Access-Treatment Relationship",
-        subtitle = "A quadrant analysis of the **systemic relationship** <br>between medical consultations and treatment delivery in children.",
+        subtitle = "A quadrant analysis of the **systemic relationship** <br>between medical consultations and treatment delivery for children in **Africa**.",
         x = "% Children Seeking Care",
         y = "% Children Receiving ORS + Zinc",
         caption = "30DayChartChallenge 2026: <b> Day 18 </b> | Source: <b> Kaggle (UNICEF) </b> | Graphic: <b>Natasa Anastasiadou</b>",
