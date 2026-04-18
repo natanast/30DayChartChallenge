@@ -24,16 +24,20 @@ dt <- dt[`UNICEF Reporting Region` %in% africa_regions &
              Level == "National" & 
              Indicator %in% c("DIARCARE", "ORSZINC")]
 
+
 dt_clean <- dt[!is.na(Value)]
+
+# Keep only the most recent year for each country and indicator
+dt_clean <- dt_clean[, .SD[which.max(`Latest Year`)], by = .(`Countries and areas`, Indicator)]
+
 
 dt_plot <- dcast(dt_clean, 
                  `Countries and areas` + `World Bank Income Group (2024)` ~ Indicator, 
-                 value.var = "Value", 
-                 fun.aggregate = function(x) if(length(x) == 0) NA else max(x, na.rm = TRUE))
-
+                 value.var = "Value")
 
 
 dt_plot <- dt_plot[!is.na(DIARCARE) & !is.na(ORSZINC)]
+
 
 dt_plot[dt_plot == -Inf] <- NA
 dt_plot <- na.omit(dt_plot)
@@ -120,7 +124,7 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     
     scale_fill_manual(values = c(
         "High Seeking, High Medicine" = "#466370",
-        "Low Seeking, High Medicine"  = "#a8b2ba",
+        "Low Seeking, High Medicine"  = "#85a4b2",
         "High Seeking, Low Medicine"  = "#d18d8d",
         "Low Seeking, Low Medicine"   = "#b24745"
     )) +
@@ -129,8 +133,8 @@ gr <- ggplot(dt_plot, aes(x = DIARCARE, y = ORSZINC)) +
     scale_y_continuous(limits = c(0, 100), expand = c(0,0), labels = function(x) paste0(x, "%")) +
     
     labs(
-        title = "The Strategic Geography of Child Health",
-        subtitle = "A systemic relationship: Comparing care-seeking rates to the actual delivery of ORS + Zinc (Action).",
+        title = "Mapping the Access-Treatment Relationship",
+        subtitle = "A quadrant analysis of the **systemic relationship** <br>between medical consultations and treatment delivery in children.",
         x = "% Children Seeking Care",
         y = "% Children Receiving ORS + Zinc",
         caption = "30DayChartChallenge 2026: <b> Day 18 </b> | Source: <b> Kaggle (UNICEF) </b> | Graphic: <b>Natasa Anastasiadou</b>",
