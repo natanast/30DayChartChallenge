@@ -27,7 +27,7 @@ library(extrafont)
 languages <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-03-21/languages.csv')
 
 # 3. Clean and Prep -------
-# Filtering for 'programming' using the correct column name found in your head()
+# Filtering for 'programming' using the correct column name github_language_type
 dt_hist <- languages[github_language_type == "programming" & appeared >= 1950 & appeared <= 2022]
 
 # Aggregate by year
@@ -35,22 +35,24 @@ dt_counts <- dt_hist[, .(n = .N), by = .(Year = appeared)][order(Year)]
 
 # Identify "Milestone" languages for historical annotations
 milestones <- dt_hist[title %in% c("Fortran", "C", "Python", "Java", "Rust", "Go")]
-# Get the count for those specific years to place the label correctly
 milestones <- merge(milestones, dt_counts, by.x = "appeared", by.y = "Year")
 
 # 4. Plot -------
 gr <- ggplot(dt_counts, aes(x = Year, y = n)) +
     
-    # A Step Area gives it a more "structured/historical" look than a smooth curve
-    geom_step(color = "#2a3d45", linewidth = 0.8) +
-    geom_area(stat = "step", fill = "#2a3d45", alpha = 0.15) +
+    # Use geom_col with width = 1 for the "stepped area" effect
+    # This is much more stable than trying to force a stat on geom_area
+    geom_col(width = 1, fill = "#2a3d45", alpha = 0.15) +
     
-    # Add points for the historical milestones
+    # The step line on top to define the silhouette
+    geom_step(color = "#2a3d45", linewidth = 0.8) +
+    
+    # Highlight points for historical milestones
     geom_point(data = milestones, aes(x = appeared, y = n), color = "#b24745", size = 2) +
     
-    # Add labels for the milestones
+    # Milestone labels
     geom_text(data = milestones, aes(x = appeared, y = n, label = title), 
-              vjust = -1, family = "Candara", size = 3, fontface = "bold", color = "#b24745") +
+              vjust = -1.2, family = "Candara", size = 3.5, fontface = "bold", color = "#b24745") +
     
     scale_x_continuous(breaks = seq(1950, 2020, by = 10)) +
     
@@ -69,13 +71,12 @@ gr <- ggplot(dt_counts, aes(x = Year, y = n)) +
         plot.subtitle = element_text(size = 12, hjust = 0.5, color = "grey40", margin = margin(b = 25)),
         plot.caption = element_markdown(size = 8, color = "grey40", margin = margin(t = 20)),
         
-        # Vintage styling: remove vertical lines, keep soft horizontal ones
         panel.grid.major.y = element_line(linewidth = .3, color = "grey85", linetype = "dotted"),
         panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),
         
         axis.title = element_text(size = 10, face = "bold", color = "grey30"),
-        # Warm background for a "historical paper" feel
+        # Warm "archival paper" background
         plot.background = element_rect(fill = "#f9f7f2", color = NA),
         plot.margin = margin(25, 25, 25, 25)
     )
