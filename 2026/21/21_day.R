@@ -15,35 +15,50 @@ library(ggstream)
 
 # load data -------
 
-dt_olympics <- "https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2024/2024-08-06/olympics.csv" |>
+dt <- "olympics_dataset.csv" |> fread()
+rm(list = ls())
+gc()
+
+# load libraries -------
+
+library(data.table)
+library(ggplot2)
+library(ggtext)
+library(extrafont)
+library(ggstream)
+
+# load data ------
+
+# Using the exact filename from your console
+dt_olympics <- "olympics_dataset.csv" |>
     fread()
 
 # clean data -----
 
-# 1. Filter for Summer Olympics and ONLY Gold Medals
-dt_gold <- dt_olympics[season == "Summer" & medal == "Gold"]
+# 1. Filter for Summer Olympics and ONLY Gold Medals (Updated to capitalized column names)
+dt_gold <- dt_olympics[Season == "Summer" & Medal == "Gold"]
 
 # 2. Find the top 10 National Olympic Committees (NOCs) by total historical GOLD medals
-top_gold_nocs <- dt_gold[, .N, by = noc][order(-N)][1:10, noc]
+top_gold_nocs <- dt_gold[, .N, by = NOC][order(-N)][1:10, NOC]
 
-# 3. CRITICAL FIX: Actually filter the dataset to ONLY include these top 10 NOCs!
-dt_top10 <- dt_gold[noc %in% top_gold_nocs]
+# 3. Filter the dataset to ONLY include these top 10 NOCs
+dt_top10 <- dt_gold[NOC %in% top_gold_nocs]
 
 # 4. Count total gold medals awarded per year, per NOC
-dt_count <- dt_top10[, .(gold_count = .N), by = .(year, noc)]
+dt_count <- dt_top10[, .(gold_count = .N), by = .(Year, NOC)]
 
 # 5. Complete the grid ONLY for years the Summer Olympics actually happened.
-olympic_years <- unique(dt_olympics[season == "Summer", year])
-grid <- CJ(year = olympic_years, noc = unique(dt_count$noc))
-dt_plot <- dt_count[grid, on = .(year, noc)]
+olympic_years <- unique(dt_olympics[Season == "Summer", Year])
+grid <- CJ(Year = olympic_years, NOC = unique(dt_count$NOC))
+dt_plot <- dt_count[grid, on = .(Year, NOC)]
 dt_plot[is.na(gold_count), gold_count := 0]
 
 # 6. Reorder factor levels from 1st to 10th
-dt_plot[, noc := factor(noc, levels = top_gold_nocs)]
+dt_plot[, NOC := factor(NOC, levels = top_gold_nocs)]
 
 # plot --------
 
-# Expanded 10-color vintage palette
+# 10-color vintage palette
 cols <- c(
     "#b25c56",  # 1
     "#d97a73",  # 2
@@ -56,28 +71,26 @@ cols <- c(
     "#628b9c",  # 9
     "#4a6b7c"   # 10
 )
-names(cols) <- levels(dt_plot$noc)
+names(cols) <- levels(dt_plot$NOC)
 
-gr <- ggplot(dt_plot, aes(x = year, y = gold_count, fill = noc)) +
+gr <- ggplot(dt_plot, aes(x = Year, y = gold_count, fill = NOC)) +
     
-    
+    # The stream plot
     geom_stream(
-        bw = .85, 
-        type = "mirror", 
+        bw = 0.85, 
         color = "#f2f2f2", 
-        linewidth = 0.3,
+        linewidth = 0.25,
         alpha = 0.9
     ) +
     
     scale_fill_manual(values = cols, name = "Top 10 National Committees") +
     
-    # Changed nrow to 2 so the 10 items fit perfectly at the bottom
     guides(fill = guide_legend(nrow = 2, override.aes = list(size = 3, color = NA))) +
     
     labs(
         title = "The Golden Eras of the Summer Games",
-        subtitle = "Tracking the Top 10 all-time gold-winning nations reveals the rise and fall<br>of global sporting superpowers, including the stark impact of the Cold War.",
-        caption = "30DayChartChallenge 2026: <b> Day 21 </b> | Source: <b> 120 Years of Olympic History (TidyTuesday) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        subtitle = "Tracking the Top 10 all-time gold-winning nations reveals the shifting eras of global sporting superpowers",
+        caption = "30DayChartChallenge 2026: <b> Day 21 </b> | Source: <b> Kaggle (1896-2024) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "Year",
         y = "Athlete Gold Medals Awarded"
     ) +
@@ -108,6 +121,75 @@ gr <- ggplot(dt_plot, aes(x = year, y = gold_count, fill = noc)) +
     )
 
 gr
+
+
+gr <- ggplot(dt_plot, aes(x = Year, y = gold_count, fill = NOC)) +
+    
+    # LAYER 1: The solid main body (clipped to actual Olympic years)
+    geom_stream(
+        bw = 0.85, 
+        extra_span = 0.1,       # Tells the math to create the taper
+        color = "#f2f2f2",      # Keeps your white separation lines
+        linewidth = 0.3,
+        alpha = 0.9
+    ) +
+    
+
+    # LAYER 2: The translucent faded tails (extends into the extra_span padding)
+    geom_stream(
+        bw = 0.85, 
+        type = "mirror", 
+        extra_span = 0.1, 
+        true_range = "none",    # Forces ggplot to draw the imaginary taper
+        alpha = 0.3,            # Makes it translucent
+        color = NA              # Removes white borders on the tails for a smoother fade
+    ) +
+    
+    scale_fill_manual(values = cols, name = "Top 10 National Committees") +
+    
+    guides(fill = guide_legend(nrow = 2, override.aes = list(size = 3, color = NA))) +
+    
+    labs(
+        title = "The Golden Eras of the Summer Games",
+        subtitle = "Tracking the Top 10 all-time gold-winning nations.",
+        caption = "30DayChartChallenge 2026: <b> Day 21 </b> | Source: <b> Kaggle (1896-2024) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        x = "Year",
+        y = "Athlete Gold Medals Awarded"
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    
+    theme(
+        panel.grid.major.y = element_blank(), 
+        panel.grid.major.x = element_line(color = "grey85", linetype = "dashed", linewidth = 0.4),
+        panel.grid.minor = element_blank(),
+        plot.background = element_rect(fill = "#f2f2f2", color = NA),
+        panel.background = element_rect(fill = "#f2f2f2", color = NA),
+        
+        axis.text.x = element_text(size = 10, color = "grey40", face = "bold"),
+        axis.text.y = element_blank(), 
+        axis.title.x = element_text(size = 12, face = "bold", color = "grey30", margin = margin(t = 15)),
+        axis.title.y = element_text(size = 12, face = "bold", color = "grey30", margin = margin(r = 15)),
+        
+        legend.position = "bottom",
+        legend.title = element_text(face = "bold", size = 11),
+        legend.text = element_text(size = 10),
+        
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
+        
+        plot.margin = margin(20, 20, 20, 20)
+    )
+
+gr
+
+# save ---------
+
+ggsave(
+    plot = gr, filename = "Rplot.png",
+    width = 10, height = 10, units = "in", dpi = 600
+)
 
 
 # clean data -----
