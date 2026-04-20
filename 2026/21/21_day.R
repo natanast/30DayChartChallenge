@@ -13,7 +13,10 @@ library(ggtext)
 library(extrafont)
 library(colorspace)
 
+
 # load data -------
+
+worlds_fairs <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-08-13/worlds_fairs.csv')
 
 
 # clean data -----
@@ -94,4 +97,83 @@ ggsave(
 )
 
 
+rm(list = ls())
+gc()
 
+# 1. Load Libraries -------
+library(data.table)
+library(ggplot2)
+library(ggtext)
+library(extrafont)
+library(ggridges)
+
+# 2. Load Fresh 2024 Data -------
+olympics <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-08-06/olympics.csv')
+
+# 3. Clean and Prep -------
+# Select sports with fascinating historical timelines
+target_sports <- c("Tug-Of-War", "Polo", "Art Competitions", "Archery", "Tennis", "Athletics")
+
+dt_oly <- olympics[sport %in% target_sports]
+
+# Order them conceptually from the "Extinct" sports down to the "Constant" sports
+# This makes the ridgeline flow beautifully from top to bottom
+dt_oly[, sport := factor(sport, levels = c("Tug-Of-War", "Polo", "Art Competitions", "Archery", "Tennis", "Athletics"))]
+
+# 4. Custom Elegant Color Palette -------
+vintage_colors <- c(
+    "Tug-Of-War" = "#8c6243",       # Rope brown
+    "Polo" = "#c49a6c",             # Equestrian gold
+    "Art Competitions" = "#7a9cb8", # Faded blue
+    "Archery" = "#659685",          # Forest teal
+    "Tennis" = "#c26d63",           # Clay red
+    "Athletics" = "#6e6e6e"         # Track charcoal
+)
+
+# 5. Plot -------
+gr <- ggplot(dt_oly, aes(x = year, y = sport, fill = sport)) +
+    
+    # The Ridgeline Geometry
+    # scale = 1.3 provides elegant overlap without covering up the historical gaps
+    geom_density_ridges(color = "#fdfbf7", alpha = 0.85, linewidth = 0.8, scale = 1.3) +
+    
+    scale_fill_manual(values = vintage_colors) +
+    scale_x_continuous(breaks = seq(1896, 2024, by = 20), expand = c(0.02, 0)) +
+    
+    labs(
+        title = "Extinct and Resurrected",
+        subtitle = "The historical lifespan of selected Olympic events (1896 - 2024)",
+        caption = "30DayChartChallenge 2026: <b>Day 21 (Historical)</b> | Source: <b>Olympics (TidyTuesday)</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        x = "Year of Olympic Games",
+        y = ""
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    
+    theme(
+        legend.position = "none",
+        
+        plot.title = element_markdown(size = 20, face = "bold", color = "#2b2b2b", hjust = 0.5, margin = margin(b = 8)),
+        plot.subtitle = element_text(size = 13, hjust = 0.5, color = "#5a5a5a", margin = margin(b = 30)),
+        plot.caption = element_markdown(size = 9, color = "#8a8a8a", margin = margin(t = 20)),
+        
+        # Soft vertical timeline lines
+        panel.grid.major.x = element_line(linewidth = 0.3, color = "#dcd6cc", linetype = "dashed"),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank(),
+        
+        axis.title.x = element_text(size = 11, face = "bold", color = "#5a5a5a", margin = margin(t = 15)),
+        axis.text.x = element_text(size = 10, color = "#5a5a5a", face = "bold"),
+        
+        axis.text.y = element_text(size = 11, face = "bold", color = "#2b2b2b", vjust = 0),
+        
+        # Soft "canvas" background
+        plot.background = element_rect(fill = "#fdfbf7", color = NA),
+        plot.margin = margin(30, 40, 30, 30)
+    )
+
+gr
+
+# 6. Save -------
+ggsave("21_historical_olympics_ridges.png", plot = gr, width = 11, height = 7, dpi = 600)
