@@ -1,4 +1,5 @@
 
+
 rm(list = ls())
 gc()
 
@@ -47,7 +48,7 @@ gr <- ggplot(dt_plot, aes(x = Year, y = Anomaly, color = Temp_Type, fill = Temp_
     ) +
     
     geom_point(
-        size = 3.5, 
+        size = 3, 
         shape = 21,
         stroke = 0.25
     ) +
