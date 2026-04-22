@@ -31,9 +31,15 @@ dt_ai <- melt(
 dt_ai$interest <- dt_ai$interest |> as.numeric()
 dt_ai$Time <- dt_ai$Time |> as.Date()
 
-dt_ai$tool 
+dt_ai$tool <- dt_ai$tool |> 
+    str_replace("Microsoft Copilot", "Copilot") 
 
-# dt_ai[, tool := factor(tool, levels = c("ChatGPT", "Copilot", "Gemini", "Claude", "DeepSeek"))]
+
+custom_order <- c("ChatGPT", "Copilot", "Claude", "DeepSeek", "Gemini")
+
+
+dt_ai$tool <- dt_ai$tool |> factor(levels = custom_order)
+
 
 
 # plot --------
@@ -51,25 +57,25 @@ names(cols) <- levels(dt_ai$tool)
 
 gr <- ggplot(dt_ai, aes(x = Time, y = interest, fill = tool)) +
     
-    geom_stream(type = "ridge", color = "white", lwd = 0.1)
+    geom_stream(type = "ridge", color = "white", lwd = 0.1) +
     
-    # geom_area(
-    #     color = "grey93",   # Thin matching borders between the layers
-    #     linewidth = 0.3,
-    #     alpha = 0.95
-    # ) +
-
-    scale_x_date(
-        date_breaks = "6 months", 
-        date_labels = "%b %Y",
-        expand = c(0, 0)
+    # ChatGPT
+    annotate(
+        "text", 
+        x = 2026.5, y = 80,
+        label = "ChatGPT",
+        hjust = 0,
+        size = 2.25,
+        lineheight = .7,
+        fontface = "bold",
+        color = cols[1]
     ) +
-    
+
     scale_y_continuous(
         expand = c(0, 0)
     ) +
     
-    scale_fill_manual(values = cols, name = "AI Systems") +
+    scale_fill_manual(values = cols, name = "AI Tool") +
     
     guides(fill = guide_legend(
         title.position = "top", 
@@ -112,6 +118,10 @@ gr <- ggplot(dt_ai, aes(x = Time, y = interest, fill = tool)) +
     )
 
 gr
+
+
+
+
 
 # plot -------
 # 
