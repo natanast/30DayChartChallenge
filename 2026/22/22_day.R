@@ -10,10 +10,9 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 library(data.table)
-library(gghighlight)
-library(ggtext)
 library(extrafont)
-library(colorspace)
+
+library(ggstream)
 
 
 # Load data -------
@@ -22,19 +21,23 @@ dt_raw <- "Google_search_chat.csv" |> fread()
 
 # clean data -----
 
+dt_ai <- melt(
+    dt_raw, 
+    id.vars = "Time", 
+    variable.name = "tool", 
+    value.name = "interest"
+)
 
-dt_ai <- melt(dt_raw, id.vars = "Time", variable.name = "tool", value.name = "interest")
+dt_ai$interest <- dt_ai$interest |> as.numeric()
+dt_ai$Time <- dt_ai$Time |> as.Date()
 
-dt_ai[, interest := as.numeric(ifelse(interest == "<1", "0", interest))]
-dt_ai[, date := as.Date(paste0(date, "-01"))]
+dt_ai$tool 
 
-# Reorder factors: ChatGPT at the bottom as the massive foundational layer
-dt_ai[, tool := factor(tool, levels = c("ChatGPT", "Copilot", "Gemini", "Claude", "DeepSeek"))]
+# dt_ai[, tool := factor(tool, levels = c("ChatGPT", "Copilot", "Gemini", "Claude", "DeepSeek"))]
 
 
 # plot --------
 
-# A modern tech palette
 cols <- c(
     "#10a37f",  # ChatGPT
     "#ffb900",  # Copilot
@@ -46,14 +49,16 @@ cols <- c(
 names(cols) <- levels(dt_ai$tool)
 
 
-gr <- ggplot(dt_ai, aes(x = date, y = interest, fill = tool)) +
+gr <- ggplot(dt_ai, aes(x = Time, y = interest, fill = tool)) +
     
-    geom_area(
-        color = "grey93",   # Thin matching borders between the layers
-        linewidth = 0.3,
-        alpha = 0.95
-    ) +
+    geom_stream(type = "ridge", color = "white", lwd = 0.1)
     
+    # geom_area(
+    #     color = "grey93",   # Thin matching borders between the layers
+    #     linewidth = 0.3,
+    #     alpha = 0.95
+    # ) +
+
     scale_x_date(
         date_breaks = "6 months", 
         date_labels = "%b %Y",
