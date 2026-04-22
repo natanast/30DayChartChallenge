@@ -62,13 +62,61 @@ gr <- ggplot(dt_ai, aes(x = Time, y = interest, fill = tool)) +
     # ChatGPT
     annotate(
         "text", 
-        x = 2026.5, y = 80,
+        x = as.Date("2026-04-05"), 
+        y = 80,                    
         label = "ChatGPT",
         hjust = 0,
-        size = 2.25,
-        lineheight = .7,
+        size = 3,                
         fontface = "bold",
-        color = cols[1]
+        color = cols["ChatGPT"]    
+    ) +
+    
+    # Copilot
+    annotate(
+        "text", 
+        x = as.Date("2026-04-05"), 
+        y = 46,                    
+        label = "Copilot",
+        hjust = 0,
+        size = 3,                
+        fontface = "bold",
+        color = cols["Copilot"]    
+    ) +
+    
+    # Claude
+    annotate(
+        "text", 
+        x = as.Date("2026-04-05"), 
+        y = 38,                    
+        label = "Claude",
+        hjust = 0,
+        size = 3,                
+        fontface = "bold",
+        color = cols["Claude"]    
+    ) +
+    
+    # DeepSeek
+    annotate(
+        "text", 
+        x = as.Date("2026-04-05"), 
+        y = 32.5,                    
+        label = "DeepSeek",
+        hjust = 0,
+        size = 3,                
+        fontface = "bold",
+        color = cols["DeepSeek"]    
+    ) +
+    
+    # Gemini
+    annotate(
+        "text", 
+        x = as.Date("2026-04-05"), 
+        y = 15,                    
+        label = "Gemini",
+        hjust = 0,
+        size = 3,                
+        fontface = "bold",
+        color = cols["Gemini"]    
     ) +
 
     scale_y_continuous(
