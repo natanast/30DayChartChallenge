@@ -74,8 +74,8 @@ gr <- ggplot(dt_tv, aes(x = ep_num, y = y_pos, fill = is_win)) +
     scale_fill_manual(values = cols) +
     
     labs(
-        title = "The One With The Hits and Misses",
-        subtitle = "A Win-Loss Sparkline of every <b>Friends</b> episode.<br>Blocks facing <span style='color:#b25c56'><b>UP</b></span> scored above their season's average IMDb rating. Blocks facing <span style='color:#4A6990'><b>DOWN</b></span> scored below it.",
+        title = "The One With Every Episode’s Rating",
+        subtitle = "A chronological win-loss sparkline across 10 seasons of **FRIENDS** TV series. <br> Blocks facing <span style='color:#b25c56'><b>UP</b></span> exceeded the season average IMDb score, while blocks facing <span style='color:#4A6990'><b>DOWN</b></span> fell below.",
         caption = "30DayChartChallenge 2026: <b> Day 23 (Seasons) </b> | Source: <b> {friends} R Package </b> | Graphic: <b>Natasa Anastasiadou</b>"
     ) +
     
@@ -87,7 +87,7 @@ gr <- ggplot(dt_tv, aes(x = ep_num, y = y_pos, fill = is_win)) +
         strip.text.y.left = element_text(size = 11, face = "bold", color = "grey30", angle = 0, hjust = 1, margin = margin(r = 15)),
         
         plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.subtitle = element_markdown(size = 14, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
         
         plot.background = element_rect(fill = "#e4e4e3", color = NA),
