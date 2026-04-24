@@ -10,8 +10,8 @@ library(data.table)
 library(ggplot2)
 library(ggtext)
 library(extrafont)
-library(friends)
 library(stringr)
+library(colorspace)
 
 
 # Load data -------
@@ -54,19 +54,20 @@ my_col <- "#4a6b7c"
 gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     
   
-    geom_step(color = my_col, linewidth = 1, direction = "hv") +
+    geom_step(color = my_col, linewidth = .85, direction = "hv") +
     
     geom_point(
         shape = 21, 
-        fill = my_col,
-        color = my_col, 
-        size = 3
+        fill = my_col |> lighten(.15),
+        color = my_col |> darken(.15), 
+        size = 3.5
     ) +
     
         annotate(
         "curve", x = 2006, y = 2500, xend = 2008, yend = 1200,
         curvature = -0.2, arrow = arrow(length = unit(0.2, "cm")), color = "grey40"
     ) +
+    
     annotate(
         "text", x = 2000, y = 3000, 
         label = "2008 Beijing Olympics\nsparks urban rail boom",
@@ -83,6 +84,7 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     
     scale_x_continuous(breaks = seq(2000, 2024, 4)) +
     
+    
     scale_y_continuous(
         labels = scales::comma, 
         position = "right", 
@@ -92,7 +94,7 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     labs(
         title = "China's Urban Rail Staircase",
         subtitle = "Cumulative kilometers of transit projects started per year.<br>The rigid, stepped growth highlights the massive scale of annual infrastructure projects.",
-        caption = "30DayChartChallenge 2026: <b> Day 24 (SCMP) </b> | Source: <b> Transit Costs Project (NYU) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 24 </b> | Source: <b> Transit Costs Project (NYU) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "",
         y = "Total Kilometers"
     ) +
@@ -101,103 +103,31 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     
     theme(
         
-        # panel.grid.major.x = element_blank(),
         panel.grid.minor = element_blank(),
         panel.grid.major = element_line(color = "grey90", linewidth = 0.3, linetype = "dashed"),
         
-        # panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-        # panel.grid.minor = element_blank(),
-        
         
         axis.text = element_text(size = 10, color = "grey40", face = "bold"),
-        axis.title.y = element_text(size = 10, color = "grey40", hjust = 1),
+        axis.text.y.right = element_text(margin = margin(r = 10)),
+        
+        axis.title.y = element_text(size = 14, color = "grey40"),
         
         # Titles
         plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.subtitle = element_markdown(size = 15, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
         
         plot.background = element_rect(fill = "white", color = NA),
-        plot.margin = margin(30, 30, 30, 30)
+        plot.margin = margin(20, 20, 20, 20)
     )
 
 gr
 
 
-
-# plot --------
-# 
-# 
-# gr <- ggplot(dt_long, aes(x = Year, y = Spending, group = Gift)) +
-#     
-#     geom_line(aes(color = Gift), linewidth = 1) +
-#     
-# 
-#     geom_point(
-#         aes(color = Gift),
-#         shape = 21, 
-#         stroke = 1, 
-#         size = 4.5,
-#         fill = "grey95"
-#     ) +
-#     
-#     geom_text_repel(
-#         data = dt_long[Year == "2010"],
-#         aes(label = paste0(Gift, " ($", round(Spending), ")"), color = Gift),
-#         hjust = 1.1, 
-#         direction = "y", 
-#         size = 4.5, 
-#         fontface = "bold", 
-#         segment.color = NA
-#     ) +
-#     
-#     
-#     geom_text_repel(
-#         data = dt_long[Year == "2022"],
-#         aes(label = paste0("($", round(Spending), ") ", Gift), color = Gift),
-#         hjust = -0.1, 
-#         direction = "y", 
-#         size = 4.5, 
-#         fontface = "bold", 
-#         segment.color = NA
-#     ) +
-#     
-#     scale_color_manual(values = col) +
-#     
-#     
-#     scale_x_discrete(expand = expansion(mult = 0.5)) +
-# 
-# labs(
-#     title = "The Rising Cost of Romance",
-#     subtitle = "Average per-person Valentine's Day spending in the US: 2010 vs 2022.",
-#     caption = "30DayChartChallenge 2026: <b> Day 4 (Slope)</b> | Source: <b> NRF (TidyTuesday)</b> | Graphic: <b>Natasa Anastasiadou</b>"
-# ) +
-#     
-#     theme_minimal(base_family = "Candara") +
-#     
-#     theme(
-#         legend.position = "none", 
-#         
-#         axis.title = element_blank(),
-#         axis.text.y = element_blank(),
-#         axis.text.x = element_text(size = 14, face = "bold", color = "black"),
-#         
-# 
-        # panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-        # panel.grid.minor = element_blank(),
-#         
-# plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-# plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-# plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
-
-#         plot.background = element_rect(fill = "#e4e4e3", color = NA),
-#         plot.margin = margin(20, 20, 20, 20)
-#     )
-
 # save ---------
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 10, height = 9, units = "in", dpi = 600
+    width = 9, height = 9, units = "in", dpi = 600
 )
 
