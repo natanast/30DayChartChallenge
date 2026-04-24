@@ -11,64 +11,54 @@ library(ggplot2)
 library(ggtext)
 library(extrafont)
 library(friends)
-
-
-# load data ------
-
-rm(list = ls())
-gc()
-
-# load libraries -----
-library(data.table)
 library(stringr)
-library(ggplot2)
-library(ggtext)
-library(extrafont)
+
 
 # Load data -------
 
-# This URL pulls the 'database' tab directly from the Google Sheet you found
+# Transit costs project
 url <- "https://docs.google.com/spreadsheets/d/16GoHcbW-eVzHUUP_XCWVXS1s_i3ZBnmZh4kvdSX7muU/export?format=csv&gid=1828904092"
-# Load the data, skipping the first row which is a title row
+
 dt_raw <- fread(url, skip = 1)
 
-# Clean the column names to remove spaces (very important for data.table)
-setnames(dt_raw, make.names(names(dt_raw)))
-# Clean and filter data ------
+# clean data ------
 
-# 1. Filter for China (Using the code 'CN' found in the sheet)
+
+setnames(dt_raw, make.names(names(dt_raw)))
+
+
 dt_china <- dt_raw[Country == "CN"]
 
-# 2. Clean numeric columns
-# We remove commas and non-numeric characters before converting to numeric
+
 dt_china[, length_km := as.numeric(str_replace_all(Length, ",", ""))]
 dt_china[, start_yr := as.numeric(str_extract(Start.year, "\\d{4}"))]
 
-# 3. Aggregate by Year
-# We group by start_yr to see the 'construction boom'
+
+
 dt_viz <- dt_china[!is.na(start_yr) & start_yr >= 2000 & start_yr <= 2024, 
                    .(km_started = sum(length_km, na.rm = TRUE)), 
                    by = .(year = start_yr)]
 
-# 4. Create Cumulative Timeseries
+
 setorder(dt_viz, year)
+
 dt_viz[, total_network := cumsum(km_started)]
 
-# Verification
-print(paste("Rows found for China:", nrow(dt_china)))
-tail(dt_viz)
-# clean data ------
 
-# Define the SCMP Red
-scmp_red <- "#b03030"
 
 # plot -------
 
+scmp_red <- "#4a6b7c"
+
+
 gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     
-    # The "Mountain" - Area chart with subtle border
-    geom_area(fill = scmp_red, alpha = 0.85) +
-    geom_line(color = scmp_red, linewidth = 1) +
+    # THE CHANGE: The "Staircase" using geom_step
+    # direction = "hv" means it draws Horizontally, then Vertically
+    geom_step(color = scmp_red, linewidth = 1.5, direction = "hv") +
+    
+    # Adding subtle anchor points to show exactly where each year lands
+    geom_point(color = scmp_red, size = 2) +
     
     # SCMP Annotation 1: Pointing to the 2008 Olympics surge
     annotate(
@@ -93,12 +83,12 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     scale_y_continuous(
         labels = scales::comma, 
         position = "right", # SCMP often puts Y-axis on the right
-        expand = expansion(mult = c(0, 0.1))
+        expand = expansion(mult = c(0, 0.15)) # Give it a little more breathing room at the top
     ) +
     
     labs(
-        title = "China's Urban Rail Explosion",
-        subtitle = "Cumulative kilometers of transit projects started per year.<br>Data includes subways, light rail, and urban rapid transit.",
+        title = "China's Urban Rail Staircase",
+        subtitle = "Cumulative kilometers of transit projects started per year.<br>The rigid, stepped growth highlights the massive scale of annual infrastructure projects.",
         caption = "30DayChartChallenge 2026: <b> Day 24 (SCMP) </b> | Source: <b> Transit Costs Project (NYU) </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "",
         y = "Total Kilometers"
@@ -127,12 +117,8 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
 
 gr
 
-# save ---------
-# IMPORTANT: We save this with a TALL aspect ratio for the SCMP look
-ggsave(
-    plot = gr, filename = "Day24_SCMP_ChinaRail.png",
-    width = 7, height = 11, units = "in", dpi = 600
-)
+
+
 # plot --------
 # 
 # 
