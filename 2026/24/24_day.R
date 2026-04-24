@@ -48,20 +48,22 @@ dt_viz[, total_network := cumsum(km_started)]
 
 # plot -------
 
-scmp_red <- "#4a6b7c"
+my_col <- "#4a6b7c"
 
 
 gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     
-    # THE CHANGE: The "Staircase" using geom_step
-    # direction = "hv" means it draws Horizontally, then Vertically
-    geom_step(color = scmp_red, linewidth = 1.5, direction = "hv") +
+  
+    geom_step(color = my_col, linewidth = 1, direction = "hv") +
     
-    # Adding subtle anchor points to show exactly where each year lands
-    geom_point(color = scmp_red, size = 2) +
+    geom_point(
+        shape = 21, 
+        fill = my_col,
+        color = my_col, 
+        size = 3
+    ) +
     
-    # SCMP Annotation 1: Pointing to the 2008 Olympics surge
-    annotate(
+        annotate(
         "curve", x = 2006, y = 2500, xend = 2008, yend = 1200,
         curvature = -0.2, arrow = arrow(length = unit(0.2, "cm")), color = "grey40"
     ) +
@@ -71,19 +73,20 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
         family = "Candara", fontface = "italic", size = 3.5, color = "grey20", hjust = 0
     ) +
     
-    # SCMP Annotation 2: The Peak Value
+    
     annotate(
         "text", x = 2024, y = 11500, 
         label = "10,938 km",
         family = "Candara", fontface = "bold", size = 5, color = scmp_red, hjust = 1
     ) +
     
-    # Formatting Axes
+    
     scale_x_continuous(breaks = seq(2000, 2024, 4)) +
+    
     scale_y_continuous(
         labels = scales::comma, 
-        position = "right", # SCMP often puts Y-axis on the right
-        expand = expansion(mult = c(0, 0.15)) # Give it a little more breathing room at the top
+        position = "right", 
+        expand = expansion(mult = c(0, 0.15)) 
     ) +
     
     labs(
@@ -97,19 +100,22 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     theme_minimal(base_family = "Candara") +
     
     theme(
-        # Remove grid lines for that clean newspaper look
-        panel.grid.major.x = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.grid.major.y = element_line(color = "grey90", linewidth = 0.3),
         
-        # Axis text styling
+        # panel.grid.major.x = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.grid.major = element_line(color = "grey90", linewidth = 0.3, linetype = "dashed"),
+        
+        # panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
+        # panel.grid.minor = element_blank(),
+        
+        
         axis.text = element_text(size = 10, color = "grey40", face = "bold"),
         axis.title.y = element_text(size = 10, color = "grey40", hjust = 1),
         
         # Titles
-        plot.title = element_markdown(size = 22, face = "bold", color = "grey10", margin = margin(b = 5)),
-        plot.subtitle = element_markdown(size = 13, color = "grey30", lineheight = 1.2, margin = margin(b = 25)),
-        plot.caption = element_markdown(size = 9, color = "grey50", margin = margin(t = 20), hjust = 1),
+        plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
         
         plot.background = element_rect(fill = "white", color = NA),
         plot.margin = margin(30, 30, 30, 30)
@@ -160,12 +166,12 @@ gr
 #     
 #     
 #     scale_x_discrete(expand = expansion(mult = 0.5)) +
-#     
-#     labs(
-#         title = "The Rising Cost of Romance",
-#         subtitle = "Average per-person Valentine's Day spending in the US: 2010 vs 2022.",
-#         caption = "30DayChartChallenge 2026: <b> Day 4 (Slope)</b> | Source: <b> NRF (TidyTuesday)</b> | Graphic: <b>Natasa Anastasiadou</b>"
-#     ) +
+# 
+# labs(
+#     title = "The Rising Cost of Romance",
+#     subtitle = "Average per-person Valentine's Day spending in the US: 2010 vs 2022.",
+#     caption = "30DayChartChallenge 2026: <b> Day 4 (Slope)</b> | Source: <b> NRF (TidyTuesday)</b> | Graphic: <b>Natasa Anastasiadou</b>"
+# ) +
 #     
 #     theme_minimal(base_family = "Candara") +
 #     
@@ -177,13 +183,13 @@ gr
 #         axis.text.x = element_text(size = 14, face = "bold", color = "black"),
 #         
 # 
-#         panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
-#         panel.grid.minor = element_blank(),
+        # panel.grid.major = element_line(linewidth = 0.35, color = "grey85"),
+        # panel.grid.minor = element_blank(),
 #         
-#         plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
-#         plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-#         plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
-#         
+# plot.title = element_markdown(size = 18, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
+# plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
+# plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1, lineheight = 1.2),
+
 #         plot.background = element_rect(fill = "#e4e4e3", color = NA),
 #         plot.margin = margin(20, 20, 20, 20)
 #     )
