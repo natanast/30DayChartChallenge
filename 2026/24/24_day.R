@@ -21,8 +21,8 @@ url <- "https://docs.google.com/spreadsheets/d/16GoHcbW-eVzHUUP_XCWVXS1s_i3ZBnmZ
 
 dt_raw <- fread(url, skip = 1)
 
-# clean data ------
 
+# clean data ------
 
 setnames(dt_raw, make.names(names(dt_raw)))
 
@@ -93,8 +93,8 @@ gr <- ggplot(dt_viz, aes(x = year, y = total_network)) +
     
     labs(
         title = "China's Urban Rail Staircase",
-        subtitle = "Cumulative kilometers of transit projects started per year.<br>The rigid, stepped growth highlights the massive scale of annual infrastructure projects.",
-        caption = "30DayChartChallenge 2026: <b> Day 24 </b> | Source: <b> Transit Costs Project (NYU) </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        subtitle = "The cumulative length of urban rail projects started each year. <br> Construction accelerated rapidly following the 2008 Beijing Olympics",
+        caption = "30DayChartChallenge 2026: <b> Day 24 </b> | Source: <b> Transit Costs Project </b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "",
         y = "Total Kilometers"
     ) +
