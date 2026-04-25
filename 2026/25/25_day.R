@@ -17,21 +17,9 @@ library(colorspace)
 # Load data -------
 
 dt_ufo <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/ufo_sightings.csv')
-places <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/places.csv')
-day_parts_map <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/day_parts_map.csv')
 
-rm(list = ls())
-gc()
+# clean data --------
 
-# load libraries -------
-library(data.table)
-library(ggplot2)
-library(ggtext)
-library(extrafont)
-
-
-# Clean data ------
-# 1. Remove NAs and group the shapes
 dt_ufo <- dt_ufo[!is.na(shape)]
 
 dt_ufo[, certainty := fcase(
@@ -40,41 +28,89 @@ dt_ufo[, certainty := fcase(
     default = "Other"
 )]
 
-# 2. Count the occurrences of each shape and sort them
+# Aggregate and Sort
 dt_viz <- dt_ufo[certainty != "Other", .(count = .N), by = .(shape, certainty)]
-setorder(dt_viz, count)
+setorder(dt_viz, -count) # Sorted by size for a spiral look
 
-# 3. Factor the shape column so ggplot orders it correctly from biggest to smallest
-dt_viz[, shape := factor(shape, levels = dt_viz$shape)]
+# --- NEW: Label Data Calculation for Radial Plot ---
+dt_viz[, id := .I]
+total_n <- nrow(dt_viz)
+# Calculate angles for the labels (text should point outward)
+dt_viz[, angle := 90 - 360 * (id - 0.5) / total_n]
+dt_viz[, hjust := fcase(angle < -90, 1, default = 0)]
+dt_viz[, angle := fcase(angle < -90, angle + 180, default = angle)]
 
-# Let's just take the Top 15 most common shapes to keep the chart clean
-dt_viz <- tail(dt_viz, 15)
+# plot -------
+
+# Space Palette
+bg_color      <- "#0b0c10" 
+text_col      <- "#c5c6c7" 
+uncertain_col <- "#66fcf1" 
+concrete_col  <- "#45a29e" 
+
+gr <- ggplot(dt_viz, aes(x = factor(shape, levels = dt_viz$shape), y = count, fill = certainty)) +
+    
+    # Radial Bars
+    geom_bar(width = 0.7, stat = "identity", alpha = 0.9) +
+    
+    # The Circular Engine
+    coord_radial(
+        start = 0,
+        inner.radius = 0.1, # Creates the "hole" in the middle
+        expand = FALSE
+    ) +
+    
+    # Adding the labels manually using our calculated angles
+    geom_text(
+        aes(label = shape, x = id, y = count + 2000, angle = angle, hjust = hjust),
+        color = text_col, family = "Candara", size = 2.8, fontface = "bold", alpha = 0.8
+    ) +
+    
+    labs(
+        title = "THE TAXONOMY OF THE UNKNOWN",
+        subtitle = "A census of 80,000+ UFO sightings. The night sky is dominated by <span style='color:#66fcf1'><b>Uncertain Phenomena</b></span><br>(lights and flashes) rather than defined <span style='color:#45a29e'><b>Geometric Objects</b></span>.",
+        caption = "30DayChartChallenge 2026: <b> Day 25 (Uncertainties) </b> | Source: <b> NUFORC </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        fill = ""
+    ) +
+    
+    scale_fill_manual(values = c("Uncertain Phenomena" = uncertain_col, "Geometric / Concrete" = concrete_col)) +
+    
+    scale_y_continuous(limits = c(-5000, max(dt_viz$count) + 10000)) + # Adjusting limits to move bars away from center
+    
+    theme_minimal() +
+    
+    theme(
+        # Center the Legend
+        legend.position = "bottom",
+        legend.direction = "horizontal",
+        legend.text = element_text(size = 9, family = "Candara", color = text_col),
+        
+        # Dark Background
+        plot.background = element_rect(fill = "grey40", color = NA),
+        
+        # Typography
+        plot.title = element_markdown(size = 20, face = "bold", hjust = 0.5, family = "Candara", color = "white", margin = margin(t = 10)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, family = "Candara", color = text_col, lineheight = 1.2, margin = margin(t = 10, b = 10)),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 8, family = "Candara", color = "grey40", hjust = 1),
+        
+        # Cleanup
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),  
+        axis.title.x = element_blank(),
+        axis.title.y = element_blank(),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        plot.margin = margin(20, 20, 20, 20)
+    )
+
+gr
 
 
-
-
-# clean data ------
-
-setnames(dt_raw, make.names(names(dt_raw)))
-
-
-dt_china <- dt_raw[Country == "CN"]
-
-
-dt_china[, length_km := as.numeric(str_replace_all(Length, ",", ""))]
-dt_china[, start_yr := as.numeric(str_extract(Start.year, "\\d{4}"))]
-
-
-
-dt_viz <- dt_china[!is.na(start_yr) & start_yr >= 2000 & start_yr <= 2024, 
-                   .(km_started = sum(length_km, na.rm = TRUE)), 
-                   by = .(year = start_yr)]
-
-
-setorder(dt_viz, year)
-
-dt_viz[, total_network := cumsum(km_started)]
-
+# Save the plot
+ggsave(
+    plot = gr, filename = "Day25_Space_UFOs.png",
+    width = 9, height = 7, units = "in", dpi = 600
+)
 
 
 # plot -------
@@ -161,4 +197,6 @@ ggsave(
     plot = gr, filename = "Rplot.png",
     width = 9, height = 9, units = "in", dpi = 600
 )
+
+
 
