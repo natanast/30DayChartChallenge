@@ -14,9 +14,10 @@ library(stringr)
 library(colorspace)
 
 
-# Load data -------
+# load data -------
 
 dt_ufo <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2023/2023-06-20/ufo_sightings.csv')
+
 
 # clean data --------
 
@@ -43,55 +44,52 @@ dt_viz[, angle := fcase(angle < -90, angle + 180, default = angle)]
 # plot -------
 
 # Space Palette
-bg_color      <- "#0b0c10" 
-text_col      <- "#c5c6c7" 
-uncertain_col <- "#66fcf1" 
-concrete_col  <- "#45a29e" 
+# text_col      <- "#c5c6c7" 
+uncertain_col <- "#e0b1f1" 
+concrete_col  <- "#4a4e69" 
 
 gr <- ggplot(dt_viz, aes(x = factor(shape, levels = dt_viz$shape), y = count, fill = certainty)) +
     
-    # Radial Bars
     geom_bar(width = 0.7, stat = "identity", alpha = 0.9) +
     
-    # The Circular Engine
+    
     coord_radial(
         start = 0,
-        inner.radius = 0.1, # Creates the "hole" in the middle
+        inner.radius = 0.1, 
         expand = FALSE
     ) +
     
-    # Adding the labels manually using our calculated angles
     geom_text(
         aes(label = shape, x = id, y = count + 2000, angle = angle, hjust = hjust),
-        color = text_col, family = "Candara", size = 2.8, fontface = "bold", alpha = 0.8
+        color = "white", size = 2.8, fontface = "bold", alpha = 0.8
     ) +
     
     labs(
         title = "THE TAXONOMY OF THE UNKNOWN",
-        subtitle = "A census of 80,000+ UFO sightings. The night sky is dominated by <span style='color:#66fcf1'><b>Uncertain Phenomena</b></span><br>(lights and flashes) rather than defined <span style='color:#45a29e'><b>Geometric Objects</b></span>.",
-        caption = "30DayChartChallenge 2026: <b> Day 25 (Uncertainties) </b> | Source: <b> NUFORC </b> | Graphic: <b>Natasa Anastasiadou</b>",
+        subtitle = "A census of 80,000+ UFO sightings. The night sky is dominated by <span style='color:#e0b1f1'><b>Uncertain Phenomena</b></span><br>(lights and flashes) rather than defined <span style='color:#4a4e69'><b>Geometric Objects</b></span>.",
+        caption = "30DayChartChallenge 2026: <b> Day 25 </b> | Source: <b> NUFORC </b> | Graphic: <b>Natasa Anastasiadou</b>",
         fill = ""
     ) +
     
     scale_fill_manual(values = c("Uncertain Phenomena" = uncertain_col, "Geometric / Concrete" = concrete_col)) +
     
-    scale_y_continuous(limits = c(-5000, max(dt_viz$count) + 10000)) + # Adjusting limits to move bars away from center
+    scale_y_continuous(limits = c(-5000, max(dt_viz$count) + 10000)) + 
     
-    theme_minimal() +
+    theme_minimal(base_family = "Candara") +
     
     theme(
-        # Center the Legend
+        
         legend.position = "bottom",
         legend.direction = "horizontal",
-        legend.text = element_text(size = 9, family = "Candara", color = text_col),
+        legend.text = element_text(size = 9, color = "white"),
         
         # Dark Background
-        plot.background = element_rect(fill = "grey40", color = NA),
+        plot.background = element_rect(fill = "grey55", color = NA),
         
         # Typography
-        plot.title = element_markdown(size = 20, face = "bold", hjust = 0.5, family = "Candara", color = "white", margin = margin(t = 10)),
-        plot.subtitle = element_markdown(size = 12, hjust = 0.5, family = "Candara", color = text_col, lineheight = 1.2, margin = margin(t = 10, b = 10)),
-        plot.caption = element_markdown(margin = margin(t = 20), size = 8, family = "Candara", color = "grey40", hjust = 1),
+        plot.title = element_markdown(size = 20, face = "bold", hjust = 0.5, color = "white", margin = margin(t = 10)),
+        plot.subtitle = element_markdown(size = 12, hjust = 0.5, color = "white", lineheight = 1.2, margin = margin(t = 10, b = 10)),
+        plot.caption = element_markdown(margin = margin(t = 20), size = 8, color = "white", hjust = .5),
         
         # Cleanup
         axis.text.x = element_blank(),
@@ -106,11 +104,6 @@ gr <- ggplot(dt_viz, aes(x = factor(shape, levels = dt_viz$shape), y = count, fi
 gr
 
 
-# Save the plot
-ggsave(
-    plot = gr, filename = "Day25_Space_UFOs.png",
-    width = 9, height = 7, units = "in", dpi = 600
-)
 
 
 # plot -------
