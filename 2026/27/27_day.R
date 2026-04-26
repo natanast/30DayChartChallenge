@@ -14,11 +14,13 @@ library(colorspace)
 
 # load data ------
 
-dt_chars <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/main/data/2024/2024-03-19/mutant_moneyball.csv')
+dt_chars <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-30/character_visualization.csv')
 
-# clean data -----
+# clean dat -------
 
+setnames(dt_chars, "character", "hero")
 dt_chars[, hero := gsub(" =.*", "", hero)]
+
 
 top_5 <- c("Wolverine", "Storm", "Cyclops", "Nightcrawler", "Colossus")
 dt_viz <- dt_chars[hero %in% top_5]
@@ -31,11 +33,11 @@ dt_long <- melt(
     value.name = "count"
 )
 
+
 dt_long[, issue_bin := floor(issue / 10) * 10]
 
 dt_binned <- dt_long[, .(total_count = sum(count, na.rm = TRUE)), by = .(issue_bin, hero, action)]
 
-# Cleanup
 dt_binned <- dt_binned[total_count > 0]
 dt_binned[, action := tools::toTitleCase(as.character(action))]
 dt_binned[, hero := factor(hero, levels = top_5)]
@@ -55,7 +57,6 @@ char_colors <- c(
     "Nightcrawler" = "#c28d75", 
     "Colossus"     = "#a33a3a"      
 )
-
 
 
 gr <- ggplot(dt_binned, aes(x = issue_bin, y = hero, size = total_count, fill = hero, color = hero)) +
@@ -217,6 +218,4 @@ ggsave(
     plot = gr, filename = "Rplot.png",
     width = 10, height = 9, units = "in", dpi = 600
 )
-
-
 
