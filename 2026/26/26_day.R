@@ -21,7 +21,11 @@ emissions <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesda
 
 # clean data ------
 
-dt_viz <- emissions[year >= 1950, .(total_MtCO2e = sum(total_emissions_MtCO2e, na.rm = TRUE)), by = .(year, parent_entity)]
+dt_viz <- emissions[
+    year >= 1950, 
+    .(total_MtCO2e = sum(total_emissions_MtCO2e, na.rm = TRUE)), 
+    by = .(year, parent_entity)
+]
 
 dt_total <- dt_viz[, .(global_total = sum(total_MtCO2e, na.rm = TRUE)), by = year]
 
@@ -29,7 +33,6 @@ dt_total <- dt_viz[, .(global_total = sum(total_MtCO2e, na.rm = TRUE)), by = yea
 # Plot -------
 
  
-
 gr <- ggplot() +
     
     geom_line(
@@ -83,7 +86,7 @@ gr <- ggplot() +
         
         plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5, color = "grey35", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1.2),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         plot.margin = margin(20, 20, 20, 20)
     )
