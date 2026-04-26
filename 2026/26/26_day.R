@@ -32,7 +32,6 @@ dt_total <- dt_viz[, .(global_total = sum(total_MtCO2e, na.rm = TRUE)), by = yea
 
 # Plot -------
 
- 
 gr <- ggplot() +
     
     geom_line(
@@ -64,7 +63,7 @@ gr <- ggplot() +
     labs(
         title = "Global emission trends (1950–2022)",
         subtitle = "Tracking carbon emissions since 1950. The actions of single companies are messy and uncertain, <br> but their total combined pollution creates a massive global trend.",
-        caption = "30DayChartChallenge 2026: <b> Day 26 (Uncertainties) </b> | Prompt: <b>Trend</b> | Source: <b>Carbon Majors</b> | Graphic: <b>Natasa Anastasiadou</b>",
+        caption = "30DayChartChallenge 2026: <b> Day 26 </b>| Source: <b>Carbon Majors</b> | Graphic: <b>Natasa Anastasiadou</b>",
         x = "",
         y = "Total Emissions (MtCO2e)"
     ) +
