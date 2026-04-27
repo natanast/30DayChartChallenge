@@ -214,7 +214,7 @@ gr
 
 
 # 2. DEFINE YOUR MONOCHROME HERO COLOR (From your previous chart)
-friends_blue <- "#155F83"
+friends_blue <- "#2c5769"
 
 # 3. PLOT
 bg_light <- "grey93"
@@ -251,7 +251,9 @@ gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
     
     stat_summary(
         fun = median, geom = "point", 
-        color = friends_blue |> darken(0.2), size = 3, shape = 18
+        color = friends_blue |> darken(0.2), 
+        fill = friends_blue |> darken(0.25), 
+        size = 3, shape = 21
     ) +
     
     # Sequential scale: Light Blue to Deep Blue
