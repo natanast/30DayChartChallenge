@@ -117,9 +117,7 @@ ggsave(
 )
 
 
-
-
-# --- DAY 29: MONOCHROME & UNCERTAINTIES (PASSWORDS) ---
+# --- DAY 29: MONOCHROME & UNCERTAINTIES (FRIENDS) ---
 
 rm(list = ls())
 gc()
@@ -127,81 +125,171 @@ gc()
 library(data.table)
 library(ggplot2)
 library(ggtext)
-library(extrafont)
 
-# 1. LOAD THE REAL TIDYTUESDAY DATA (Jan 14, 2020)
-dt_raw <- fread('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-01-14/passwords.csv')
+# 1. LOAD DATA
+url <- 'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-09-08/friends_info.csv'
+dt_raw <- fread(url)
 
-# 2. PREPARE THE DATA
-# Drop any empty rows
-dt_viz <- dt_raw[!is.na(password) & !is.na(offline_crack_sec)]
+# 2. CLEAN DATA
+# Ensure season is a factor for the X-axis
+dt_raw[, season := factor(season)]
 
-# Clean up the category names (e.g., "sport" -> "Sport")
-dt_viz[, category := tools::toTitleCase(category)]
+# 3. PLOT (Clean, Centered, Monochrome)
+bg_light   <- "grey93"
+dot_light  <- "#bdbdbd" # Light grey for uncertainty cloud
+line_dark  <- "#2b2b2b" # Charcoal for the trend
 
-# Reorder categories by their median crack time so the plot looks organized
-dt_viz[, category := reorder(category, offline_crack_sec, FUN = median)]
 
-# 3. PLOTTING (The Brutalist Monochrome Aesthetic)
-bg_dark    <- "#0f0f0f" # Deep, almost-black background
-text_light <- "#e2e2e2" # Bright white/grey for primary text
-text_dim   <- "#737373" # Muted grey for secondary text and gridlines
+col = c('#155F83', '#9c95cd', '#FFB900', '#d0615d', '#a33a3a')
 
-gr <- ggplot(dt_viz, aes(x = offline_crack_sec, y = category)) +
+
+
+gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
     
-    # THE DATA: White, semi-transparent points heavily jittered
-    # This creates a "static/noise" look representing thousands of passwords
+    # The Uncertainty: The "cloud" of individual episode ratings
     geom_jitter(
-        color = "#ffffff", 
-        alpha = 0.25, 
-        size = 1.5, 
-        height = 0.25, 
+        color = "#d0615d", 
+        alpha = 0.6, 
+        width = 0.2, 
+        size = 2, 
         shape = 16
     ) +
     
-    # A vertical threshold line marking 1 Day to crack (86,400 seconds)
-    geom_vline(xintercept = 86400, color = "#ffffff", linetype = "dashed", linewidth = 0.5, alpha = 0.5) +
-    
-    # Annotation for the threshold
-    annotate(
-        "text", x = 86400 * 1.5, y = 1.5, 
-        label = "Threshold: 1 Day to Crack", 
-        color = text_light, angle = 90, size = 3, family = "Candara", fontface = "bold"
+    # The Central Trend: Median rating per season
+    stat_summary(
+        fun = median, 
+        geom = "line", 
+        aes(group = 1), 
+        color = "#a33a3a", 
+        linewidth = 1
     ) +
     
-    # Log10 scale because crack times range from 0.001 seconds to centuries
-    scale_x_log10(
-        labels = scales::trans_format("log10", scales::math_format(10^.x)),
-        breaks = scales::trans_breaks("log10", function(x) 10^x)
+    # Highlighting the Median points
+    stat_summary(
+        fun = median, 
+        geom = "point", 
+        color = "#a33a3a", 
+        fill = "#a33a3a",
+        size = 3.5, 
+        shape = 21
     ) +
+    
+    scale_y_continuous(limits = c(6.5, 10), breaks = seq(7, 10, 0.5)) +
     
     labs(
-        title = "The Illusion of Security",
-        subtitle = "Visualizing the time required to crack common leaked passwords. The dense clusters on the left<br>expose the massive **uncertainty** and vulnerability of human-generated security.",
-        caption = "30DayChartChallenge 2026: **Day 29 (Monochrome)** | Prompt: **Uncertainties** | Source: **TidyTuesday** | Graphic: **Natasa Anastasiadou**",
-        x = "Offline Crack Time in Seconds (Log10 Scale)",
-        y = ""
+        title = "IMDB User Ratings for All Episodes of Friends",
+        subtitle = "A monochrome distribution of episode quality across ten seasons. The vertical spread of grey dots <br>represents the **uncertainty** in viewer reception, peaking during the series finale in Season 10.",
+        caption = "30DayChartChallenge 2026: **Day 29 (Monochrome)** | Source: **TidyTuesday** | Graphic: **Natasa Anastasiadou**",
+        x = "Season",
+        y = "IMDB Rating"
     ) +
     
     theme_minimal(base_family = "Candara") +
     
     theme(
-        plot.background = element_rect(fill = bg_dark, color = NA),
-        panel.background = element_rect(fill = bg_dark, color = NA),
+        plot.background = element_rect(fill = bg_light, color = NA),
+        panel.background = element_rect(fill = bg_light, color = NA),
         
-        # Monochrome grid lines (Dark Grey)
-        panel.grid.major.y = element_line(linewidth = 0.2, color = "#333333"),
-        panel.grid.major.x = element_line(linewidth = 0.2, color = "#333333"),
+        # Centered Title and Subtitle
+        plot.title = element_markdown(size = 20, face = "bold", color = "#1a1a1c", hjust = 0.5, margin = margin(t = 20)),
+        plot.subtitle = element_markdown(size = 11, color = "grey30", lineheight = 1.3, hjust = 0.5, margin = margin(t = 10, b = 30)),
+        plot.caption = element_markdown(size = 8, color = "grey50", hjust = 0.5, margin = margin(t = 30)),
+        
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linewidth = 0.4, color = "#e0e0e0"),
         panel.grid.minor = element_blank(),
         
-        axis.text = element_text(color = text_dim, size = 10, face = "bold"),
-        axis.title.x = element_text(color = text_light, size = 11, face = "bold", margin = margin(t = 15)),
+        axis.text = element_text(color = "grey40", size = 10, face = "bold"),
+        axis.title = element_text(color = "grey30", size = 10, face = "bold"),
         
-        plot.title = element_markdown(size = 22, face = "bold", color = "#ffffff", hjust = 0),
-        plot.subtitle = element_markdown(size = 12, color = text_dim, lineheight = 1.3, margin = margin(b = 20)),
-        plot.caption = element_markdown(size = 8, color = text_dim, margin = margin(t = 25)),
+        plot.margin = margin(20, 50, 20, 50)
+    )
+
+gr
+
+
+
+
+
+
+
+# 2. DEFINE YOUR MONOCHROME HERO COLOR (From your previous chart)
+friends_blue <- "#155F83"
+
+# 3. PLOT
+bg_light <- "grey93"
+
+gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
+    
+    # THE UNCERTAINTY: Half-eye density shapes
+    # Using a light tint of your blue
+    stat_halfeye(
+        fill = friends_blue |> lighten(0.6),
+        color = NA,
+        width = .6, 
+        .width = 0, 
+        justification = -.3,
+        alpha = 0.8
+    ) +
+    
+    # THE RAW DATA: Jittered points
+    # Using a sequential gradient of your blue
+    geom_jitter(
+        aes(color = imdb_rating),
+        width = .1, 
+        alpha = 0.6, 
+        size = 2,
+        shape = 16
+    ) +
+    
+    # THE CENTRAL TREND: Median line and points
+    # Using a dark shade of your blue
+    stat_summary(
+        fun = median, geom = "line", aes(group = 1), 
+        color = friends_blue |> darken(0.2), linewidth = 1
+    ) +
+    
+    stat_summary(
+        fun = median, geom = "point", 
+        color = friends_blue |> darken(0.2), size = 3, shape = 18
+    ) +
+    
+    # Sequential scale: Light Blue to Deep Blue
+    scale_color_gradient(
+        low = friends_blue |> lighten(0.4), 
+        high = friends_blue |> darken(0.3)
+    ) +
+    
+    scale_y_continuous(limits = c(6.5, 10), breaks = seq(7, 10, 0.5)) +
+    
+    labs(
+        title = "IMDb User Ratings and Distribution for Friends",
+        subtitle = "A monochrome analysis of viewer consensus across ten seasons. The density shapes highlight the<br>**uncertainty** and variance in episode quality compared to the steady seasonal medians.",
+        caption = "30DayChartChallenge 2026: **Day 29 (Monochrome)** | Source: **TidyTuesday** | Graphic: **Natasa Anastasiadou**",
+        x = "Season",
+        y = "IMDb Rating"
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    
+    theme(
+        legend.position = "none",
+        plot.background = element_rect(fill = bg_light, color = NA),
+        panel.background = element_rect(fill = bg_light, color = NA),
         
-        plot.margin = margin(30, 30, 30, 30)
+        # Centered Cédric Scherer-style layout
+        plot.title = element_markdown(size = 22, face = "bold", color = "#1a1a1c", hjust = 0.5, margin = margin(t = 20)),
+        plot.subtitle = element_markdown(size = 11, color = "grey30", lineheight = 1.3, hjust = 0.5, margin = margin(t = 10, b = 35)),
+        plot.caption = element_markdown(size = 8, color = "grey50", hjust = 0.5, margin = margin(t = 40)),
+        
+        panel.grid.major.x = element_blank(),
+        panel.grid.major.y = element_line(linewidth = 0.4, color = "#e0e0e0"),
+        panel.grid.minor = element_blank(),
+        
+        axis.text = element_text(color = "grey40", size = 11, face = "bold"),
+        axis.title = element_text(color = "grey30", size = 10, face = "bold"),
+        
+        plot.margin = margin(20, 20, 20, 20)
     )
 
 gr
