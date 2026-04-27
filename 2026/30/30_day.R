@@ -308,8 +308,100 @@ gr <- ggplot(dt_countries, aes(x = val, y = factor(year), color = region)) +
 gr
 
 
+# --- DAY 30: THE FINALE - TEMPORAL BEESWARM (COLOR BY VALUE) ---
 
+library(data.table)
+library(ggplot2)
+library(ggtext)
+library(ggbeeswarm)
 
+# 1. DATA PREP
+milestone_years <- c(2000, 2010, 2020, 2023)
+dt_milestones <- dt[year %in% milestone_years]
+
+# Separate regions and countries
+regions <- c("Central Europe", "Eastern Europe", "Western Europe")
+dt_countries <- dt_milestones[!(location_name %in% regions)]
+dt_regions   <- dt_milestones[location_name %in% regions]
+
+# 2. DESIGN PALETTE
+bg_light   <- "grey93"
+low_col    <- "#ADC2C8" # Light teal/grey
+high_col   <- "#155F83" # Deep signature blue
+region_col <- "#1a1a1c" # Dark charcoal for the regional anchor
+
+# 3. PLOT
+gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
+    
+    # THE UNCERTAINTY: Subtle range bars for every country
+    geom_linerange(
+        aes(xmin = lower, xmax = upper),
+        color = "grey80", alpha = 0.4, linewidth = 0.4
+    ) +
+    
+    # THE POINTS: Beeswarm distribution colored by VALUE
+    geom_quasirandom(
+        aes(color = val), # Redundant encoding: position + color
+        alpha = 0.9, size = 2, groupOnX = FALSE
+    ) +
+    
+    # THE REGIONAL CONTEXT: Large diamond for the average
+    # Using a solid dark color to stand out against the gradient
+    stat_summary(
+        data = dt_regions,
+        aes(x = val, y = factor(year)),
+        fun = mean, geom = "point", 
+        color = region_col, fill = "white", stroke = 1.5, size = 4, shape = 23
+    ) +
+    
+    # FACET BY CAUSE
+    facet_wrap(~cause_name, scales = "free_x") +
+    
+    # SCALES
+    scale_color_gradient(low = "grey", high = "#f30000") +
+    
+    # scale_fill_gradient(
+    #     low = "grey", high = "#f30000",
+    #     guide = guide_colorbar(
+    #         title = "-log10(p.adj)",
+    #         barheight = unit(10, "lines"),
+    #         barwidth = unit(.75, "lines")
+    #     )
+    # ) +
+    
+    labs(
+        title = "Evolution of Global Health Estimates & Reporting Certainty",
+        subtitle = "Comparing mortality rates per 100,000. Points represent individual countries colored by intensity,<br>while bars show the **uncertainty intervals** and diamonds mark the regional averages.",
+        caption = "30DayChartChallenge 2026: **Day 30 (GHDx Data Day)** | Theme: **Uncertainties** | Source: **IHME GHDx** | Graphic: **Natasa Anastasiadou**",
+        x = "Death Rate per 100,000",
+        y = NULL
+    ) +
+    
+    theme_minimal(base_family = "Candara") +
+    theme(
+        legend.position = "none", # Color is redundant, so we can hide the legend
+        plot.background = element_rect(fill = bg_light, color = NA),
+        panel.background = element_rect(fill = bg_light, color = NA),
+        
+        # Centered Header Hierarchy
+        plot.title = element_markdown(size = 24, face = "bold", color = "#1a1a1c", hjust = 0.5, margin = margin(t = 20)),
+        plot.subtitle = element_markdown(size = 11, color = "grey30", lineheight = 1.3, hjust = 0.5, margin = margin(t = 10, b = 40)),
+        plot.caption = element_markdown(size = 8, color = "grey50", hjust = 0.5, margin = margin(t = 40)),
+        
+        # Facet and Axis Styling
+        strip.text = element_text(size = 13, face = "bold", color = "grey20", margin = margin(b = 15)),
+        axis.text.y = element_text(size = 12, face = "bold", color = high_col),
+        axis.text.x = element_text(color = "grey40"),
+        
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_line(linewidth = 0.3, color = "grey85"),
+        panel.grid.minor = element_blank(),
+        panel.spacing = unit(3, "lines"),
+        
+        plot.margin = margin(20, 20, 20, 20)
+    )
+
+gr
 
 
 
