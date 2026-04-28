@@ -29,6 +29,9 @@ text_main <- "#1a1a1c"
 
 fill_colors <- c("Human Text" = "#94a3b8", "AI Text" = "#466370")
 
+
+# plot ------
+
 gr <- ggplot(dt, aes(x = .pred_AI, y = detector, fill = kind)) +
     
     # THE VISUALIZATION: Density Ridges
@@ -63,19 +66,21 @@ gr <- ggplot(dt, aes(x = .pred_AI, y = detector, fill = kind)) +
         plot.background = element_rect(fill = bg_light, color = NA),
         panel.background = element_rect(fill = bg_light, color = NA),
         
-        strip.text = element_text(face = "bold", size = 12, color = text_main),
+        strip.text = element_text(face = "bold", size = 12, color = "grey20"),
         strip.background = element_blank(),
         
         panel.grid.major.x = element_line(linewidth = 0.35, color = "grey85"),
         panel.grid.major.y = element_blank(),
         panel.grid.minor = element_blank(),
         
+        
+        axis.title.x = element_text(size = 10, color = "grey20", margin = margin(t = 10)),
         axis.text.y = element_text(color = text_main, size = 11, face = "bold"),
         axis.text.x = element_text(color = "grey40", size = 9),
         
         plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1.2),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 8, hjust = 1),
         
         panel.spacing = unit(2, "lines"),
         plot.margin = margin(20, 20, 20, 20)
@@ -84,21 +89,6 @@ gr <- ggplot(dt, aes(x = .pred_AI, y = detector, fill = kind)) +
 gr
 
 
-
-# plot --------
-# 
-# gr = ggplot(df_heatmap, aes(x = sending_country_code, y = receiving_country_code, fill = N)) +
-#     
-#     geom_tile(color = "grey20", linewidth = .25) +
-#     
-#     geom_shadowtext(
-#         aes(label = N), 
-#         color = "black",
-#         family = "Candara",
-#         bg.color = "grey95", 
-#         bg.r = .1, 
-#         size = 3.5 
-#     ) +
 #     
 #     scale_fill_stepsn(
 #         colors = c('#2c5769', '#6F99AD', 'grey96', '#ffb5ac', '#a33a3a'),
@@ -154,6 +144,6 @@ gr
 
 ggsave(
     plot = gr, filename = "Rplot.png",
-    width = 9, height = 8, units = "in", dpi = 600
+    width = 10, height = 9, units = "in", dpi = 600
 )
 
