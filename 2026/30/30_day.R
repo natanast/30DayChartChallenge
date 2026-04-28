@@ -121,21 +121,6 @@ gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
 
 gr
 
-# 
-# # plot --------
-# 
-# gr = ggplot(df_heatmap, aes(x = sending_country_code, y = receiving_country_code, fill = N)) +
-#     
-#     geom_tile(color = "grey20", linewidth = .25) +
-#     
-#     geom_shadowtext(
-#         aes(label = N), 
-#         color = "black",
-#         family = "Candara",
-#         bg.color = "grey95", 
-#         bg.r = .1, 
-#         size = 3.5 
-#     ) +
 #     
 #     scale_fill_stepsn(
         # colors = c('#2c5769', '#6F99AD', 'grey96', '#ffb5ac', '#a33a3a'),
