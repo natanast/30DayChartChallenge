@@ -84,14 +84,6 @@ gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
     
     scale_y_continuous(limits = c(6.5, 10), breaks = seq(7, 10, 0.5)) +
     
-    # labs(
-    #     title = "IMDb User Ratings and Distribution for Friends",
-    #     subtitle = "A monochrome analysis of viewer consensus across ten seasons. The density shapes highlight the<br>**uncertainty** and variance in episode quality compared to the steady seasonal medians.",
-    #     caption = "30DayChartChallenge 2026: **Day 29** | Source: **FRIENDS** | Graphic: **Natasa Anastasiadou**",
-    #     x = "",
-    #     y = "IMDb Rating"
-    # ) +
-    
     labs(
         title = "IMDb User Ratings and Distribution for Friends",
         subtitle = "A monochrome analysis of viewer consensus across ten seasons. The density shapes highlight the<br>**uncertainty** and variance in episode quality compared to the steady seasonal medians.",
