@@ -22,27 +22,28 @@ dt_raw <- friends_info
 
 # clean data ------
 
-
 dt_raw |> setDT()
 
-# Ensure season is a factor for the X-axis
+
 dt_raw[, season := factor(season)]
 
-# 3. PLOT (Clean, Centered, Monochrome)
-bg_light   <- "grey93"
+
+
+# plot -----
+
+friends_blue <- "#2c5769"
+
+# bg_light <- "grey93"
+
+
+# bg_light   <- "grey93"
 dot_light  <- "#bdbdbd" 
 line_dark  <- "#2b2b2b" 
 
-# 2. DEFINE YOUR MONOCHROME HERO COLOR (From your previous chart)
-friends_blue <- "#2c5769"
-
-# 3. PLOT
-bg_light <- "grey93"
 
 gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
     
-    # THE UNCERTAINTY: Half-eye density shapes
-    # Using a light tint of your blue
+
     stat_halfeye(
         fill = friends_blue |> lighten(0.6),
         color = NA,
@@ -52,8 +53,6 @@ gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
         alpha = 0.8
     ) +
     
-    # THE RAW DATA: Jittered points
-    # Using a sequential gradient of your blue
     geom_jitter(
         # data = dt_raw,
         # aes(color = imdb_rating, fill = imdb_rating),
@@ -65,8 +64,6 @@ gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
         shape = 21
     ) +
     
-    # THE CENTRAL TREND: Median line and points
-    # Using a dark shade of your blue
     stat_summary(
         fun = median, 
         geom = "line", 
@@ -100,13 +97,12 @@ gr <- ggplot(dt_raw, aes(x = season, y = imdb_rating)) +
     
     theme(
         legend.position = "none",
-        plot.background = element_rect(fill = bg_light, color = NA),
-        panel.background = element_rect(fill = bg_light, color = NA),
+        plot.background = element_rect(fill = "grey95", color = NA),
         
-        # Centered Cédric Scherer-style layout
+        
         plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
-        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1.2),
+        plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1),
         
         panel.grid.major.x = element_blank(),
         panel.grid.major.y = element_line(linewidth = 0.4, color = "#e0e0e0"),
