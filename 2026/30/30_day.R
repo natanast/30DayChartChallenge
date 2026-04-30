@@ -55,15 +55,15 @@ gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
     facet_wrap(~cause_name, scales = "free_x") +
     
     scale_color_gradientn(
-        colors = c("#2c5769", "#6F99AD", "#b25c56", "#8a2a2a"),
+        colors = c("#295466", "#ffb5ac", "#b25c56", "#8a2a2a"),
         values = scales::rescale(c(0, 10, 30, 50)),
         limits = c(0, 100),
         breaks = c(0, 10, 30, 50, 70, 100)
     ) +
     
     labs(
-        title = "Evolution of Global Health Estimates & Reporting Certainty",
-        subtitle = "Comparing mortality rates per 100,000. Points represent individual countries colored by intensity,<br>while bars show the **uncertainty intervals** and diamonds mark the regional averages.",
+        title = "European Mortality and Uncertainty",
+        subtitle = "Tracking death rates per 100,000 over two decades. While regional averages (red) suggest stable trends,<br>the wide distribution of individual countries reveals the stark **uncertainty**.",
         caption = "30DayChartChallenge 2026: **Day 30** | Source: **IHME GHDx** | Graphic: **Natasa Anastasiadou**",
         x = "Death Rate per 100,000",
         y = NULL
