@@ -12,25 +12,15 @@ library(stringr)
 library(ggtext)
 library(extrafont)
 library(colorspace)
-library(shadowtext)
-library(tidyr)
-library(forcats)
-library(scales)
+library(ggbeeswarm)
 
 # load data ------
 
 dt <- "IHME-GBD_2023_DATA-4506560c-1.csv" |> fread()
 
 
+# clean data ----
 
-# --- DAY 30: THE FINALE - TEMPORAL BEESWARM (COLOR BY VALUE) ---
-
-library(data.table)
-library(ggplot2)
-library(ggtext)
-library(ggbeeswarm)
-
-# 1. DATA PREP
 milestone_years <- c(2000, 2010, 2020, 2023)
 dt_milestones <- dt[year %in% milestone_years]
 
@@ -39,29 +29,23 @@ regions <- c("Central Europe", "Eastern Europe", "Western Europe")
 dt_countries <- dt_milestones[!(location_name %in% regions)]
 dt_regions   <- dt_milestones[location_name %in% regions]
 
-# 2. DESIGN PALETTE
-bg_light   <- "grey93"
-low_col    <- "#ADC2C8" # Light teal/grey
-high_col   <- "#155F83" # Deep signature blue
-region_col <- "#1a1a1c" # Dark charcoal for the regional anchor
 
-# 3. PLOT
+bg_light   <- "grey93"
+low_col    <- "#ADC2C8" 
+high_col   <- "#155F83" 
+region_col <- "#1a1a1c" 
+
+
+# plot ------
+
 gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
     
-    # THE UNCERTAINTY: Subtle range bars for every country
-    # geom_linerange(
-    #     aes(xmin = lower, xmax = upper),
-    #     color = "grey80", alpha = 0.4, linewidth = 0.4
-    # ) +
-    
-    # THE POINTS: Beeswarm distribution colored by VALUE
     geom_quasirandom(
-        aes(color = val), # Redundant encoding: position + color
+        aes(color = val), 
         alpha = 0.9, size = 2, groupOnX = FALSE
     ) +
     
-    # THE REGIONAL CONTEXT: Large diamond for the average
-    # Using a solid dark color to stand out against the gradient
+    
     stat_summary(
         data = dt_regions,
         aes(x = val, y = factor(year)),
@@ -73,13 +57,9 @@ gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
         shape = 21
     ) +
     
-    # FACET BY CAUSE
+    
     facet_wrap(~cause_name, scales = "free_x") +
     
-    # SCALES
-    # scale_color_gradient(low = "#4A6990", high = "#b25c56") +
-    # 
-
     scale_color_gradientn(
         colors = c("#2c5769", "#6F99AD", "#b25c56", "#8a2a2a"),
         values = scales::rescale(c(0, 10, 30, 50)),
@@ -101,12 +81,10 @@ gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
         legend.position = "none", 
         plot.background = element_rect(fill = "grey95", color = NA),
         
-        # Centered Header Hierarchy
         plot.title = element_markdown(size = 17, face = "bold", hjust = 0.5, margin = margin(t = 15, b = 5)),
         plot.subtitle = element_markdown(size = 13, hjust = 0.5, color = "grey30", margin = margin(t = 2.5, b = 25)),
         plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1.2),
         
-        # Facet and Axis Styling
         strip.text = element_text(size = 13, face = "bold", color = "grey20", margin = margin(b = 15)),
         axis.text.y = element_text(size = 12, face = "bold", color = high_col),
         axis.text.x = element_text(color = "grey40"),
