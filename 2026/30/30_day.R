@@ -30,12 +30,6 @@ dt_countries <- dt_milestones[!(location_name %in% regions)]
 dt_regions   <- dt_milestones[location_name %in% regions]
 
 
-bg_light   <- "grey93"
-low_col    <- "#ADC2C8" 
-high_col   <- "#155F83" 
-region_col <- "#1a1a1c" 
-
-
 # plot ------
 
 gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
@@ -86,7 +80,7 @@ gr <- ggplot(dt_countries, aes(x = val, y = factor(year))) +
         plot.caption = element_markdown(margin = margin(t = 35), size = 9, hjust = 1.2),
         
         strip.text = element_text(size = 13, face = "bold", color = "grey20", margin = margin(b = 15)),
-        axis.text.y = element_text(size = 12, face = "bold", color = high_col),
+        axis.text.y = element_text(size = 12, face = "bold", color = "grey20"),
         axis.text.x = element_text(color = "grey40"),
         
         panel.grid.major.y = element_blank(),
