@@ -3,18 +3,15 @@
 library(magick)
 library(patchwork)
 library(grid)
+library(ggplot2)
+library(extrafont)
 
-
-# 1. Load the packages
-library(magick)
-library(patchwork)
-library(grid)
 
 # 2. Define the reading function
 # We scale them down slightly as they load so R doesn't crash from 30 high-res images!
 read_plot <- function(file_path) {
     img <- image_read(file_path)
-    img <- image_scale(img, "1000x1000!") # Resizes to a uniform square/box
+    img <- image_scale(img, "1100x1100!") # Resizes to a uniform square/box
     rasterGrob(as.raster(img))
 }
 
@@ -40,18 +37,19 @@ patch_list <- lapply(plot_list, wrap_elements)
 # 6. Stitch them together in a 5x6 grid
 final_collage <- wrap_plots(patch_list, ncol = 5) +
     plot_annotation(
-        # title = "My 30DayChartChallenge 2026 Portfolio",
+        title = "30 Day Chart Challenge 2026",
         theme = theme(
-            plot.title = element_text(size = 35, face = "bold", hjust = 0.5, margin = margin(b = 20)),
+            plot.title = element_text(size = 40, family = "Candara", hjust = 0.5, margin = margin(b = 20, t = 20)),
             plot.background = element_rect(fill = "#FAFAFA", color = NA)
         )
-    )
+    ) &
+    theme(plot.margin = margin(5, 5, 5, 5))
 
 # 7. Save the final masterpiece
 ggsave(
     filename = "30Day_Collage.png", 
     plot = final_collage, 
-    width = 20, 
-    height = 24, 
+    width = 17, 
+    height = 20, 
     dpi = 300
 )
